@@ -1,7 +1,7 @@
 require('dotenv').config();
 import express from 'express';
 import { publicationRoutes } from './routes/PublicationRoutes';
-import cors from "cors";
+import cors from 'cors';
 const app = express();
 const PORT = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
@@ -12,8 +12,8 @@ app.use(express.json());
 app.use(
     cors({
         optionsSuccessStatus: 200,
-        methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
-    })
+        methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH'],
+    }),
 );
 //TODO insert cors package
 //TODO make a sharp package middleware to handle global image resizing.
