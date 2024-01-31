@@ -1,28 +1,32 @@
 require('dotenv').config();
-
-import express, { Request, Response } from 'express';
-
+import express from 'express';
+import { publicationRoutes } from './routes/PublicationRoutes';
+import cors from "cors";
 const app = express();
+const PORT = process.env.PORT;
+const MONGO_URL = process.env.MONGO_URL;
 const mongoose = require('mongoose');
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello NODE API');
-});
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(
+    cors({
+        optionsSuccessStatus: 200,
+        methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
+    })
+);
+//TODO insert cors package
+//TODO make a sharp package middleware to handle global image resizing.
 
-app.get('/blog', (req: Request, res: Response) => {
-    res.send('This is Blog route');
-});
-
-app.listen(3000, () => {
-    console.log('Node API is running on port 3000');
-});
+app.use('/api/publication', publicationRoutes());
 
 mongoose
-    .connect(
-        `mongodb+srv://${process.env.ADMIN_API_USERNAME}:${process.env.ADMIN_API_PASSWORD}@selfpaperapi.bm5qfab.mongodb.net/SelfPaperAPI?retryWrites=true&w=majority`,
-    )
+    .connect(MONGO_URL)
     .then(() => {
         console.log('Connected to MongoDB');
+        app.listen(PORT, () => {
+            console.log('Node API is running on port', PORT);
+        });
     })
     .catch((error: Error) => {
         console.log('There is an error connecting to MongoDB: ', error);

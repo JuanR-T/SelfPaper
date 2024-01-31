@@ -9,7 +9,7 @@ const authorSchema = new Schema({
         type: Map,
         of: String,
     }, //DESC X, Instagram, phone, adress...
-    profile_image: { type: Image || String },
+    profile_image: { type: Buffer || String },
     affiliations: [{ type: String }], //DESC Associations etc ...
     publications: [
         {
