@@ -1,6 +1,10 @@
 require('dotenv').config();
 import express from 'express';
 import { publicationRoutes } from './routes/PublicationRoutes';
+import { publisherRoutes } from './routes/PublisherRoutes';
+import { authorRoutes } from './routes/AuthorRoutes';
+import { themeRoutes } from './routes/ThemeRoutes';
+
 import cors from 'cors';
 const app = express();
 const PORT = process.env.PORT;
@@ -19,6 +23,9 @@ app.use(
 //TODO make a sharp package middleware to handle global image resizing.
 
 app.use('/api/publication', publicationRoutes());
+app.use('/api/publisher', publisherRoutes());
+app.use('/api/author', authorRoutes());
+app.use('/api/theme', themeRoutes());
 
 mongoose
     .connect(MONGO_URL)

@@ -1,6 +1,7 @@
-import { Request, Response } from 'express';
+import { Request, Response, response } from 'express';
 import Publication from '../models/Publication';
 import { handleControllerErrors } from '../utils/handleControllerErrors';
+import { checkPublisherService } from '../utils/publisherHasSameService';
 
 export const getPublication = async (
     req: Request,
@@ -10,7 +11,7 @@ export const getPublication = async (
         const publication = await Publication.find({});
         if (!publication) throw new Error("Couldn't find any publications");
 
-        return res.status(200).json({data: {found: true, publication}});
+        return res.status(200).json({ data: { found: true, publication } });
     } catch (err) {
         return handleControllerErrors(err, res, 'Publications not found');
     }
@@ -29,7 +30,7 @@ export const getPublicationById = async (
         if (!publicationById)
             throw new Error('Could not find this publication');
 
-        return res.status(200).json({data: {found: true, publicationById}});
+        return res.status(200).json({ data: { found: true, publicationById } });
     } catch (err) {
         return handleControllerErrors(
             err,
@@ -40,16 +41,26 @@ export const getPublicationById = async (
 };
 
 export const createPublication = async (
-    req: Request,
-    res: Response,
+    req: any,
+    res: any,
 ): Promise<Response> => {
     try {
+        const hasSameService = await checkPublisherService(req);
+
+        if (!hasSameService) {
+            throw new Error(
+                'Publisher service from request does not match existing publisher service',
+            );
+        }
+
         const newPublication = await Publication.create(req.body);
 
         if (!newPublication)
             throw new Error('Publication could not be created. Wrong params');
 
-        return res.status(200).json({data: {created: true, newPublication}});
+        return res
+            .status(200)
+            .json({ data: { created: true, newPublication } });
     } catch (err) {
         return handleControllerErrors(
             err,
@@ -70,6 +81,14 @@ export const updatePublication = async (
                 'Could not find publication id for update. Wrong id',
             );
 
+        const hasSameService = await checkPublisherService(req);
+
+        if (!hasSameService) {
+            throw new Error(
+                'Publisher service from request does not match existing publisher service',
+            );
+        }
+
         const updatedPublication = await Publication.findByIdAndUpdate(
             id,
             req.body,
@@ -77,7 +96,9 @@ export const updatePublication = async (
         if (!updatedPublication)
             throw new Error('Could not update publication. Wrong params;');
 
-        return res.status(200).json({data: {updated: true, updatedPublication}});
+        return res
+            .status(200)
+            .json({ data: { updated: true, updatedPublication } });
     } catch (err) {
         return handleControllerErrors(err, res, 'Could not update publication');
     }
@@ -89,13 +110,20 @@ export const deletePublication = async (
 ): Promise<Response> => {
     try {
         const { id } = req.params;
-        if (!id) throw new Error("Could not delete publication. Wrong id");
+        if (!id) throw new Error('Could not delete publication. Wrong id');
 
         const deletedPublication = await Publication.findByIdAndDelete(id);
-        if (!deletedPublication) throw new Error("Could not delete publication.");
+        if (!deletedPublication)
+            throw new Error('Could not delete publication.');
 
-        return res.status(200).json({data: {deleted: true, deletedPublication}});
+        return res
+            .status(200)
+            .json({ data: { deleted: true, deletedPublication } });
     } catch (err) {
-        return handleControllerErrors(err, res, "Could not delete publication.");
+        return handleControllerErrors(
+            err,
+            res,
+            'Could not delete publication.',
+        );
     }
 };

@@ -1,21 +1,20 @@
 import { Schema, SchemaTypes, model } from 'mongoose';
 
 const authorSchema = new Schema({
-    name: { type: String, required: true },
+    first_name: { type: String, required: true },
+    last_name: { type: String, required: true },
     email: { type: String, required: true },
-    password: { type: String, required: true },
+    phone_number: { type: String, required: true },
+    password: { type: String, required: true }, //TODO hashed password
     biography: { type: String },
-    contact_data: {
-        type: Map,
-        of: String,
-    }, //DESC X, Instagram, phone, adress...
+    social_medias: [{ type: String }],
     profile_image: { type: Buffer || String },
     affiliations: [{ type: String }], //DESC Associations etc ...
     publications: [
         {
             type: SchemaTypes.ObjectId,
             ref: 'Publication',
-            required: true,
+            required: false,
         },
     ],
     collaborators: [
