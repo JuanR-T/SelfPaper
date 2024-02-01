@@ -12,8 +12,8 @@ export const publicationRoutes = () => {
     router.get('/', getPublication);
     router.get('/:id', getPublicationById);
     router.post('/create', createPublication);
-    router.post('/update', updatePublication);
-    router.post('/delete', deletePublication);
+    router.put('/update/:id', updatePublication);
+    router.delete('/delete/:id', deletePublication);
 
     return router;
 };

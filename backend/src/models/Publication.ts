@@ -17,16 +17,21 @@ const publicationSchema = new Schema({
     publication_date: { type: Date, required: true },
     publisher: [
         {
-            type: SchemaTypes.ObjectId,
-            ref: 'Publisher',
-            required: false, //TODO remove this false
+            _id: {
+                type: SchemaTypes.ObjectId,
+                ref: 'Publisher',
+                required: true,
+            },
+            service: {
+                type: String,
+            },
         },
     ],
     author: [
         {
             type: SchemaTypes.ObjectId,
             ref: 'Author',
-            required: false, //TODO remove this false
+            required: true,
         },
     ],
 });
