@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Theme from '../models/Theme';
 import { handleControllerErrors } from '../utils/handleControllerErrors';
+import mongoose from 'mongoose';
 
 export const getThemes = async (
     req: Request,
@@ -22,7 +23,11 @@ export const getThemeById = async (
 ): Promise<Response> => {
     try {
         const { id } = req.params;
-        if (!id) throw new Error('Could not get theme by id. Wrong id.');
+        if (!id || typeof id !== 'string') throw new Error('Could not get theme by id. Wrong id.');
+        
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error('Invalid theme ID format. Please provide a valid ID.');
+        }
 
         const themeById = await Theme.findById(id);
         if (!themeById) throw new Error('Could not find this theme');
@@ -53,7 +58,11 @@ export const deleteTheme = async (
 ): Promise<Response> => {
     try {
         const { id } = req.params;
-        if (!id) throw new Error('Could not delete theme. Wrong id');
+        if (!id || typeof id !== 'string') throw new Error('Could not delete theme. Wrong id');
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error('Invalid theme ID format. Please provide a valid ID.');
+        }
 
         const deletedTheme = await Theme.findByIdAndDelete(id);
         if (!deletedTheme) throw new Error('Could not delete theme');
@@ -70,8 +79,11 @@ export const updateTheme = async (
 ): Promise<Response> => {
     try {
         const { id } = req.params;
-        if (!id || typeof id !== 'string')
-            throw new Error('Could not update theme. Wrong id');
+        if (!id || typeof id !== 'string') throw new Error('Could not update theme. Wrong id');
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error('Invalid theme ID format. Please provide a valid ID.');
+        }
 
         const updatedTheme = await Theme.findByIdAndUpdate(id, req.body);
         if (!updatedTheme) throw new Error('Could not update theme');

@@ -2,6 +2,7 @@ import { Request, Response, response } from 'express';
 import Publication from '../models/Publication';
 import { handleControllerErrors } from '../utils/handleControllerErrors';
 import { checkPublisherService } from '../utils/publisherHasSameService';
+import mongoose from 'mongoose';
 
 export const getPublication = async (
     req: Request,
@@ -23,13 +24,14 @@ export const getPublicationById = async (
 ): Promise<Response> => {
     try {
         const { id } = req.params;
+        if (!id || typeof id !== 'string') throw new Error('Publication id not found. Wrong request params');
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error('Invalid theme ID format. Please provide a valid ID.');
+        }
+
         const publicationById = await Publication.findById(id);
-
-        if (!id)
-            throw new Error('Publication id not found. Wrong request params');
-        if (!publicationById)
-            throw new Error('Could not find this publication');
-
+        if (!publicationById) throw new Error('Could not find this publication');
+        
         return res.status(200).json({ data: { found: true, publicationById } });
     } catch (err) {
         return handleControllerErrors(
@@ -76,13 +78,15 @@ export const updatePublication = async (
 ): Promise<Response> => {
     try {
         const { id } = req.params;
-        if (!id)
+        if (!id || typeof id !== 'string')
             throw new Error(
                 'Could not find publication id for update. Wrong id',
             );
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error('Invalid theme ID format. Please provide a valid ID.');
+        }
 
         const hasSameService = await checkPublisherService(req);
-
         if (!hasSameService) {
             throw new Error(
                 'Publisher service from request does not match existing publisher service',
@@ -110,7 +114,10 @@ export const deletePublication = async (
 ): Promise<Response> => {
     try {
         const { id } = req.params;
-        if (!id) throw new Error('Could not delete publication. Wrong id');
+        if (!id || typeof id !== 'string') throw new Error('Could not delete publication. Wrong id');
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error('Invalid theme ID format. Please provide a valid ID.');
+        }
 
         const deletedPublication = await Publication.findByIdAndDelete(id);
         if (!deletedPublication)

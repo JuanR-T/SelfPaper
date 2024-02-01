@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Publisher from '../models/Publisher';
 import { handleControllerErrors } from '../utils/handleControllerErrors';
+import mongoose from 'mongoose';
 
 export const getPublisher = async (
     req: Request,
@@ -26,7 +27,11 @@ export const getPublisherById = async (
 ): Promise<Response> => {
     try {
         const { id } = req.params;
-        if (!id) throw new Error('Could not get publisher by id. Wrong id.');
+        if (!id || typeof id !== 'string') throw new Error('Could not get publisher by id. Wrong id.');
+        
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error('Invalid theme ID format. Please provide a valid ID.');
+        }
 
         const publisherById = await Publisher.findById(id);
         if (!publisherById) throw new Error('Could not find this publisher');
@@ -62,7 +67,11 @@ export const deletePublisher = async (
 ): Promise<Response> => {
     try {
         const { id } = req.params;
-        if (!id) throw new Error('Could not delete publisher. Wrong id');
+        if (!id || typeof id !== 'string') throw new Error('Could not delete publisher. Wrong id');
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error('Invalid theme ID format. Please provide a valid ID.');
+        }
 
         const deletedPublisher = await Publisher.findByIdAndDelete(id);
         if (!deletedPublisher) throw new Error('Could not delete publisher');
@@ -84,6 +93,10 @@ export const updatePublisher = async (
         if (!id || typeof id !== 'string')
             throw new Error('Could not update publisher. Wrong id');
 
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error('Invalid theme ID format. Please provide a valid ID.');
+        }
+        
         const updatedPublisher = await Publisher.findByIdAndUpdate(
             id,
             req.body,
