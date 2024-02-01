@@ -19,7 +19,6 @@ app.use(
         methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH'],
     }),
 );
-//TODO insert cors package
 //TODO make a sharp package middleware to handle global image resizing.
 
 app.use('/api/publication', publicationRoutes());

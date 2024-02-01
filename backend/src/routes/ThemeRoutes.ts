@@ -4,7 +4,7 @@ import {
     getThemeById,
     createTheme,
     updateTheme,
-    deleteTheme
+    deleteTheme,
 } from '../controllers/ThemeController';
 
 export const themeRoutes = () => {
