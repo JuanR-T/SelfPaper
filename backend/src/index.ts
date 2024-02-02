@@ -15,6 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(
     cors({
+        //TODO ADD ORIGIN
         optionsSuccessStatus: 200,
         methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH'],
     }),
