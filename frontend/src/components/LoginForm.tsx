@@ -1,13 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';
-
-//import './LoginForm.css'; // Create a CSS file for custom styling
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useLocalStorage } from '../lib/useLocalStorage';
 
 const LoginForm: React.FC = () => {
-    const { logIn } = useAuth();
+    const { logIn, author } = useAuth();
+    const navigate = useNavigate();
+    const {getItem} = useLocalStorage();
 
+    useEffect(() => {
+        if (author && getItem("token")) {
+            navigate('/dashboard');
+            toast.info('Tu es déjà connecté !', {
+                position: 'top-center',
+                autoClose: 5000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'light',
+            });
+        }
+    }, []);
+
+    if (author && getItem("token")) {
+        return null;
+    }
+    
     const onFinish = async (values: any) => {
         if (!logIn) return null;
         logIn(values.email, values.password);

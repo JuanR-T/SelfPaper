@@ -7,10 +7,14 @@ import {
 } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';
 const { Sider, Content } = Layout;
-
+import { useNavigate } from 'react-router-dom';
 const Dashboard = () => {
+    const navigate = useNavigate();
     const { author } = useAuth();
-    console.log("author it is",author);
+    if (!author) {
+        navigate('/login');
+    }
+
     return (
         <Layout style={{ minHeight: '100vh' }}>
             <Sider width={80} theme="dark">
@@ -25,7 +29,8 @@ const Dashboard = () => {
                 <Content style={{ padding: '20px' }}>
                     {author ? (
                         <h1>
-                            Bienvenue {author?.firstName + " " + author?.lastName}
+                            Bienvenue{' '}
+                            {author?.firstName + ' ' + author?.lastName}
                         </h1>
                     ) : (
                         'Welcome to the dashboard'
