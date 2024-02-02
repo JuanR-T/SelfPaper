@@ -5,6 +5,7 @@ import {
     createAuthor,
     deleteAuthor,
     updateAuthor,
+    loginAuthor
 } from '../controllers/AuthorController';
 
 export const authorRoutes = () => {
@@ -14,6 +15,7 @@ export const authorRoutes = () => {
     router.post('/create', createAuthor);
     router.delete('/delete/:id', deleteAuthor);
     router.put('/update/:id', updateAuthor);
+    router.post('/login', loginAuthor);
 
     return router;
 };
