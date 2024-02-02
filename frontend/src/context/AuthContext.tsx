@@ -120,7 +120,6 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         if (!token) return logOut();
 
         const decodedToken: { author: Author } | null = decodeToken(token);
-        console.log('this is decodedToken', decodedToken);
         if (!decodedToken?.author) return logOut();
 
         setAuthor(decodedToken?.author);
