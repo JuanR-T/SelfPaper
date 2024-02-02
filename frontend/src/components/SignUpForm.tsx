@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { useLocalStorage } from '../lib/useLocalStorage';
 
 const SignUpForm: React.FC = () => {
+    //TODO too many re renders here, check why 
     const navigate = useNavigate();
     const { signUp, author } = useAuth();
     const { getItem } = useLocalStorage();
