@@ -43,6 +43,14 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
             getAuthorFromToken(authResult.data?.token);
             setItem('token', authResult.data?.token);
+            toast.success('Successfully logged in!', {
+                position: 'bottom-left',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
             navigate('/dashboard');
         } catch (err) {
             toast(
@@ -81,6 +89,14 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
             getAuthorFromToken(authresult.data?.token);
             setItem('token', authresult.data?.token);
             navigate('/dashboard');
+            toast.success('Successfully signed up!', {
+                position: 'bottom-left',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } catch (err) {
             toast(
                 err instanceof Error
@@ -104,7 +120,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         if (!token) return logOut();
 
         const decodedToken: { author: Author } | null = decodeToken(token);
-        console.log("this is decodedToken",decodedToken);
+        console.log('this is decodedToken', decodedToken);
         if (!decodedToken?.author) return logOut();
 
         setAuthor(decodedToken?.author);
@@ -117,8 +133,8 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
             getAuthorFromToken(authorToken);
         } else {
             setIsLoading(false);
-            //TODO Find a solution to be able to go to signup page without doing this
-            //return logOut();
+            //TODO Find a solution to be able to go to signup page without doing this (it was commented)
+            return logOut();
         }
         setIsLoading(false);
     }, []);

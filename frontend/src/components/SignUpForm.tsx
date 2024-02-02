@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, Button, Row, Col } from 'antd';
 import {
     UserOutlined,
@@ -7,9 +7,36 @@ import {
     LockOutlined,
 } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useLocalStorage } from '../lib/useLocalStorage';
 
 const SignUpForm: React.FC = () => {
-    const { signUp } = useAuth();
+    const navigate = useNavigate();
+    const { signUp, author } = useAuth();
+    const { getItem } = useLocalStorage();
+
+    useEffect(() => {
+        if (author && getItem("token")) {
+            navigate('/dashboard');
+            toast.info('Tu es déjà connecté !', {
+                position: 'top-center',
+                autoClose: 5000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'light',
+            });
+        }
+    }, []);
+
+    if (author && getItem("token")) {
+        return null;
+    }
+
+    //TODO check if it's ok to make a middleware of lines 19 - 37.
 
     const onFinish = async (values: any) => {
         if (!signUp) return;

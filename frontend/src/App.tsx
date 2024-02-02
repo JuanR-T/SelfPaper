@@ -6,9 +6,11 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
-    const {getItem} = useLocalStorage();
+    const { getItem } = useLocalStorage();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,6 +28,7 @@ const App = () => {
                     <Route path="/signup" element={<SignUp />}></Route>
                     <Route path="/dashboard" element={<Dashboard />}></Route>
                 </Routes>
+                <ToastContainer />
             </AuthContextProvider>
         </div>
     );
