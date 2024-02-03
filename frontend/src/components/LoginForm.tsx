@@ -9,7 +9,7 @@ const LoginForm: React.FC = () => {
     const navigate = useNavigate();
     const { logIn, author } = useAuth();
     if (author) {navigate("/dashboard"); return null}
-    
+
     const onFinish = async (values: any) => {
         if (!logIn) return null;
         logIn(values.email, values.password);
