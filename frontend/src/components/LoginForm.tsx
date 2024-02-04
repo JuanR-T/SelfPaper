@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 const LoginForm: React.FC = () => {
     const navigate = useNavigate();
     const { logIn, author } = useAuth();
-    if (author) {navigate("/dashboard"); return null}
+    if (author) {console.log(author); navigate("/dashboard");}
 
     const onFinish = async (values: any) => {
         if (!logIn) return null;

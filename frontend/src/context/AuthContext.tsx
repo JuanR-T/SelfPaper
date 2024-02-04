@@ -11,6 +11,7 @@ import { decodeToken } from 'react-jwt';
 import { toast } from 'react-toastify';
 import { handlePost } from '../api/handleCall';
 import { useNavigate } from 'react-router-dom';
+import toastProvider from '../lib/toastProvider';
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 export const useAuth = () => useContext(AuthContext);
@@ -43,14 +44,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
             getAuthorFromToken(authResult.data?.token);
             setItem('token', authResult.data?.token);
-            toast.success('Successfully logged in!', {
-                position: 'bottom-left',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-            });
+            toastProvider("success", "Connexion réussie !", "bottom-left", "light");
             navigate('/dashboard');
         } catch (err) {
             toast(
@@ -84,36 +78,21 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
                 },
             );
             console.log('test', authresult);
-            if (!authresult || !authresult.data?.token)
-                throw new Error(authresult?.error);
+            if (!authresult || !authresult.data?.token) throw new Error(authresult?.error);
+
             getAuthorFromToken(authresult.data?.token);
             setItem('token', authresult.data?.token);
             navigate('/dashboard');
-            toast.success('Successfully signed up!', {
-                position: 'bottom-left',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-            });
+            toastProvider("success", "Connexion réussie !", "bottom-left", "light");
         } catch (err) {
-            toast(
-                err instanceof Error
-                    ? err.message
-                    : 'There has been an error, please retry signing up.',
-                {
-                    type: 'error',
-                    theme: 'colored',
-                    position: 'bottom-left',
-                },
-            );
+            toastProvider("error", "Une erreur est survenue, réessaye de te connecter.", "bottom-left", "colored");
         }
     };
     const logOut = () => {
         removeItem('token');
         setAuthor(undefined);
         navigate('/login');
+        toastProvider("success", "Déconnexion réussie !", "bottom-left", "light");
     };
 
     const getAuthorFromToken = (token: string) => {

@@ -8,11 +8,10 @@ import {
 } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { useLocalStorage } from '../lib/useLocalStorage';
+import toastProvider from '../lib/toastProvider';
 
 const SignUpForm: React.FC = () => {
-    //TODO too many re renders here, check why 
     const navigate = useNavigate();
     const { signUp, author } = useAuth();
     const { getItem } = useLocalStorage();
@@ -20,16 +19,7 @@ const SignUpForm: React.FC = () => {
     useEffect(() => {
         if (author && getItem("token")) {
             navigate('/dashboard');
-            toast.info('Tu es déjà connecté !', {
-                position: 'top-center',
-                autoClose: 5000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'light',
-            });
+            toastProvider("info", "Tu es déjà connecté !", "top-center", "light");
         }
     }, []);
 
