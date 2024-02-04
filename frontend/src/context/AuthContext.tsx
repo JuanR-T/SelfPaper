@@ -44,18 +44,19 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
             getAuthorFromToken(authResult.data?.token);
             setItem('token', authResult.data?.token);
-            toastProvider("success", "Connexion réussie !", "bottom-left", "light");
+            toastProvider(
+                'success',
+                'Connexion réussie !',
+                'bottom-left',
+                'light',
+            );
             navigate('/dashboard');
         } catch (err) {
-            toast(
-                err instanceof Error
-                    ? err.message
-                    : 'There has been an error, please try again.',
-                {
-                    type: 'error',
-                    theme: 'colored',
-                    position: 'bottom-left',
-                },
+            toastProvider(
+                'error',
+                'Une erreur est survenue, réessaye de te connecter.',
+                'bottom-left',
+                'colored',
             );
         }
     };
@@ -78,21 +79,37 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
                 },
             );
             console.log('test', authresult);
-            if (!authresult || !authresult.data?.token) throw new Error(authresult?.error);
+            if (!authresult || !authresult.data?.token)
+                throw new Error(authresult?.error);
 
             getAuthorFromToken(authresult.data?.token);
             setItem('token', authresult.data?.token);
             navigate('/dashboard');
-            toastProvider("success", "Connexion réussie !", "bottom-left", "light");
+            toastProvider(
+                'success',
+                'Connexion réussie !',
+                'bottom-left',
+                'light',
+            );
         } catch (err) {
-            toastProvider("error", "Une erreur est survenue, réessaye de te connecter.", "bottom-left", "colored");
+            toastProvider(
+                'error',
+                'Une erreur est survenue, réessaye de te connecter.',
+                'bottom-left',
+                'colored',
+            );
         }
     };
     const logOut = () => {
         removeItem('token');
         setAuthor(undefined);
         navigate('/login');
-        toastProvider("success", "Déconnexion réussie !", "bottom-left", "light");
+        toastProvider(
+            'success',
+            'Déconnexion réussie !',
+            'bottom-left',
+            'light',
+        );
     };
 
     const getAuthorFromToken = (token: string) => {

@@ -6,10 +6,10 @@ import {
     PhoneOutlined,
     LockOutlined,
 } from '@ant-design/icons';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { useLocalStorage } from '../lib/useLocalStorage';
-import toastProvider from '../lib/toastProvider';
+import { useLocalStorage } from '../../lib/useLocalStorage';
+import toastProvider from '../../lib/toastProvider';
 
 const SignUpForm: React.FC = () => {
     const navigate = useNavigate();
@@ -17,13 +17,18 @@ const SignUpForm: React.FC = () => {
     const { getItem } = useLocalStorage();
 
     useEffect(() => {
-        if (author && getItem("token")) {
+        if (author && getItem('token')) {
             navigate('/dashboard');
-            toastProvider("info", "Tu es déjà connecté !", "top-center", "light");
+            toastProvider(
+                'info',
+                'Tu es déjà connecté !',
+                'top-center',
+                'light',
+            );
         }
     }, []);
 
-    if (author && getItem("token")) {
+    if (author && getItem('token')) {
         return null;
     }
 
@@ -148,4 +153,3 @@ const SignUpForm: React.FC = () => {
 };
 
 export default SignUpForm;
-
