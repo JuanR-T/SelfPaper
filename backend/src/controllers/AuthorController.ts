@@ -42,7 +42,9 @@ export const createAuthor = async (
     try {
         const existingAuthor = await Author.findOne({ email: req.body.email });
         if (existingAuthor) {
-            throw new Error('Email is already in use. Please use a different email.');
+            throw new Error(
+                'Email is already in use. Please use a different email.',
+            );
         }
 
         const salt = await bcrypt.genSalt();
@@ -51,10 +53,24 @@ export const createAuthor = async (
         const newAuthor = await Author.create(req.body);
         if (!newAuthor)
             throw new Error('Could not create author. Wrong params.');
-        
-        const token = jwt.sign({ author: {id: newAuthor._id, firstName: newAuthor.firstName, lastName: newAuthor.lastName, email: newAuthor.email, phoneNumber: newAuthor.phoneNumber} }, `${process.env.JWT_SECRET_KEY}`, { expiresIn: '1h' });
 
-        return res.status(200).json({ data: { created: true, newAuthor, token } });
+        const token = jwt.sign(
+            {
+                author: {
+                    id: newAuthor._id,
+                    firstName: newAuthor.firstName,
+                    lastName: newAuthor.lastName,
+                    email: newAuthor.email,
+                    phoneNumber: newAuthor.phoneNumber,
+                },
+            },
+            `${process.env.JWT_SECRET_KEY}`,
+            { expiresIn: '1h' },
+        );
+
+        return res
+            .status(200)
+            .json({ data: { created: true, newAuthor, token } });
     } catch (err) {
         return handleControllerErrors(err, res, 'Could not create Author.');
     }
@@ -69,20 +85,35 @@ export const loginAuthor = async (
     try {
         const { email, password } = req.body;
         const existingAuthor = await Author.findOne({ email });
-        
+
         if (!existingAuthor) {
             throw new Error('Author not found. Please check your credentials.');
         }
-        
-        const isPasswordValid = await bcrypt.compare(password, existingAuthor.password);
+
+        const isPasswordValid = await bcrypt.compare(
+            password,
+            existingAuthor.password,
+        );
 
         if (!isPasswordValid) {
             throw new Error('Invalid password. Please check your credentials.');
         }
 
         // If the password is valid, you can generate a token for authentication
-        const token = jwt.sign({ author: {id: existingAuthor._id, firstName: existingAuthor.firstName, lastName: existingAuthor.lastName, email: existingAuthor.email, phoneNumber: existingAuthor.phoneNumber} }, `${process.env.JWT_SECRET_KEY}`, { expiresIn: '1h' });
-        console.log("token", token)
+        const token = jwt.sign(
+            {
+                author: {
+                    id: existingAuthor._id,
+                    firstName: existingAuthor.firstName,
+                    lastName: existingAuthor.lastName,
+                    email: existingAuthor.email,
+                    phoneNumber: existingAuthor.phoneNumber,
+                },
+            },
+            `${process.env.JWT_SECRET_KEY}`,
+            { expiresIn: '1h' },
+        );
+        console.log('token', token);
         return res.status(200).json({ data: { authenticated: true, token } });
     } catch (err) {
         return handleControllerErrors(err, res, 'Could not log in Author.');

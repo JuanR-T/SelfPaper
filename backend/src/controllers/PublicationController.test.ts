@@ -3,10 +3,18 @@ jest.mock('../utils/publisherHasSameService', () => ({
     checkPublisherService: mCheckPublisherService,
 }));
 
-import { mPublicationCreate, mPublicationFind, mPublicationFindByIdAndUpdate} from '../tests/tests-utils';
+import {
+    mPublicationCreate,
+    mPublicationFind,
+    mPublicationFindByIdAndUpdate,
+} from '../tests/tests-utils';
 import { Request, Response } from 'express';
 import { checkPublisherService } from '../utils/publisherHasSameService';
-import { createPublication, getPublication, updatePublication } from './PublicationController';
+import {
+    createPublication,
+    getPublication,
+    updatePublication,
+} from './PublicationController';
 
 describe('createPublication', () => {
     beforeEach(() => {
@@ -101,23 +109,20 @@ describe('getPublication', () => {
         const mStatus = jest.fn(() => ({ json: mJson }));
         const res = { status: mStatus } as unknown as Response;
         const publication = {
-            title: "Parentalité dans la kvienre",
-			description: "Cet article de la vie de mon mec",
-			type: [
-				"article",
-				"podcast"
-			],
-			theme: [],
-			excerpt: "Voici un article",
-			publication_date: "2024-01-29T08:30:00.000Z",
-			publisher: [
-				{
-					"_id": "65ba6c0c0a9f1ffc953293de",
-					"service": "Sport"
-				}
-			],
-			author: [],
-			_id: "65baeff"
+            title: 'Parentalité dans la kvienre',
+            description: 'Cet article de la vie de mon mec',
+            type: ['article', 'podcast'],
+            theme: [],
+            excerpt: 'Voici un article',
+            publication_date: '2024-01-29T08:30:00.000Z',
+            publisher: [
+                {
+                    _id: '65ba6c0c0a9f1ffc953293de',
+                    service: 'Sport',
+                },
+            ],
+            author: [],
+            _id: '65baeff',
         };
         mPublicationFind.mockResolvedValueOnce(publication);
 
@@ -128,23 +133,23 @@ describe('getPublication', () => {
         expect(mStatus).toHaveBeenCalledWith(200);
         expect(mJson).toHaveBeenCalledTimes(1);
         expect(mJson).toHaveBeenCalledWith({
-            data: { found: true, publication }
+            data: { found: true, publication },
         });
     });
 
-    it("should return an error if there is no publications", async() => {
+    it('should return an error if there is no publications', async () => {
         const req = { query: {} } as unknown as Request;
         const mJson = jest.fn();
         const mStatus = jest.fn(() => ({ json: mJson }));
         const res = { status: mStatus } as unknown as Response;
-    
+
         await getPublication(req, res);
 
         expect(mStatus).toHaveBeenCalledTimes(1);
         expect(mStatus).toHaveBeenCalledWith(500);
         expect(mJson).toHaveBeenCalledTimes(1);
         expect(mJson).toHaveBeenCalledWith({
-            error: "Couldn't find any publications"
+            error: "Couldn't find any publications",
         });
     });
 });
@@ -154,21 +159,31 @@ describe('updatePublication', () => {
         jest.resetAllMocks();
     });
 
-    it("should update a given publication", async () => {
-        const req = { params: { id: "test123" }, body: { publisher: [{ "_id": "8712", "service": "Société" }] } } as unknown as Request;
+    it('should update a given publication', async () => {
+        const req = {
+            params: { id: 'test123' },
+            body: { publisher: [{ _id: '8712', service: 'Société' }] },
+        } as unknown as Request;
         mCheckPublisherService.mockResolvedValue(true);
         const mJson = jest.fn();
         const mStatus = jest.fn(() => ({ json: mJson }));
         const res = { status: mStatus } as unknown as Response;
-        const updatedPublication = {"id": "test123", "publisher": [{"_id": "8712", "service": "Société"}]};
+        const updatedPublication = {
+            id: 'test123',
+            publisher: [{ _id: '8712', service: 'Société' }],
+        };
         mPublicationFindByIdAndUpdate.mockResolvedValue(updatedPublication);
 
         await updatePublication(req, res);
-        
+
         expect(mPublicationFindByIdAndUpdate).toHaveBeenCalledTimes(1);
-        expect(mPublicationFindByIdAndUpdate).toHaveBeenCalledWith("test123", {"publisher": [{"_id": "8712", "service": "Société"}]});
+        expect(mPublicationFindByIdAndUpdate).toHaveBeenCalledWith('test123', {
+            publisher: [{ _id: '8712', service: 'Société' }],
+        });
         expect(mStatus).toHaveBeenCalledWith(200);
         expect(mJson).toHaveBeenCalledTimes(1);
-        expect(mJson).toHaveBeenCalledWith({ data: { updated: true, updatedPublication } });
+        expect(mJson).toHaveBeenCalledWith({
+            data: { updated: true, updatedPublication },
+        });
     });
 });

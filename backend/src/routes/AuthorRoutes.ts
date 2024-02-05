@@ -5,7 +5,7 @@ import {
     createAuthor,
     deleteAuthor,
     updateAuthor,
-    loginAuthor
+    loginAuthor,
 } from '../controllers/AuthorController';
 
 export const authorRoutes = () => {
