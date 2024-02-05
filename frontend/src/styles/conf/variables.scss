@@ -1,0 +1,64 @@
+@import url("https://fonts.googleapis.com/css2?family=Yantramanav:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap");
+
+/**
+ * Here you can find all the style variables used all over the website, from colors to fonts.
+ */
+
+/**
+ * Colors
+ */
+$red-color: #e76565;
+$charcoal-color: #2e3239;
+$charcoal-darker-color: #26292b;
+$charcoal-darker-color-filter: brightness(0) saturate(100%) invert(12%)
+    sepia(19%) saturate(218%) hue-rotate(160deg) brightness(98%) contrast(91%);
+$nightblue-color: #24253b;
+$nightblue-darker-color: #1b1d30;
+$milky-white-color: #f9f9f9;
+$milky-white-color-filter: brightness(0) saturate(100%) invert(97%) sepia(3%)
+    saturate(543%) hue-rotate(329deg) brightness(92%) contrast(118%);
+$milky-white-darker-color: #f2f2f2;
+$grey-color: #c9c9c9;
+$success-color: #80c360;
+$warning-color: #e4be5a;
+
+/**
+ * Text Styles
+ */
+$title-font: "Roboto Condensed", sans-serif;
+$text-font: "Yantramanav", sans-serif;
+
+/**
+ * Border-radiuses
+ */
+$border-radius-sm: 5px;
+$border-radius-md: 10px;
+$border-radius-xl: 25px;
+
+/**
+ * Font sizes
+ */
+$body-font-size: 14px;
+$secondary-font-size: 12px;
+$extra-information-font-size: 10px;
+$title-font-size-xl: 40px;
+$title-font-size-md: 36px;
+$title-font-size-sm: 24px;
+$title-font-size-s: 18px;
+$title-font-size-xs: 16px;
+
+/**
+ * Screen sizes for responsive
+ */
+$xs: 360px;
+$sm: 768px;
+$mobile: 500px;
+$md: 1024px;
+$lg: 1200px;
+
+/**
+ * Box Shadows : remember to add -webkit-box-shadow and -moz-box-shadow in the corresponding scss
+ */
+
+$box-shadow-light: 2px 2px 12px -4px rgba(0, 0, 0, 0.51);

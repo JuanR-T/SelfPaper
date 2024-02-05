@@ -2,6 +2,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import { AuthContextProvider } from './context/AuthContext';
 import { useEffect } from 'react';
 import { useLocalStorage } from './lib/useLocalStorage';
+import './styles/main.css';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';

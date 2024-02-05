@@ -8,6 +8,8 @@ import {
 import { useAuth } from '../context/AuthContext';
 const { Sider, Content } = Layout;
 import { useNavigate } from 'react-router-dom';
+import PublisherForm from '../components/publication/Publisher';
+
 const Dashboard = () => {
     const navigate = useNavigate();
     const { author } = useAuth();
@@ -35,7 +37,7 @@ const Dashboard = () => {
                     ) : (
                         'Welcome to the dashboard'
                     )}
-                    {/* Your dashboard content goes here */}
+                    <PublisherForm />
                 </Content>
             </Layout>
         </Layout>

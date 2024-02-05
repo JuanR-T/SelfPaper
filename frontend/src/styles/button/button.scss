@@ -1,0 +1,16 @@
+@import "../conf/variables.scss";
+
+.submit-button {
+    background-color: $milky-white-color;
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: center;
+    &:hover,
+    &:focus,
+    &:active {
+        transition: 0.2s !important;
+        background: $milky-white-darker-color !important;
+    }
+}

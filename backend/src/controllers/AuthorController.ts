@@ -68,16 +68,13 @@ export const loginAuthor = async (
 ): Promise<Response> => {
     try {
         const { email, password } = req.body;
-        console.log(email, password, "its inside now")
         const existingAuthor = await Author.findOne({ email });
-        //console.log("testing", req.body, existingAuthor);
         
         if (!existingAuthor) {
             throw new Error('Author not found. Please check your credentials.');
         }
         
         const isPasswordValid = await bcrypt.compare(password, existingAuthor.password);
-        //console.log("testing clg",req.body, existingAuthor,isPasswordValid)
 
         if (!isPasswordValid) {
             throw new Error('Invalid password. Please check your credentials.');
