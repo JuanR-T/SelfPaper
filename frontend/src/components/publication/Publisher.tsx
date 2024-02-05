@@ -1,17 +1,16 @@
-import React, { useRef, useState } from 'react';
-import type { InputRef } from 'antd';
-import BookOutlined, {PushpinOutlined, CalendarOutlined} from '@ant-design/icons';
+import React, { useState } from 'react';
+import BookOutlined, {PushpinOutlined} from '@ant-design/icons';
 import { handlePost } from '../../api/handleCall';
-import {Input, Switch, Form, Select, Col, Row, DatePicker, Button } from 'antd';
+import {Input, Switch, Form, Select, Row, DatePicker, Button } from 'antd';
+import "../../styles/main.css";
+import toastProvider from '../../lib/toastProvider';
 
 const PublisherForm: React.FC = () => {
-    const inputRef = useRef<InputRef>(null);
-    const [input, setInput] = useState(true);
-    const sharedProps = {
-        style: { width: '100%' },
-        placeholder: "Veuillez renseigner le(s) service(s) de l'éditeur.",
-        ref: inputRef,
-    };
+    const [servicesSwitch, setServicesSwitch] = useState(true);
+    const [selectValue, setSelectValue] = useState("");
+    const [servicesValue, setServicesValue] = useState<any>("");
+    const [typeSwitch, setTypeSwitch] = useState(true);
+    const BASE_URL = import.meta.env.VITE_BASE_URL;
     const selectFieldOptions = [
         {
             value: "journal",
@@ -31,151 +30,179 @@ const PublisherForm: React.FC = () => {
         }
     ];
     const onSubmit = async(values: any) => {
-        handlePost(`${process.env.VITE_BASE_URL}`, (
-            values.title,
-            values.description,
-            values.type,
-            values.location,
-            values.foundedAt,
-            values.services
-        ))
+        await handlePost(`${BASE_URL}/api/publisher/create`, {
+            title: values.title,
+            description: values.description,
+            services: servicesValue.split(/[\/\n]/),
+            type: selectValue,
+            location: values.location,
+            foundedAt: values.foundedAt.toISOString(),
+        })
+        
+        toastProvider(
+            "success",
+            "L'éditeur a bien été créer !",
+            "bottom-left",
+            "light",
+        );
     }
-
     return (
-        <Row justify="center" align="middle" style={{ minHeight: '100vh' }}>
-            <Col span={15}>
-                <Form
-                    name="login-form"
-                    initialValues={{ remember: true }}
-                    onFinish={onSubmit}
-                    labelCol={{ span: 8 }}
-                    wrapperCol={{ span: 16 }}
-                    className="rounded-form"
-                >
-                    <Form.Item
-                        label={"Nom"}
-                        name={"title"}
-                        rules={
-                            [
-                                {
-                                    required: true,
-                                    message: "Nom de l'éditeur",
-                                },
-                            ]
-                        }
+        <>
+            <Row className="login-form" justify="center" align="middle">
+                <h1 className="h1">Ajouter un Éditeur</h1>
+                    <Form
+                        name="login-form"
+                        initialValues={{ remember: true }}
+                        onFinish={onSubmit}
+                        labelCol={{ span: 8 }}
+                        wrapperCol={{ span: 25 }}
+                        className="content"
                     >
-                        <Input
-                            prefix={<BookOutlined/>}
-                            placeholder='Slate...'
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        label={"Description"}
-                        name={"description"}
-                        rules={
-                            [
-                                {
-                                    required: true,
-                                    message: "Description de l'éditeur",
-                                },
-                            ]
-                        }
-                    >
-                        <Input.TextArea
-                            placeholder='Slate est un magazine...'
-                        />
-                    </Form.Item>
+                        <Form.Item
+                            label={"Nom"}
+                            name={"title"}
+                            rules={
+                                [
+                                    {
+                                        required: true,
+                                        message: "Nom de l'éditeur",
+                                    },
+                                ]
+                            }
+                        >
+                            <Input
+                                prefix={<BookOutlined/>}
+                                placeholder='Slate...'
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            label={"Description"}
+                            name={"description"}
+                            rules={
+                                [
+                                    {
+                                        required: true,
+                                        message: "Description de l'éditeur",
+                                    },
+                                ]
+                            }
+                        >
+                            <Input.TextArea
+                                placeholder='Slate est un magazine...'
+                            />
+                        </Form.Item>
 
-                    <Form.Item
-                        label={"Type"}
-                        name={"type"}
-                        rules={
-                            [
-                                {
-                                    required: true,
-                                    message: "Type de l'éditeur",
-                                },
-                            ]
-                        }
-                    >
-                        <Select 
-                            defaultValue={selectFieldOptions[0]} 
-                            options={selectFieldOptions} 
-                        />
-                        <Input 
-                            placeholder="Média en ligne..." 
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        label={"Adresse"}
-                        name={"location"}
-                        rules={
-                            [
-                                {
-                                    required: true,
-                                    message: "Adresse de l'éditeur",
-                                },
-                            ]
-                        }
-                    >
-                        <Input
-                            prefix={<PushpinOutlined/>}
-                            placeholder="4 Rue Lapeyrère 75018, Paris" 
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        label={"Date de création"}
-                        name={"foundedAt"}
-                        rules={
-                            [
+                        <Form.Item
+                            label={"Type"}
+                            name={"type"}
+                            rules={[
                                 {
                                     required: false,
-                                    message: "Date de création de l'éditeur",
+                                    message: "Type de l'éditeur",
                                 },
-                            ]
-                        }
-                    >
-                        <DatePicker />
-                    </Form.Item>
-                    <Form.Item
-                        label={"Services de l'éditeur"}
-                        name={"services"}
-                        rules={
-                            [
-                                {
-                                    required: true,
-                                    message: "Services de l'éditeur",
-                                },
-                            ]
-                        }
-                    >
-                        <Switch
-                            checked={input}
-                            checkedChildren="Mono"
-                            unCheckedChildren="Multi"
-                            onChange={() => {
-                                setInput(!input);
-                            }}
-                        />
-                        <br/> 
-                        {input ? (
-                            <Input {...sharedProps} />
-                        ) : (
-                            <Input.TextArea {...sharedProps} />
-                        )}
-                    </Form.Item>
-                    <Form.Item wrapperCol={{ offset: 14, span: 10 }}>
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            className="submit-button"
+                            ]}
+    dependencies={['typeSwitch', 'selectField', 'inputField']}
+
                         >
-                            Envoyer
-                        </Button>
-                </Form.Item>
-                </Form>
-            </Col>
-        </Row>
+                            <Switch
+                                checked={typeSwitch}
+                                checkedChildren="Existant"
+                                unCheckedChildren="Nouveau"
+                                onChange={() => {
+                                    setTypeSwitch(!typeSwitch);
+                                }}
+                            />
+                            <br/> 
+                            {typeSwitch ? (
+                                <Select
+                                    placeholder="Choisir un type"
+                                    options={selectFieldOptions}
+                                    onSelect={value => setSelectValue(value)}
+                                />
+                            ) : (
+                                <Input
+                                    placeholder="Média en ligne..." 
+                                    onChange={event => setSelectValue(event?.target.value)}
+                                />
+                            )}
+                        </Form.Item>
+                        <Form.Item
+                            label={"Adresse"}
+                            name={"location"}
+                            rules={
+                                [
+                                    {
+                                        required: true,
+                                        message: "Adresse de l'éditeur",
+                                    },
+                                ]
+                            }
+                        >
+                            <Input
+                                prefix={<PushpinOutlined/>}
+                                placeholder="4 Rue Lapeyrère 75018, Paris" 
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            label={"Date de création"}
+                            name={"foundedAt"}
+                            rules={
+                                [
+                                    {
+                                        required: false,
+                                        message: "Date de création de l'éditeur",
+                                    },
+                                ]
+                            }
+                        >
+                            <DatePicker />
+                        </Form.Item>
+                        <Form.Item
+                            label={"Services de l'éditeur"}
+                            name={"services"}
+                            rules={
+                                [
+                                    {
+                                        required: false,
+                                        message: "Services de l'éditeur",
+                                    },
+                                ]
+                            }
+                        >
+                            <Switch
+                                checked={servicesSwitch}
+                                checkedChildren="Mono"
+                                unCheckedChildren="Multi"
+                                onChange={() => {
+                                    setServicesSwitch(!servicesSwitch);
+                                }}
+                            />
+                            <br/> 
+                            {servicesSwitch ? (
+                                
+                                <Input 
+                                    placeholder="Veuillez renseigner le(s) service(s) de l'éditeur."
+                                    onChange={event => setServicesValue(event?.target.value)}
+                                />
+                            ) : (
+                                <Input.TextArea 
+                                    placeholder="Veuillez renseigner le(s) service(s) de l'éditeur."
+                                    onChange={event => setServicesValue(event?.target.value)}
+
+                                />
+                            )}
+                        </Form.Item>
+                        <Form.Item wrapperCol={{ offset: 14, span: 10 }}>
+                            <Button
+                                className="submit-button"
+                                htmlType="submit"
+                            >
+                                Envoyer
+                            </Button>
+                    </Form.Item>
+                    </Form>
+            </Row>        
+        </>
     );
 };
 

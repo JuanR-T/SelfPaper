@@ -8,7 +8,6 @@ import {
 import { Author, AuthContextType, LoginResponse } from '../types/types';
 import { useLocalStorage } from '../lib/useLocalStorage';
 import { decodeToken } from 'react-jwt';
-import { toast } from 'react-toastify';
 import { handlePost } from '../api/handleCall';
 import { useNavigate } from 'react-router-dom';
 import toastProvider from '../lib/toastProvider';

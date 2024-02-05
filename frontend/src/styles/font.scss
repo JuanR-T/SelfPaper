@@ -1,0 +1,29 @@
+h1 {
+    font-family: $title-font;
+    font-size: $title-font-size-xl !important;
+    display: block;
+    text-transform: lowercase;
+    &::first-letter {
+        text-transform: uppercase;
+    }
+}
+h2 {
+    font-family: $title-font;
+    font-size: $title-font-size-md;
+    display: block;
+    text-transform: lowercase;
+    padding: 2rem 0rem;
+    &::first-letter {
+        text-transform: uppercase;
+    }
+}
+.page-title {
+    display: block;
+    font-family: $title-font;
+    font-size: $title-font-size-xl;
+    margin-bottom: 0.6rem;
+    text-transform: lowercase;
+    &::first-letter {
+        text-transform: uppercase;
+    }
+}

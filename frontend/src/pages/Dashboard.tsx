@@ -37,7 +37,7 @@ const Dashboard = () => {
                     ) : (
                         'Welcome to the dashboard'
                     )}
-                    <PublisherForm/>
+                    <PublisherForm />
                 </Content>
             </Layout>
         </Layout>
