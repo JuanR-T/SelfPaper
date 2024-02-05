@@ -6,7 +6,7 @@ const publisherSchema = new Schema({
     services: [{ type: String }], //DESC if publisher is devided in different services.
     type: { type: String, required: true }, //DESC newspaper, music platform...
     location: { type: String },
-    founded_at: { type: Date },
+    foundedAt: { type: Date },
 });
 
 const Publisher = model('Publisher', publisherSchema);
