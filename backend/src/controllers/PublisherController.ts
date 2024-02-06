@@ -27,10 +27,13 @@ export const getPublisherById = async (
 ): Promise<Response> => {
     try {
         const { id } = req.params;
-        if (!id || typeof id !== 'string') throw new Error('Could not get publisher by id. Wrong id.');
-        
+        if (!id || typeof id !== 'string')
+            throw new Error('Could not get publisher by id. Wrong id.');
+
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            throw new Error('Invalid theme ID format. Please provide a valid ID.');
+            throw new Error(
+                'Invalid theme ID format. Please provide a valid ID.',
+            );
         }
 
         const publisherById = await Publisher.findById(id);
@@ -50,7 +53,7 @@ export const createPublisher = async (
     req: Request,
     res: Response,
 ): Promise<Response> => {
-    console.log("request ez", req.body)
+    console.log('request ez', req.body);
     try {
         const newPublisher = await Publisher.create(req.body);
         if (!newPublisher)
@@ -68,10 +71,13 @@ export const deletePublisher = async (
 ): Promise<Response> => {
     try {
         const { id } = req.params;
-        if (!id || typeof id !== 'string') throw new Error('Could not delete publisher. Wrong id');
+        if (!id || typeof id !== 'string')
+            throw new Error('Could not delete publisher. Wrong id');
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            throw new Error('Invalid theme ID format. Please provide a valid ID.');
+            throw new Error(
+                'Invalid theme ID format. Please provide a valid ID.',
+            );
         }
 
         const deletedPublisher = await Publisher.findByIdAndDelete(id);
@@ -95,13 +101,17 @@ export const updatePublisher = async (
             throw new Error('Could not update publisher. Wrong id');
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            throw new Error('Invalid theme ID format. Please provide a valid ID.');
+            throw new Error(
+                'Invalid theme ID format. Please provide a valid ID.',
+            );
         }
-        
+        console.log("body", req.body);
         const updatedPublisher = await Publisher.findByIdAndUpdate(
             id,
             req.body,
+            { new: true, runValidators: true }
         );
+        console.log("updatedPublisher", updatedPublisher)
         if (!updatedPublisher) throw new Error('Could not update publisher');
 
         return res

@@ -24,14 +24,18 @@ export const getPublicationById = async (
 ): Promise<Response> => {
     try {
         const { id } = req.params;
-        if (!id || typeof id !== 'string') throw new Error('Publication id not found. Wrong request params');
+        if (!id || typeof id !== 'string')
+            throw new Error('Publication id not found. Wrong request params');
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            throw new Error('Invalid theme ID format. Please provide a valid ID.');
+            throw new Error(
+                'Invalid theme ID format. Please provide a valid ID.',
+            );
         }
 
         const publicationById = await Publication.findById(id);
-        if (!publicationById) throw new Error('Could not find this publication');
-        
+        if (!publicationById)
+            throw new Error('Could not find this publication');
+
         return res.status(200).json({ data: { found: true, publicationById } });
     } catch (err) {
         return handleControllerErrors(
@@ -83,7 +87,9 @@ export const updatePublication = async (
                 'Could not find publication id for update. Wrong id',
             );
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            throw new Error('Invalid theme ID format. Please provide a valid ID.');
+            throw new Error(
+                'Invalid theme ID format. Please provide a valid ID.',
+            );
         }
 
         const hasSameService = await checkPublisherService(req);
@@ -114,9 +120,12 @@ export const deletePublication = async (
 ): Promise<Response> => {
     try {
         const { id } = req.params;
-        if (!id || typeof id !== 'string') throw new Error('Could not delete publication. Wrong id');
+        if (!id || typeof id !== 'string')
+            throw new Error('Could not delete publication. Wrong id');
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            throw new Error('Invalid theme ID format. Please provide a valid ID.');
+            throw new Error(
+                'Invalid theme ID format. Please provide a valid ID.',
+            );
         }
 
         const deletedPublication = await Publication.findByIdAndDelete(id);

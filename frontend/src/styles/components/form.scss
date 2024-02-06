@@ -11,15 +11,40 @@
 
 .login-form {
     display: flex;
-    width: 70%;
-    padding: 50px;
+    width: 100%;
+    padding: 10px;
     flex-direction: column;
-    background: rgba(1, 70, 57, 0.767);
+    align-items: start;
     box-sizing: border-box;
-    box-shadow: 0 15px 25px;
+    //box-shadow: 0 15px 25px;
     border-radius: $border-radius-md;
     .content {
-        margin-top: 30px;
         width: 100%;
+        label {
+            margin: 5px 0px;
+        }
+        button {
+            margin: 10px 0px;
+        }
+        .ant-form-item-control-input-content {
+                margin: 20px 0px;
+        }
+        
+        > div {
+            background-color: rgba(0, 0, 255, 0);
+            width: 100%;
+            margin: 10px 0px;
+            > div {
+                display: flex;
+                flex-direction: column;
+                padding: 0px 0px 25px 0px;
+                > div {
+                    width: 100%;
+                    padding: 0px 0px 5px 0px;
+                    overflow: visible;
+                    text-align: start;
+                }
+            }
+        }
     }
 }
