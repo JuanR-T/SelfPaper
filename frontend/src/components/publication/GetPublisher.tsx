@@ -36,7 +36,26 @@ const GetPublisher: React.FC<CreatePublisherFormProps> = ({
     const [editingRowId, setEditingRowId] = useState<string | null>(null);
     const [isDeletingPublisher, setIsDeletingPublisher] =
         useState<boolean>(false);
-    const [editingRowData, setEditingRowData] = useState<any>();
+    const [isEditingPublisher, setIsEditingPublisher] =
+        useState<boolean>(false);
+    const [open, setOpen] = useState<boolean>(false);
+    const [editingRowData, setEditingRowData] = useState<Publisher>({
+        _id: '',
+        title: '',
+        description: '',
+        type: '',
+        location: '',
+        founded_at: '',
+        services: [],
+    });
+    const hide = () => {
+        setEditingRowId(null);
+        setOpen(false);
+    };
+    const handleOpenChange = (newOpen: boolean) => {
+        setOpen(newOpen);
+    }; 
+
     const { data: useQueryPublishers, refetch } = useQuery(
         'get_publishers',
         async () => {
@@ -70,6 +89,7 @@ const GetPublisher: React.FC<CreatePublisherFormProps> = ({
             );
             return undefined;
         }
+        setIsEditingPublisher(false);
         setEditingRowId(null);
         return updatedPublisher;
     };
@@ -96,11 +116,14 @@ const GetPublisher: React.FC<CreatePublisherFormProps> = ({
     const endIndex = startIndex + publishersPerPage;
     const currentPublishers = publishers?.slice(startIndex, endIndex);
 
-    const handleEditPublisherRow = (record: any) => {
+    const handleEditPublisherRow = (record: Publisher) => {
+        setIsEditingPublisher(true);
         setEditingRowData({ ...record });
         setEditingRowId(record._id);
     };
-
+    const handlePopoverRow = (record: Publisher) => {
+        setEditingRowId(record._id);
+    };
     useEffect(() => {
         const fetchData = async () => {
             await refetch();
@@ -116,7 +139,7 @@ const GetPublisher: React.FC<CreatePublisherFormProps> = ({
             width: '10%',
             editable: true,
             render: (text: string, record: Publisher) => {
-                return editingRowId === record._id ? (
+                return isEditingPublisher && editingRowId === record._id ? (
                     <Input
                         onChange={(e) => {
                             setEditingRowData({
@@ -136,7 +159,7 @@ const GetPublisher: React.FC<CreatePublisherFormProps> = ({
             dataIndex: 'description',
             width: '30%',
             render: (text: string, record: Publisher) => {
-                return editingRowId === record._id ? (
+                return isEditingPublisher && editingRowId === record._id ? (
                     <Input.TextArea
                         onChange={(e) => {
                             setEditingRowData({
@@ -156,7 +179,7 @@ const GetPublisher: React.FC<CreatePublisherFormProps> = ({
             dataIndex: 'location',
             width: '10%',
             render: (text: string, record: Publisher) => {
-                return editingRowId === record._id ? (
+                return isEditingPublisher && editingRowId === record._id ? (
                     <Input
                         onChange={(e) => {
                             setEditingRowData({
@@ -176,7 +199,7 @@ const GetPublisher: React.FC<CreatePublisherFormProps> = ({
             dataIndex: 'services',
             width: '10%',
             render: (text: string, record: Publisher) => {
-                return editingRowId === record._id ? (
+                return isEditingPublisher && editingRowId === record._id ? (
                     <Input.TextArea
                         onChange={(e) => {
                             setEditingRowData({
@@ -196,7 +219,7 @@ const GetPublisher: React.FC<CreatePublisherFormProps> = ({
             dataIndex: 'type',
             width: '10%',
             render: (text: string, record: Publisher) => {
-                return editingRowId === record._id ? (
+                return isEditingPublisher && editingRowId === record._id ? (
                     <Input
                         onChange={(e) => {
                             setEditingRowData({
@@ -216,7 +239,7 @@ const GetPublisher: React.FC<CreatePublisherFormProps> = ({
             dataIndex: 'founded_at',
             width: '10%',
             render: (text: string, record: Publisher) => {
-                return editingRowId === record._id ? (
+                return isEditingPublisher && editingRowId === record._id ? (
                     <DatePicker
                         onChange={(date: Dayjs | null) => {
                             if (date) {
@@ -228,7 +251,7 @@ const GetPublisher: React.FC<CreatePublisherFormProps> = ({
                             } else {
                                 setEditingRowData({
                                     ...editingRowData,
-                                    founded_at: null,
+                                    founded_at: '',
                                 });
                             }
                         }}
@@ -260,7 +283,7 @@ const GetPublisher: React.FC<CreatePublisherFormProps> = ({
                                 Êtes vous sûre de vouloir supprimer cet éditeur
                                 ?{' '}
                             </p>
-                            <Button>Annuler</Button>
+                            <Button onClick={hide}>Annuler</Button>
                             <Button onClick={() => deletePublisher(record)}>
                                 Confirmer
                             </Button>
@@ -272,14 +295,19 @@ const GetPublisher: React.FC<CreatePublisherFormProps> = ({
                         content={deleteContent(record)}
                         title="Suppression de l'éditeur"
                         trigger="click"
+                        open={editingRowId === record._id && open}
+                        onOpenChange={handleOpenChange}
                     >
-                        <a> Supprimer</a>
+                        <a onClick={() => handlePopoverRow(record)}>
+                            {' '}
+                            Supprimer
+                        </a>
                     </Popover>
                 );
 
                 return (
                     <>
-                        {editingRowId ? (
+                        {isEditingPublisher && editingRowId ? (
                             <>{saveButton}</>
                         ) : (
                             <>
