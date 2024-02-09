@@ -1,3 +1,5 @@
+/** Author */
+
 export interface Author {
     id: string;
     firstName: string;
@@ -6,6 +8,7 @@ export interface Author {
     password: string;
     phoneNumber: string;
 }
+/** Common */
 
 export interface AuthContextType {
     author?: Author | undefined;
@@ -31,3 +34,41 @@ export type LoginResponse = {
     token: string;
     msg: string;
 };
+
+/** Publisher */
+
+export interface PublisherApiResponse {
+    found: boolean;
+    publisher?: Publisher[];
+}
+export interface Publisher {
+    _id: string;
+    title: string;
+    description: string;
+    type: string;
+    location: string;
+    founded_at: string;
+    services?: string[];
+}
+
+export interface CreatePublisherFormProps {
+    refetchTrigger: boolean;
+}
+
+/** Themes */
+
+export interface ThemeApiResponse {
+    found: boolean;
+    theme?: Theme[];
+}
+
+export interface Theme {
+    _id: string;
+    title: string;
+    description: string;
+    image: Buffer | string;
+}
+
+export interface CreateThemeProps {
+    refetchTrigger: boolean;
+}

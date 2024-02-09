@@ -6,26 +6,12 @@ import toastProvider from '../../lib/toastProvider';
 import { useAuth } from '../../context/AuthContext';
 import dayjs, { Dayjs } from 'dayjs';
 import { WarningOutlined } from '@ant-design/icons';
-import Publisher from '../../pages/dashboard/Publisher';
-interface ApiResponse {
-    found: boolean;
-    publisher?: Publisher[];
-}
-//TODO make interface / type folder and import
+import {
+    PublisherApiResponse,
+    Publisher,
+    CreatePublisherFormProps,
+} from '../../types/types';
 //TODO clean this awfull code
-interface Publisher {
-    _id: string;
-    title: string;
-    description: string;
-    type: string;
-    location: string;
-    founded_at: string;
-    services?: string[];
-}
-
-interface CreatePublisherFormProps {
-    refetchTrigger: boolean;
-}
 
 const GetPublisher: React.FC<CreatePublisherFormProps> = ({
     refetchTrigger,
@@ -54,7 +40,7 @@ const GetPublisher: React.FC<CreatePublisherFormProps> = ({
     };
     const handleOpenChange = (newOpen: boolean) => {
         setOpen(newOpen);
-    }; 
+    };
 
     const { data: useQueryPublishers, refetch } = useQuery(
         'get_publishers',
@@ -110,7 +96,8 @@ const GetPublisher: React.FC<CreatePublisherFormProps> = ({
         return deletedPublisher;
     };
 
-    const publishers = (useQueryPublishers?.data as ApiResponse)?.publisher;
+    const publishers = (useQueryPublishers?.data as PublisherApiResponse)
+        ?.publisher;
     const publishersPerPage = 10;
     const startIndex = (currentPage - 1) * publishersPerPage;
     const endIndex = startIndex + publishersPerPage;
