@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import BookOutlined, { UploadOutlined } from '@ant-design/icons';
 import { handlePost } from '../../api/handleCall';
 import { Input, Form, Row, Button, Upload, message } from 'antd';
@@ -6,20 +6,18 @@ import toastProvider from '../../lib/toastProvider';
 interface CreateThemeProps {
     setRefetchTrigger: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const CreateTheme: React.FC<CreateThemeProps> = ({
-    setRefetchTrigger,
-}) => {
+const CreateTheme: React.FC<CreateThemeProps> = ({ setRefetchTrigger }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const onSubmit = async (values: any) => {
         await handlePost(`${BASE_URL}/api/theme/create`, {
             title: values.title,
             description: values.description,
-            image: values.image
+            image: values.image,
         });
         setRefetchTrigger(true);
         toastProvider(
             'success',
-            "Le thème a bien été créer !",
+            'Le thème a bien été créer !',
             'bottom-left',
             'light',
         );
@@ -41,7 +39,7 @@ const CreateTheme: React.FC<CreateThemeProps> = ({
                     rules={[
                         {
                             required: true,
-                            message: "Nom du thème",
+                            message: 'Nom du thème',
                         },
                     ]}
                 >
@@ -53,7 +51,7 @@ const CreateTheme: React.FC<CreateThemeProps> = ({
                     rules={[
                         {
                             required: true,
-                            message: "Description du thème",
+                            message: 'Description du thème',
                         },
                     ]}
                 >
@@ -66,7 +64,7 @@ const CreateTheme: React.FC<CreateThemeProps> = ({
                     rules={[
                         {
                             required: false,
-                            message: "Image",
+                            message: 'Image',
                         },
                     ]}
                     dependencies={['typeSwitch', 'selectField', 'inputField']}

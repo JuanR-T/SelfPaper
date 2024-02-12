@@ -1,19 +1,12 @@
 import { useEffect, useState } from 'react';
-import { handleDelete, handleGet, handlePut } from '../../api/handleCall';
-import {
-    Button,
-    Upload,
-    Input,
-    Pagination,
-    Popover,
-    Table,
-    message,
-} from 'antd';
+import { handleGet, handlePut } from '../../api/handleCall';
+import { Button, Upload, Input, Pagination, Table, message } from 'antd';
 import { useQuery } from 'react-query';
 import toastProvider from '../../lib/toastProvider';
 import { useAuth } from '../../context/AuthContext';
-import { WarningOutlined, UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined } from '@ant-design/icons';
 import { ThemeApiResponse, Theme, CreateThemeProps } from '../../types/types';
+import DeleteTheme from './DeleteThemes';
 
 const GetThemes: React.FC<CreateThemeProps> = ({ refetchTrigger }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -22,7 +15,6 @@ const GetThemes: React.FC<CreateThemeProps> = ({ refetchTrigger }) => {
     const [editingRowId, setEditingRowId] = useState<string | null>(null);
     const [isDeletingTheme, setIsDeletingTheme] = useState<boolean>(false);
     const [isEditingTheme, setIsEditingTheme] = useState<boolean>(false);
-    const [open, setOpen] = useState<boolean>(false);
 
     const [editingRowData, setEditingRowData] = useState<Theme>({
         _id: '',
@@ -30,13 +22,6 @@ const GetThemes: React.FC<CreateThemeProps> = ({ refetchTrigger }) => {
         description: '',
         image: '',
     });
-    const hide = () => {
-        setEditingRowId(null);
-        setOpen(false);
-    };
-    const handleOpenChange = (newOpen: boolean) => {
-        setOpen(newOpen);
-    };
 
     const { data: useQueryThemes, refetch } = useQuery(
         'get_themes',
@@ -75,22 +60,6 @@ const GetThemes: React.FC<CreateThemeProps> = ({ refetchTrigger }) => {
         setEditingRowId(null);
         return updatedTheme;
     };
-    const deleteTheme = async (record: any) => {
-        const deletedTheme = await handleDelete(
-            `${BASE_URL}/api/theme/delete/${record._id}`,
-        );
-        if (!deletedTheme || !deletedTheme.data) {
-            toastProvider(
-                'error',
-                'Une erreur est survenue pendant la suppression du thème. Veuillez réessayer.',
-                'bottom-left',
-                'colored',
-            );
-            return undefined;
-        }
-        setIsDeletingTheme(true);
-        return deletedTheme;
-    };
 
     const themes = (useQueryThemes?.data as ThemeApiResponse)?.theme;
     const themesPerPage = 10;
@@ -101,9 +70,6 @@ const GetThemes: React.FC<CreateThemeProps> = ({ refetchTrigger }) => {
     const handleEditThemeRow = (record: Theme) => {
         setIsEditingTheme(true);
         setEditingRowData({ ...record });
-        setEditingRowId(record._id);
-    };
-    const handlePopoverRow = (record: Theme) => {
         setEditingRowId(record._id);
     };
     useEffect(() => {
@@ -200,34 +166,6 @@ const GetThemes: React.FC<CreateThemeProps> = ({ refetchTrigger }) => {
                 const saveButton = (
                     <Button onClick={() => updateTheme()}>Sauvegarder</Button>
                 );
-                const deleteContent = (record: Theme) => {
-                    return (
-                        <>
-                            <WarningOutlined style={{ color: 'red' }} />
-                            <p>
-                                Êtes vous sûre de vouloir supprimer ce theme ?{' '}
-                            </p>
-                            <Button onClick={hide}>Annuler</Button>
-                            <Button onClick={() => deleteTheme(record)}>
-                                Confirmer
-                            </Button>
-                        </>
-                    );
-                };
-                const deleteButton = (
-                    <Popover
-                        content={deleteContent(record)}
-                        title="Suppression de l'éditeur"
-                        trigger="click"
-                        open={editingRowId === record._id && open}
-                        onOpenChange={handleOpenChange}
-                    >
-                        <a onClick={() => handlePopoverRow(record)}>
-                            {' '}
-                            Supprimer
-                        </a>
-                    </Popover>
-                );
 
                 return (
                     <>
@@ -236,7 +174,12 @@ const GetThemes: React.FC<CreateThemeProps> = ({ refetchTrigger }) => {
                         ) : (
                             <>
                                 {editButton}
-                                {deleteButton}
+                                <DeleteTheme
+                                    record={record}
+                                    setIsDeletingTheme={setIsDeletingTheme}
+                                    editingRowId={editingRowId}
+                                    setEditingRowId={setEditingRowId}
+                                />
                             </>
                         )}
                     </>

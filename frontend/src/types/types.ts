@@ -1,5 +1,6 @@
-/** Author */
+import { Dispatch, SetStateAction } from "react";
 
+/** Author */
 export interface Author {
     id: string;
     firstName: string;
@@ -71,4 +72,11 @@ export interface Theme {
 
 export interface CreateThemeProps {
     refetchTrigger: boolean;
+}
+
+export interface DeleteThemeProps {
+    record: Theme;
+    setIsDeletingTheme: Dispatch<SetStateAction<boolean>>;
+    editingRowId: string | null;
+    setEditingRowId: Dispatch<SetStateAction<string | null>>;
 }
