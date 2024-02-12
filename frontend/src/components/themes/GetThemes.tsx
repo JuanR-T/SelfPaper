@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { handleGet, handlePut } from '../../api/handleCall';
+import { handleGet } from '../../api/handleCall';
 import { Button, Upload, Input, Pagination, Table, message } from 'antd';
 import { useQuery } from 'react-query';
 import toastProvider from '../../lib/toastProvider';
@@ -7,6 +7,7 @@ import { useAuth } from '../../context/AuthContext';
 import { UploadOutlined } from '@ant-design/icons';
 import { ThemeApiResponse, Theme, CreateThemeProps } from '../../types/types';
 import DeleteTheme from './DeleteThemes';
+import UpdateThemes from './UpdateThemes';
 
 const GetThemes: React.FC<CreateThemeProps> = ({ refetchTrigger }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -42,24 +43,6 @@ const GetThemes: React.FC<CreateThemeProps> = ({ refetchTrigger }) => {
             return useQueryThemes;
         },
     );
-    const updateTheme = async () => {
-        const updatedTheme = await handlePut(
-            `${BASE_URL}/api/theme/update/${editingRowData._id}`,
-            { ...editingRowData },
-        );
-        if (!updatedTheme || !updatedTheme.data) {
-            toastProvider(
-                'error',
-                'Une erreur est survenue pendant la mise à jour du thème. Veuillez réessayer.',
-                'bottom-left',
-                'colored',
-            );
-            return undefined;
-        }
-        setIsEditingTheme(false);
-        setEditingRowId(null);
-        return updatedTheme;
-    };
 
     const themes = (useQueryThemes?.data as ThemeApiResponse)?.theme;
     const themesPerPage = 10;
@@ -67,11 +50,6 @@ const GetThemes: React.FC<CreateThemeProps> = ({ refetchTrigger }) => {
     const endIndex = startIndex + themesPerPage;
     const currentThemes = themes?.slice(startIndex, endIndex);
 
-    const handleEditThemeRow = (record: Theme) => {
-        setIsEditingTheme(true);
-        setEditingRowData({ ...record });
-        setEditingRowId(record._id);
-    };
     useEffect(() => {
         const fetchData = async () => {
             await refetch();
@@ -159,29 +137,23 @@ const GetThemes: React.FC<CreateThemeProps> = ({ refetchTrigger }) => {
             title: 'Actions',
             width: '15%',
             render: (record: Theme) => {
-                const editButton = (
-                    <a onClick={() => handleEditThemeRow(record)}>Éditer</a>
-                );
-
-                const saveButton = (
-                    <Button onClick={() => updateTheme()}>Sauvegarder</Button>
-                );
-
                 return (
                     <>
-                        {isEditingTheme && editingRowId ? (
-                            <>{saveButton}</>
-                        ) : (
-                            <>
-                                {editButton}
-                                <DeleteTheme
-                                    record={record}
-                                    setIsDeletingTheme={setIsDeletingTheme}
-                                    editingRowId={editingRowId}
-                                    setEditingRowId={setEditingRowId}
-                                />
-                            </>
-                        )}
+                        <UpdateThemes
+                            record={record}
+                            isEditingTheme={isEditingTheme}
+                            editingRowId={editingRowId}
+                            editingRowData={editingRowData}
+                            setIsEditingTheme={setIsEditingTheme}
+                            setEditingRowId={setEditingRowId}
+                            setEditingRowData={setEditingRowData}
+                        />
+                        <DeleteTheme
+                            record={record}
+                            setIsDeletingTheme={setIsDeletingTheme}
+                            editingRowId={editingRowId}
+                            setEditingRowId={setEditingRowId}
+                        />
                     </>
                 );
             },

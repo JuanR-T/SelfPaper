@@ -80,3 +80,12 @@ export interface DeleteThemeProps {
     editingRowId: string | null;
     setEditingRowId: Dispatch<SetStateAction<string | null>>;
 }
+export interface UpdateThemeProps {
+    record: Theme;
+    editingRowId: string | null;
+    isEditingTheme: boolean;
+    editingRowData: Theme;
+    setIsEditingTheme: Dispatch<SetStateAction<boolean>>;
+    setEditingRowId: Dispatch<SetStateAction<string | null>>;
+    setEditingRowData: Dispatch<SetStateAction<Theme>>;
+}
