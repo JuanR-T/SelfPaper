@@ -247,7 +247,7 @@ const GetThemes: React.FC<CreateThemeProps> = ({ refetchTrigger }) => {
 
     return (
         <div style={{ width: '100%' }}>
-            <h2>Mes Themes</h2>
+            <h2>Mes Thèmes</h2>
             {currentThemes ? (
                 <>
                     <Table
@@ -270,7 +270,7 @@ const GetThemes: React.FC<CreateThemeProps> = ({ refetchTrigger }) => {
                     />
                 </>
             ) : (
-                <>Chargement des Themes...</>
+                <>Chargement des Thèmes...</>
             )}
         </div>
     );
