@@ -1,7 +1,7 @@
 import { Layout } from 'antd';
 import { useState } from 'react';
-import GetThemes from '../../components/themes/GetThemes';
-import CreateTheme from '../../components/themes/CreateThemes';
+import GetThemes from '../../components/dashboard/themes/GetThemes';
+import CreateTheme from '../../components/dashboard/themes/CreateThemes';
 
 const Themes = () => {
     const [refetchTrigger, setRefetchTrigger] = useState(false);
@@ -10,7 +10,7 @@ const Themes = () => {
         <Layout
             style={{ minHeight: '100vh', width: '100%', alignItems: 'center' }}
         >
-            <CreateTheme setRefetchTrigger={setRefetchTrigger}/>
+            <CreateTheme setRefetchTrigger={setRefetchTrigger} />
             <GetThemes refetchTrigger={refetchTrigger} />
         </Layout>
     );

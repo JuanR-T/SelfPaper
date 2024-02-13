@@ -1,21 +1,19 @@
 import { useEffect, useState } from 'react';
-import { handleDelete, handleGet, handlePut } from '../../api/handleCall';
+import { handleDelete, handleGet, handlePut } from '../../../api/handleCall';
 import { Button, DatePicker, Input, Pagination, Popover, Table } from 'antd';
 import { useQuery } from 'react-query';
-import toastProvider from '../../lib/toastProvider';
-import { useAuth } from '../../context/AuthContext';
+import toastProvider from '../../../lib/toastProvider';
+import { useAuth } from '../../../context/AuthContext';
 import dayjs, { Dayjs } from 'dayjs';
 import { WarningOutlined } from '@ant-design/icons';
 import {
     PublisherApiResponse,
     Publisher,
-    CreatePublisherFormProps,
-} from '../../types/types';
+    RefetchTriggerProps,
+} from '../../../types/types';
 //TODO clean this awfull code
 
-const GetPublisher: React.FC<CreatePublisherFormProps> = ({
-    refetchTrigger,
-}) => {
+const GetPublisher: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { getConfig } = useAuth();
     const [currentPage, setCurrentPage] = useState<number>(1);

@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import BookOutlined, { UploadOutlined } from '@ant-design/icons';
-import { handlePost } from '../../api/handleCall';
+import { handlePost } from '../../../api/handleCall';
 import { Input, Form, Row, Button, Upload, message } from 'antd';
-import toastProvider from '../../lib/toastProvider';
-interface CreateThemeProps {
-    setRefetchTrigger: React.Dispatch<React.SetStateAction<boolean>>;
-}
-const CreateTheme: React.FC<CreateThemeProps> = ({
+import toastProvider from '../../../lib/toastProvider';
+import { SetRefetchTriggerProps } from '../../../types/types';
+
+const CreateTheme: React.FC<SetRefetchTriggerProps> = ({
     setRefetchTrigger,
 }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -14,12 +13,12 @@ const CreateTheme: React.FC<CreateThemeProps> = ({
         await handlePost(`${BASE_URL}/api/theme/create`, {
             title: values.title,
             description: values.description,
-            image: values.image
+            image: values.image,
         });
         setRefetchTrigger(true);
         toastProvider(
             'success',
-            "Le thème a bien été créer !",
+            'Le thème a été créé avec succès !',
             'bottom-left',
             'light',
         );
@@ -41,7 +40,7 @@ const CreateTheme: React.FC<CreateThemeProps> = ({
                     rules={[
                         {
                             required: true,
-                            message: "Nom du thème",
+                            message: 'Nom du thème',
                         },
                     ]}
                 >
@@ -53,7 +52,7 @@ const CreateTheme: React.FC<CreateThemeProps> = ({
                     rules={[
                         {
                             required: true,
-                            message: "Description du thème",
+                            message: 'Description du thème',
                         },
                     ]}
                 >
@@ -66,7 +65,7 @@ const CreateTheme: React.FC<CreateThemeProps> = ({
                     rules={[
                         {
                             required: false,
-                            message: "Image",
+                            message: 'Image',
                         },
                     ]}
                     dependencies={['typeSwitch', 'selectField', 'inputField']}

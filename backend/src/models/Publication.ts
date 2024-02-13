@@ -4,7 +4,7 @@ const publicationSchema = new Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     thumbnail: { type: Buffer || String },
-    post_image: { type: Buffer || String },
+    postImage: { type: Buffer || String },
     type: [{ type: String, required: true }], //DESC article, podcast...
     theme: [
         {
@@ -14,7 +14,7 @@ const publicationSchema = new Schema({
         },
     ], //DESC Musique, Cinéma, Société, Féminisme, Racisme...
     excerpt: { type: String },
-    publication_date: { type: Date, required: true },
+    publicationDate: { type: Date, required: true },
     publisher: [
         {
             _id: {
