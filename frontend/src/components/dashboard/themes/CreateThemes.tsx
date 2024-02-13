@@ -1,12 +1,13 @@
 import React from 'react';
 import BookOutlined, { UploadOutlined } from '@ant-design/icons';
-import { handlePost } from '../../api/handleCall';
+import { handlePost } from '../../../api/handleCall';
 import { Input, Form, Row, Button, Upload, message } from 'antd';
-import toastProvider from '../../lib/toastProvider';
-interface CreateThemeProps {
-    setRefetchTrigger: React.Dispatch<React.SetStateAction<boolean>>;
-}
-const CreateTheme: React.FC<CreateThemeProps> = ({ setRefetchTrigger }) => {
+import toastProvider from '../../../lib/toastProvider';
+import { SetRefetchTriggerProps } from '../../../types/types';
+
+const CreateTheme: React.FC<SetRefetchTriggerProps> = ({
+    setRefetchTrigger,
+}) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const onSubmit = async (values: any) => {
         await handlePost(`${BASE_URL}/api/theme/create`, {
@@ -17,7 +18,7 @@ const CreateTheme: React.FC<CreateThemeProps> = ({ setRefetchTrigger }) => {
         setRefetchTrigger(true);
         toastProvider(
             'success',
-            'Le thème a bien été créer !',
+            'Le thème a été créé avec succès !',
             'bottom-left',
             'light',
         );

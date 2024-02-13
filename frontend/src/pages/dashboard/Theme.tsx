@@ -1,7 +1,7 @@
 import { Layout } from 'antd';
 import { useState } from 'react';
-import GetThemes from '../../components/themes/GetThemes';
-import CreateTheme from '../../components/themes/CreateThemes';
+import GetThemes from '../../components/dashboard/themes/GetThemes';
+import CreateTheme from '../../components/dashboard/themes/CreateThemes';
 
 const Themes = () => {
     const [refetchTrigger, setRefetchTrigger] = useState(false);

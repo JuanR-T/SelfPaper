@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import BookOutlined, { PushpinOutlined } from '@ant-design/icons';
-import { handlePost } from '../../api/handleCall';
+import { handlePost } from '../../../api/handleCall';
 import { Input, Switch, Form, Select, Row, DatePicker, Button } from 'antd';
-import '../../styles/main.css';
-import toastProvider from '../../lib/toastProvider';
+import toastProvider from '../../../lib/toastProvider';
 interface CreatePublisherFormProps {
     setRefetchTrigger: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -45,7 +44,7 @@ const CreatePublisherForm: React.FC<CreatePublisherFormProps> = ({
         setRefetchTrigger(true);
         toastProvider(
             'success',
-            "L'éditeur a bien été créer !",
+            "L'éditeur a été créé avec succès !",
             'bottom-left',
             'light',
         );

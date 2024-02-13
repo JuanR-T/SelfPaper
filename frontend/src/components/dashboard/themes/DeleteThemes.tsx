@@ -1,10 +1,10 @@
 import { Button, Popover } from 'antd';
-import { handleDelete } from '../../api/handleCall';
-import toastProvider from '../../lib/toastProvider';
+import { handleDelete } from '../../../api/handleCall';
+import toastProvider from '../../../lib/toastProvider';
 import { WarningOutlined } from '@ant-design/icons';
-import { Theme } from '../../types/types';
+import { Theme } from '../../../types/types';
 import { useState } from 'react';
-import { DeleteThemeProps } from '../../types/types';
+import { DeleteThemeProps } from '../../../types/types';
 
 const DeleteTheme = ({
     record,

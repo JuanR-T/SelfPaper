@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react';
-import { handleGet } from '../../api/handleCall';
+import { handleGet } from '../../../api/handleCall';
 import { Button, Upload, Input, Pagination, Table, message } from 'antd';
 import { useQuery } from 'react-query';
-import toastProvider from '../../lib/toastProvider';
-import { useAuth } from '../../context/AuthContext';
+import toastProvider from '../../../lib/toastProvider';
+import { useAuth } from '../../../context/AuthContext';
 import { UploadOutlined } from '@ant-design/icons';
-import { ThemeApiResponse, Theme, CreateThemeProps } from '../../types/types';
+import {
+    ThemeApiResponse,
+    Theme,
+    RefetchTriggerProps,
+} from '../../../types/types';
 import DeleteTheme from './DeleteThemes';
 import UpdateThemes from './UpdateThemes';
 
-const GetThemes: React.FC<CreateThemeProps> = ({ refetchTrigger }) => {
+const GetThemes: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { getConfig } = useAuth();
     const [currentPage, setCurrentPage] = useState<number>(1);

@@ -1,4 +1,12 @@
 import { Dispatch, SetStateAction } from "react";
+/** Misc */
+
+export interface RefetchTriggerProps {
+    refetchTrigger: boolean;
+}
+export interface SetRefetchTriggerProps {
+    setRefetchTrigger: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 /** Author */
 export interface Author {
@@ -43,6 +51,7 @@ export interface PublisherApiResponse {
     publisher?: Publisher[];
 }
 export interface Publisher {
+    [x: string]: any;
     _id: string;
     title: string;
     description: string;
@@ -52,15 +61,15 @@ export interface Publisher {
     services?: string[];
 }
 
-export interface CreatePublisherFormProps {
-    refetchTrigger: boolean;
-}
-
 /** Themes */
 
 export interface ThemeApiResponse {
     found: boolean;
     theme?: Theme[];
+}
+export interface PublicationApiResponse {
+    found: boolean;
+    publication?: Publication[];
 }
 
 export interface Theme {
@@ -68,10 +77,6 @@ export interface Theme {
     title: string;
     description: string;
     image: Buffer | string;
-}
-
-export interface CreateThemeProps {
-    refetchTrigger: boolean;
 }
 
 export interface DeleteThemeProps {
@@ -88,4 +93,37 @@ export interface UpdateThemeProps {
     setIsEditingTheme: Dispatch<SetStateAction<boolean>>;
     setEditingRowId: Dispatch<SetStateAction<string | null>>;
     setEditingRowData: Dispatch<SetStateAction<Theme>>;
+}
+
+/** Publications */
+
+export interface Publication {
+    _id: string;
+    title: string,
+    description: string,
+    thumbnail: Buffer | string ,
+    postImage: Buffer | string ,
+    type: string[],
+    theme: Theme,
+    excerpt: string,
+    publicationDate: string,
+    publisher: Publisher,
+    author: Author
+}
+
+export interface UpdatePublicationsProps {
+    record: Publication;
+    editingRowId: string | null;
+    isEditingPublication: boolean;
+    editingRowData: Publication;
+    setIsEditingPublication: Dispatch<SetStateAction<boolean>>;
+    setEditingRowId: Dispatch<SetStateAction<string | null>>;
+    setEditingRowData: Dispatch<SetStateAction<Publication>>;
+}
+
+export interface DeletePublicationsProps {
+    record: Publication;
+    setIsDeletingPublication: Dispatch<SetStateAction<boolean>>;
+    editingRowId: string | null;
+    setEditingRowId: Dispatch<SetStateAction<string | null>>;
 }

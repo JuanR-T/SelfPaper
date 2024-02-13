@@ -1,6 +1,6 @@
 import { ReactElement, useState } from 'react';
-import CreatePublisherForm from '../../components/publisher/CreatePublisher';
-import GetPublisher from '../../components/publisher/GetPublisher';
+import CreatePublisherForm from '../../components/dashboard/publisher/CreatePublisher';
+import GetPublisher from '../../components/dashboard/publisher/GetPublisher';
 
 import { Layout } from 'antd';
 

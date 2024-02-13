@@ -1,7 +1,7 @@
 import { Button } from 'antd';
-import { handlePut } from '../../api/handleCall';
-import toastProvider from '../../lib/toastProvider';
-import { Theme, UpdateThemeProps } from '../../types/types';
+import { handlePut } from '../../../api/handleCall';
+import toastProvider from '../../../lib/toastProvider';
+import { Theme, UpdateThemeProps } from '../../../types/types';
 
 const UpdateThemes = ({
     record,
