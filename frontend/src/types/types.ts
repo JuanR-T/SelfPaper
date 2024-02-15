@@ -69,7 +69,7 @@ export interface ThemeApiResponse {
 }
 export interface PublicationApiResponse {
     found: boolean;
-    publication?: Publication[];
+    publications?: Publication[];
 }
 
 export interface Theme {
@@ -108,7 +108,7 @@ export interface Publication {
     excerpt: string,
     publicationDate: string,
     publisher: Publisher,
-    author: Author
+    author: string | undefined
 }
 
 export interface UpdatePublicationsProps {
