@@ -113,7 +113,6 @@ export const loginAuthor = async (
             `${process.env.JWT_SECRET_KEY}`,
             { expiresIn: '1h' },
         );
-        console.log('token', token);
         return res.status(200).json({ data: { authenticated: true, token } });
     } catch (err) {
         return handleControllerErrors(err, res, 'Could not log in Author.');

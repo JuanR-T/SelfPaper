@@ -3,6 +3,9 @@ import Publication from '../models/Publication';
 import { handleControllerErrors } from '../utils/handleControllerErrors';
 import { checkPublisherService } from '../utils/publisherHasSameService';
 import mongoose from 'mongoose';
+import Author from '../models/Author';
+import Theme from '../models/Theme';
+import Publisher from '../models/Publisher';
 
 export const getPublication = async (
     req: Request,
@@ -10,9 +13,23 @@ export const getPublication = async (
 ): Promise<Response> => {
     try {
         const publication = await Publication.find({});
-        if (!publication) throw new Error("Couldn't find any publications");
 
-        return res.status(200).json({ data: { found: true, publication } });
+        if (!publication) throw new Error("Couldn't find any publications");
+        
+        const publications = await Promise.all(publication.map(async (publication) => {
+            const author = await Author.findById(publication.author);
+            const theme = await Theme.findById(publication.theme);
+            const publisher = await Publisher.findById(publication.publisher);
+            //TODO make it generic for other models
+            const formattedPublicationDate = new Date(publication.publicationDate).toLocaleDateString('fr-FR', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+            });
+            return { ...publication.toObject(), publicationDate: formattedPublicationDate, theme, publisher, author };
+        }));
+        console.log("publications", publications)
+        return res.status(200).json({ data: { found: true, publications } });
     } catch (err) {
         return handleControllerErrors(err, res, 'Publications not found');
     }
@@ -52,13 +69,13 @@ export const createPublication = async (
 ): Promise<Response> => {
     try {
         const hasSameService = await checkPublisherService(req);
-
+        console.log("hasSameService", hasSameService)
         if (!hasSameService) {
             throw new Error(
                 'Publisher service from request does not match existing publisher service',
             );
         }
-
+        console.log("req.body", req.body)
         const newPublication = await Publication.create(req.body);
 
         if (!newPublication)
