@@ -61,14 +61,7 @@ const GetPublications: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
             founded_at: '',
             services: [''],
         },
-        author: {
-            id: '',
-            firstName: '',
-            lastName: '',
-            email: '',
-            password: '',
-            phoneNumber: '',
-        },
+        author: author?.id,
     });
     const { data: useQueryThemes }: any = useQuery('get_themes', async () => {
         const useQueryThemes = await handleGet(
@@ -124,18 +117,15 @@ const GetPublications: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
             return useQueryPublications;
         },
     );
+        
     const publications = (useQueryPublications?.data as PublicationApiResponse)
-        ?.publication;
+        ?.publications;
     const publicationsPerPage = 10;
     const startIndex = (currentPage - 1) * publicationsPerPage;
     const endIndex = startIndex + publicationsPerPage;
     const currentPublications = publications?.slice(startIndex, endIndex);
-    console.log(currentPublications, 'currentPublications');
-    console.log(
-        'useQueryPublishers?.data.publisher',
-        useQueryPublishers?.data.publisher,
-    );
-
+    const publishers = useQueryPublishers?.data.publisher;
+    console.log(publishers, "publishers")
     useEffect(() => {
         const fetchData = async () => {
             await refetch();
@@ -347,29 +337,22 @@ const GetPublications: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
             dataIndex: 'publisher',
             width: '30%',
             render: (text: string, record: Publication) => {
+                console.log(useQueryPublishers?.publisher)
                 return isEditingPublication && editingRowId === record._id ? (
                     <Select
                         placeholder="Choisir un éditeur"
                         onSelect={(value) => setSelectPublisherValue(value)}
                     >
-                        {useQueryPublishers?.data?.publisher.map(
-                            (item: any) => (
-                                <Select.Option key={item._id} value={item._id}>
-                                    {item.title}
+                        {publishers?.map(
+                            (publisher: any) => (
+                                <Select.Option key={publisher._id} value={publisher._id}>
+                                    {publisher.title}
                                 </Select.Option>
                             ),
                         )}
                     </Select>
                 ) : (
-                    useQueryPublishers?.data?.publisher.map((item: any) => {
-                        if (
-                            record.publisher
-                                .map((publi: any) => publi._id)
-                                .includes(item._id)
-                        ) {
-                            return item.title;
-                        }
-                    })
+                    record.publisher.title
                 );
             },
         },
@@ -378,31 +361,9 @@ const GetPublications: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
             dataIndex: 'author',
             width: '30%',
             render: (text: string, record: Publication) => {
-                console.log('record', record);
-                return isEditingPublication && editingRowId === record._id ? (
-                    <Select
-                        placeholder="Choisir un auteur"
-                        onSelect={(value) => setSelectPublisherValue(value)}
-                    >
-                        {useQueryPublishers?.data?.publisher.map(
-                            (item: any) => (
-                                <Select.Option key={item._id} value={item._id}>
-                                    {item.title}
-                                </Select.Option>
-                            ),
-                        )}
-                    </Select>
-                ) : (
-                    useQueryPublishers?.data?.publisher.map((item: any) => {
-                        if (
-                            record.publisher
-                                .map((publi: any) => publi._id)
-                                .includes(item._id)
-                        ) {
-                            return item.title;
-                        }
-                    })
-                );
+                return (
+                    useQueryPublications?.data
+                )
             },
         },
         {

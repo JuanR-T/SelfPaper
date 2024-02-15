@@ -105,13 +105,11 @@ export const updatePublisher = async (
                 'Invalid theme ID format. Please provide a valid ID.',
             );
         }
-        console.log("body", req.body);
         const updatedPublisher = await Publisher.findByIdAndUpdate(
             id,
             req.body,
             { new: true, runValidators: true }
         );
-        console.log("updatedPublisher", updatedPublisher)
         if (!updatedPublisher) throw new Error('Could not update publisher');
 
         return res

@@ -5,7 +5,7 @@ import Publisher from '../models/Publisher';
 
 interface PublisherRequestBody {
     _id: string;
-    service: any;
+    service: string;
 }
 
 export const checkPublisherService = async (req: Request): Promise<boolean> => {
@@ -18,19 +18,18 @@ export const checkPublisherService = async (req: Request): Promise<boolean> => {
             );
         }
 
-        const requestPublishers =
-            (req.body.publisher as PublisherRequestBody[]) || [];
-
-        const hasSameService = publishers.some((publisher) => {
-            return requestPublishers.some(
-                (requestPublisher) =>
-                    publisher._id.equals(requestPublisher._id) &&
+        const requestPublishers: PublisherRequestBody =
+            (req.body.publisher) || [];
+            const hasSameService = publishers.some((publisher) => {
+            console.log("coucouc",  publisher.services, requestPublishers.service)
+            return (
+                    publisher._id.equals(requestPublishers._id) &&
                     publisher.services.some(
                         (service) =>
                             service.toLowerCase() ===
-                            requestPublisher.service.toLowerCase(),
-                    ),
-            );
+                            requestPublishers.service.toLowerCase(),
+                    ))
+
         });
 
         return hasSameService;

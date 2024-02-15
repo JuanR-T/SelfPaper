@@ -110,7 +110,6 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
             'light',
         );
     };
-
     const getAuthorFromToken = (token: string) => {
         if (!token) return logOut();
 
@@ -119,7 +118,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
         setAuthor(decodedToken?.author);
     };
-
+    console.log("authoooor", author)
     useEffect(() => {
         const authorToken = getItem('token');
 

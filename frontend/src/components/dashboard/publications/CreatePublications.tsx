@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { SetStateAction, useState } from 'react';
 import BookOutlined, { UploadOutlined } from '@ant-design/icons';
 import { handleGet, handlePost } from '../../../api/handleCall';
 import {
@@ -10,9 +10,10 @@ import {
     message,
     Select,
     DatePicker,
+    Cascader,
 } from 'antd';
 import toastProvider from '../../../lib/toastProvider';
-import { SetRefetchTriggerProps } from '../../../types/types';
+import { Publisher, SetRefetchTriggerProps } from '../../../types/types';
 import { useQuery } from 'react-query';
 import { useAuth } from '../../../context/AuthContext';
 import dayjs, { Dayjs } from 'dayjs';
@@ -24,7 +25,7 @@ const CreatePublication: React.FC<SetRefetchTriggerProps> = ({
     const { getConfig, author } = useAuth();
     const [selectThemeValue, setSelectThemeValue] = useState('');
     const [publicationDateValue, setPublicationDateValue] = useState('');
-    const [selectPublisherValue, setSelectPublisherValue] = useState('');
+    const [selectPublisherValue, setSelectPublisherValue] = useState<any>({});
 
     const { data: useQueryThemes }: any = useQuery('get_themes', async () => {
         const useQueryThemes = await handleGet(
@@ -61,6 +62,9 @@ const CreatePublication: React.FC<SetRefetchTriggerProps> = ({
             return useQueryPublishers;
         },
     );
+    console.log('useQueryThemes', useQueryThemes);
+    console.log('useQueryPublishers', useQueryPublishers);
+
     const onSubmit = async (values: any) => {
         await handlePost(`${BASE_URL}/api/publication/create`, {
             title: values.title,
@@ -72,7 +76,7 @@ const CreatePublication: React.FC<SetRefetchTriggerProps> = ({
             excerpt: values.excerpt,
             publicationDate: publicationDateValue,
             publisher: selectPublisherValue,
-            author: '', //TODO add author here
+            author: author?.id,
         });
         setRefetchTrigger(true);
         toastProvider(
@@ -82,6 +86,8 @@ const CreatePublication: React.FC<SetRefetchTriggerProps> = ({
             'light',
         );
     };
+
+    console.log("selectPublisherValue", selectPublisherValue)
     return (
         <Row className="login-form">
             <h1 className="h1">Ajouter une publication</h1>
@@ -120,7 +126,6 @@ const CreatePublication: React.FC<SetRefetchTriggerProps> = ({
                 >
                     <Input.TextArea placeholder="Résumé de la publication" />
                 </Form.Item>
-
                 <Form.Item
                     label={'Thumbnail'}
                     name={'thumbnail'}
@@ -209,7 +214,12 @@ const CreatePublication: React.FC<SetRefetchTriggerProps> = ({
                 >
                     <Select
                         placeholder="Choisir un type"
-                        options={useQueryThemes?.data}
+                        options={useQueryThemes?.data.theme.map(
+                            (item: any) => ({
+                                value: item._id,
+                                label: item.title,
+                            }),
+                        )}
                         onSelect={(value) => setSelectThemeValue(value)}
                     />
                 </Form.Item>
@@ -258,10 +268,26 @@ const CreatePublication: React.FC<SetRefetchTriggerProps> = ({
                         },
                     ]}
                 >
-                    <Select
-                        placeholder="Choisir un éditeur"
-                        options={useQueryPublishers?.data}
-                        onSelect={(value) => setSelectPublisherValue(value)}
+                    <Cascader
+                        placeholder="Editeur / Service"
+                        options={useQueryPublishers?.data.publisher.map(
+                            (publisher: Publisher) => ({
+                                value: publisher._id,
+                                label: publisher.title,
+                                children: publisher.services?.map(
+                                    (services: any) => ({
+                                        value: services,
+                                        label: services,
+                                    }),
+                                ),
+                            }),
+                        )}
+                        expandTrigger="hover"
+                        onChange={(value) => {
+                            const [_id, service] = value;
+                            const selectedPublisher = {_id, service};
+                            setSelectPublisherValue(selectedPublisher);
+                        }}
                     />
                 </Form.Item>
                 <Form.Item wrapperCol={{ offset: 0 }}>
