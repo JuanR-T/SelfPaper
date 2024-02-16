@@ -118,7 +118,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
         setAuthor(decodedToken?.author);
     };
-    console.log("authoooor", author)
+
     useEffect(() => {
         const authorToken = getItem('token');
 

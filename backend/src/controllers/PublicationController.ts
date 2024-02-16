@@ -11,6 +11,7 @@ export const getPublication = async (
     req: Request,
     res: Response,
 ): Promise<Response> => {
+    //TODO return the matching publisher services from the publication, it returns everything now
     try {
         const publication = await Publication.find({});
 

@@ -3,7 +3,6 @@ import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-//import './LoginForm.css'; // Create a CSS file for custom styling
 
 const LoginForm: React.FC = () => {
     const navigate = useNavigate();

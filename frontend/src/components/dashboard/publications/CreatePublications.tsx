@@ -86,11 +86,11 @@ const CreatePublication: React.FC<SetRefetchTriggerProps> = ({
             'light',
         );
     };
-
-    console.log("selectPublisherValue", selectPublisherValue)
+    //TODO Faire de ce component une modale
+    console.log('selectPublisherValue', selectPublisherValue);
     return (
         <Row className="login-form">
-            <h1 className="h1">Ajouter une publication</h1>
+            <h2>Ajouter une publication</h2>
             <Form
                 name="login-form"
                 initialValues={{ remember: true }}
@@ -285,7 +285,7 @@ const CreatePublication: React.FC<SetRefetchTriggerProps> = ({
                         expandTrigger="hover"
                         onChange={(value) => {
                             const [_id, service] = value;
-                            const selectedPublisher = {_id, service};
+                            const selectedPublisher = { _id, service };
                             setSelectPublisherValue(selectedPublisher);
                         }}
                     />

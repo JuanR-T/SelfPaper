@@ -1,0 +1,17 @@
+.content-container {
+    height: 60vh;
+    width: 100%;
+    padding: 20px 0px;
+    display: flex;
+    justify-content: space-between;
+    .content-description {
+        height: 100%;
+        width: 49%;
+        background-color: $nightblue-color;
+    }
+    .content-annex {
+        background-color: $grey-color;
+        width: 49%;
+        height: 100%;
+    }
+}
