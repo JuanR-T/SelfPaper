@@ -1,14 +1,16 @@
+body {
+    margin: 0px;
+}
 h1 {
     font-family: $title-font;
     font-size: $title-font-size-xl !important;
     display: block;
-    text-transform: lowercase;
     &::first-letter {
         text-transform: uppercase;
     }
 }
 h2 {
-    font-family: $title-font;
+    font-family: $title-font-h2;
     font-size: $title-font-size-md;
     display: block;
     text-transform: lowercase;
@@ -16,6 +18,10 @@ h2 {
     &::first-letter {
         text-transform: uppercase;
     }
+}
+p {
+    font-family: $text-font;
+    font-size: $title-font-size-xs;
 }
 .page-title {
     display: block;

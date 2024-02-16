@@ -19,6 +19,7 @@ import {
     Publication,
     RefetchTriggerProps,
     PublicationApiResponse,
+    Author,
 } from '../../../types/types';
 import dayjs, { Dayjs } from 'dayjs';
 import UpdatePublications from './UpdatePublications';
@@ -117,7 +118,7 @@ const GetPublications: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
             return useQueryPublications;
         },
     );
-        
+
     const publications = (useQueryPublications?.data as PublicationApiResponse)
         ?.publications;
     const publicationsPerPage = 10;
@@ -125,7 +126,7 @@ const GetPublications: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
     const endIndex = startIndex + publicationsPerPage;
     const currentPublications = publications?.slice(startIndex, endIndex);
     const publishers = useQueryPublishers?.data.publisher;
-    console.log(publishers, "publishers")
+    console.log(publishers, 'publishers');
     useEffect(() => {
         const fetchData = async () => {
             await refetch();
@@ -159,7 +160,7 @@ const GetPublications: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
         {
             title: 'Description',
             dataIndex: 'description',
-            width: '30%',
+            width: '20%',
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Input.TextArea
@@ -179,7 +180,7 @@ const GetPublications: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
         {
             title: 'Thumbnail',
             dataIndex: 'thumbnail',
-            width: '10%',
+            width: '5%',
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Upload
@@ -212,7 +213,7 @@ const GetPublications: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
         {
             title: 'Image',
             dataIndex: 'postImage',
-            width: '10%',
+            width: '5%',
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Upload
@@ -245,7 +246,7 @@ const GetPublications: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
         {
             title: 'Type',
             dataIndex: 'type',
-            width: '30%',
+            width: '5%',
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Input.TextArea
@@ -265,28 +266,29 @@ const GetPublications: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
         {
             title: 'Thème',
             dataIndex: 'theme',
-            width: '30%',
+            width: '5%',
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Select
                         placeholder="Choisir un type"
                         onSelect={(value) => setSelectThemeValue(value)}
                     >
-                        {useQueryThemes?.data.theme.map((item: any) => (
-                            <Select.Option key={item._id} value={item._id}>
-                                {item.title}
-                            </Select.Option>
-                        ))}
+                        <Select.Option
+                            key={record.theme._id}
+                            value={record.theme._id}
+                        >
+                            {record.theme.title}
+                        </Select.Option>
                     </Select>
                 ) : (
-                    text
+                    record.theme.title
                 );
             },
         },
         {
             title: 'Excerpt',
             dataIndex: 'excerpt',
-            width: '10%',
+            width: '20%',
             editable: true,
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
@@ -335,21 +337,21 @@ const GetPublications: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
         {
             title: 'Éditeur',
             dataIndex: 'publisher',
-            width: '30%',
+            width: '10%',
             render: (text: string, record: Publication) => {
-                console.log(useQueryPublishers?.publisher)
                 return isEditingPublication && editingRowId === record._id ? (
                     <Select
                         placeholder="Choisir un éditeur"
                         onSelect={(value) => setSelectPublisherValue(value)}
                     >
-                        {publishers?.map(
-                            (publisher: any) => (
-                                <Select.Option key={publisher._id} value={publisher._id}>
-                                    {publisher.title}
-                                </Select.Option>
-                            ),
-                        )}
+                        {publishers?.map((publisher: any) => (
+                            <Select.Option
+                                key={publisher._id}
+                                value={publisher._id}
+                            >
+                                {publisher.title}
+                            </Select.Option>
+                        ))}
                     </Select>
                 ) : (
                     record.publisher.title
@@ -359,11 +361,12 @@ const GetPublications: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
         {
             title: 'Auteur',
             dataIndex: 'author',
-            width: '30%',
-            render: (text: string, record: Publication) => {
-                return (
-                    useQueryPublications?.data
-                )
+            width: '20%',
+            render: (record: Author) => {
+                if (record) {
+                    return record?.firstName + ' ' + record?.lastName;
+                }
+                return '';
             },
         },
         {

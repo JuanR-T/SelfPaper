@@ -4,6 +4,7 @@ import {
     FormOutlined,
     ContainerOutlined,
     UserOutlined,
+    HomeOutlined,
 } from '@ant-design/icons';
 import { useAuth } from '../../context/AuthContext';
 const { Sider, Content } = Layout;
@@ -16,7 +17,7 @@ const Dashboard = () => {
         navigate('/login');
     }
     const tabSwitch = (key: React.Key) => {
-        navigate('/dashboard/' + key);
+        key ? navigate('/dashboard/' + key) : navigate('/');
     };
     return (
         <Layout style={{ minHeight: '100vh', minWidth: '100%' }}>
@@ -49,6 +50,13 @@ const Dashboard = () => {
                         onClick={() => tabSwitch('account')}
                     >
                         Compte
+                    </Menu.Item>
+                    <Menu.Item
+                        key="application"
+                        icon={<HomeOutlined />}
+                        onClick={() => tabSwitch('')}
+                    >
+                        Application
                     </Menu.Item>
                 </Menu>
             </Sider>
