@@ -24,8 +24,13 @@ import {
 import dayjs, { Dayjs } from 'dayjs';
 import UpdatePublications from './UpdatePublications';
 import DeletePublications from './DeletePublications';
+import ModalProvider from '../../common/modalProvider';
+import CreatePublication from './CreatePublications';
 
-const GetPublications: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
+const GetPublications: React.FC<RefetchTriggerProps> = ({
+    setRefetchTrigger,
+    refetchTrigger,
+}) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     //TODO check if middleware fetching and caching data calls is a good idea or not (avoid doing X calls on X pages, just do it once)
     const { getConfig, author } = useAuth();
@@ -398,6 +403,12 @@ const GetPublications: React.FC<RefetchTriggerProps> = ({ refetchTrigger }) => {
     return (
         <div style={{ width: '100%' }}>
             <h2>Mes Publications</h2>
+            <ModalProvider
+                modalContent={
+                    <CreatePublication setRefetchTrigger={setRefetchTrigger} />
+                }
+                contentContext="Ajouter une publication"
+            />
             {currentPublications ? (
                 <>
                     <Table

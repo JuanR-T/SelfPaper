@@ -13,13 +13,14 @@ import {
     Cascader,
 } from 'antd';
 import toastProvider from '../../../lib/toastProvider';
-import { Publisher, SetRefetchTriggerProps } from '../../../types/types';
+import { Publisher, RefetchTriggerProps } from '../../../types/types';
 import { useQuery } from 'react-query';
 import { useAuth } from '../../../context/AuthContext';
 import dayjs, { Dayjs } from 'dayjs';
 
-const CreatePublication: React.FC<SetRefetchTriggerProps> = ({
+const CreatePublication: React.FC<RefetchTriggerProps> = ({
     setRefetchTrigger,
+    refetchTrigger,
 }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { getConfig, author } = useAuth();
