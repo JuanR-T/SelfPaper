@@ -1,10 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 /** Misc */
-
 export interface RefetchTriggerProps {
     refetchTrigger: boolean;
-}
-export interface SetRefetchTriggerProps {
     setRefetchTrigger: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
