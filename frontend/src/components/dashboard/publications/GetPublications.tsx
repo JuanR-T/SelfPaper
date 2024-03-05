@@ -15,7 +15,6 @@ import toastProvider from '../../../lib/toastProvider';
 import { useAuth } from '../../../context/AuthContext';
 import { UploadOutlined } from '@ant-design/icons';
 import {
-    ThemeApiResponse,
     Publication,
     RefetchTriggerProps,
     PublicationApiResponse,
@@ -27,13 +26,11 @@ import DeletePublications from './DeletePublications';
 import ModalProvider from '../../common/modalProvider';
 import CreatePublication from './CreatePublications';
 
-const GetPublications: React.FC<RefetchTriggerProps> = ({
-    setRefetchTrigger,
-    refetchTrigger,
-}) => {
+const GetPublications: React.FC = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     //TODO check if middleware fetching and caching data calls is a good idea or not (avoid doing X calls on X pages, just do it once)
     const { getConfig, author } = useAuth();
+    const [refetchTrigger, setRefetchTrigger] = useState(false);
     const [selectThemeValue, setSelectThemeValue] = useState('');
     const [selectPublisherValue, setSelectPublisherValue] = useState('');
     const [currentPage, setCurrentPage] = useState<number>(1);
