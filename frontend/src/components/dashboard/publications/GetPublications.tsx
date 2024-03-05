@@ -402,7 +402,7 @@ const GetPublications: React.FC = () => {
             <h2>Mes Publications</h2>
             <ModalProvider
                 modalContent={
-                    <CreatePublication setRefetchTrigger={setRefetchTrigger} />
+                    <CreatePublication refetchTrigger={refetchTrigger} setRefetchTrigger={setRefetchTrigger} />
                 }
                 contentContext="Ajouter une publication"
             />

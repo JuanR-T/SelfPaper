@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
-
+import { PlusOutlined } from '@ant-design/icons';
 interface ModalProviderProps {
     modalContent: React.ReactNode;
     contentContext: string;
@@ -11,6 +11,8 @@ const ModalProvider: React.FC<ModalProviderProps> = ({
     contentContext,
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    /** This calculates dynamically the sider width based on the viewport width, the goal is to have a centered modal according to it. */
+    const siderWidth = `calc(100vw - 200px)`;
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -26,14 +28,18 @@ const ModalProvider: React.FC<ModalProviderProps> = ({
 
     return (
         <>
-            <Button type="primary" onClick={showModal}>
+            <Button className="modal-button" type="primary" onClick={showModal}>
+                <PlusOutlined />
                 {contentContext}
             </Button>
             <Modal
+                className='modal-provider'
                 visible={isModalOpen}
                 onOk={handleValidation}
                 onCancel={handleCancelation}
+                footer={[]}
                 width={1000}
+                style={{ left: `calc(50% - ${siderWidth} / 2)` }}
             >
                 {modalContent}
             </Modal>

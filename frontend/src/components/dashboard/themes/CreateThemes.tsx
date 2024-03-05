@@ -3,9 +3,9 @@ import BookOutlined, { UploadOutlined } from '@ant-design/icons';
 import { handlePost } from '../../../api/handleCall';
 import { Input, Form, Row, Button, Upload, message } from 'antd';
 import toastProvider from '../../../lib/toastProvider';
-import { SetRefetchTriggerProps } from '../../../types/types';
+import { RefetchTriggerProps } from '../../../types/types';
 
-const CreateTheme: React.FC<SetRefetchTriggerProps> = ({
+const CreateTheme: React.FC<RefetchTriggerProps> = ({
     setRefetchTrigger,
 }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -24,14 +24,12 @@ const CreateTheme: React.FC<SetRefetchTriggerProps> = ({
         );
     };
     return (
-        <Row className="login-form">
+        <Row className="creation-form">
             <h1 className="h1">Ajouter un Thème</h1>
             <Form
-                name="login-form"
+                name="creation-form"
                 initialValues={{ remember: true }}
                 onFinish={onSubmit}
-                labelCol={{ span: 1 }}
-                wrapperCol={{ span: 15 }}
                 className="content"
             >
                 <Form.Item
@@ -93,7 +91,7 @@ const CreateTheme: React.FC<SetRefetchTriggerProps> = ({
                 </Form.Item>
                 <Form.Item wrapperCol={{ offset: 0 }}>
                     <Button className="submit-button" htmlType="submit">
-                        Envoyer
+                        Ajouter
                     </Button>
                 </Form.Item>
             </Form>

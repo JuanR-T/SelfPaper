@@ -1,4 +1,4 @@
-import React, { SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
 import BookOutlined, { UploadOutlined } from '@ant-design/icons';
 import { handleGet, handlePost } from '../../../api/handleCall';
 import {
@@ -63,8 +63,6 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
             return useQueryPublishers;
         },
     );
-    console.log('useQueryThemes', useQueryThemes);
-    console.log('useQueryPublishers', useQueryPublishers);
 
     const onSubmit = async (values: any) => {
         await handlePost(`${BASE_URL}/api/publication/create`, {
@@ -87,17 +85,13 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
             'light',
         );
     };
-    //TODO Faire de ce component une modale
-    console.log('selectPublisherValue', selectPublisherValue);
     return (
-        <Row className="login-form">
+        <Row className="creation-form">
             <h2>Ajouter une publication</h2>
             <Form
-                name="login-form"
+                name="creation-form"
                 initialValues={{ remember: true }}
                 onFinish={onSubmit}
-                labelCol={{ span: 1 }}
-                wrapperCol={{ span: 15 }}
                 className="content"
             >
                 <Form.Item
@@ -293,7 +287,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                 </Form.Item>
                 <Form.Item wrapperCol={{ offset: 0 }}>
                     <Button className="submit-button" htmlType="submit">
-                        Envoyer
+                        Ajouter
                     </Button>
                 </Form.Item>
             </Form>
