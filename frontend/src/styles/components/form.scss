@@ -48,3 +48,48 @@
         }
     }
 }
+
+.creation-form {
+    display: flex;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    border-radius: $border-radius-md;
+    .content {
+        width: 100%;
+        button {
+            margin: 10px 0px;
+        }
+        .ant-form-item-control-input {
+            height: 40px;
+        }
+        > div {
+            background-color: rgba(0, 0, 255, 0);
+            width: 100%;
+            > div {
+                display: flex;
+                flex-direction: column;
+                padding: 0px 0px 25px 0px;
+                > div {
+                    width: 100%;
+                    padding: 0px 0px 5px 0px;
+                    overflow: visible;
+                    text-align: start;
+                }
+            }
+        }
+        > div:last-child {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+        }
+    }
+}
+
+.modal-provider {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

@@ -15,3 +15,11 @@
         background: $milky-white-darker-color !important;
     }
 }
+
+.modal-button {
+    background-color: $eighties-purple;
+    color: $milky-white-color;
+    &:hover {
+        background-color: $eighties-purple-lighter !important;
+    }
+}

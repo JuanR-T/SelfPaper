@@ -4,9 +4,11 @@ import { handlePost } from '../../../api/handleCall';
 import { Input, Switch, Form, Select, Row, DatePicker, Button } from 'antd';
 import toastProvider from '../../../lib/toastProvider';
 interface CreatePublisherFormProps {
+    refetchTrigger: boolean;
     setRefetchTrigger: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const CreatePublisherForm: React.FC<CreatePublisherFormProps> = ({
+    refetchTrigger,
     setRefetchTrigger,
 }) => {
     const [servicesSwitch, setServicesSwitch] = useState(true);
@@ -50,14 +52,12 @@ const CreatePublisherForm: React.FC<CreatePublisherFormProps> = ({
         );
     };
     return (
-        <Row className="login-form">
+        <Row className="creation-form">
             <h1 className="h1">Ajouter un Éditeur</h1>
             <Form
-                name="login-form"
+                name="creation-form"
                 initialValues={{ remember: true }}
                 onFinish={onSubmit}
-                labelCol={{ span: 1 }}
-                wrapperCol={{ span: 15 }}
                 className="content"
             >
                 <Form.Item
