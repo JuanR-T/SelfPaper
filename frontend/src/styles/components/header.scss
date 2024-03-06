@@ -1,10 +1,11 @@
 .header {
     width: 100%;
-    position: sticky;
+    position: absolute;
     display: flex;
     align-items: center;
     justify-content: space-around;
-    background-color: $milky-white-darker-color;
+    //background: rgb(159,28,28);
+    //background: radial-gradient(circle, rgba(159,28,28,1) 0%, rgba(229,27,16,1) 86%);
     top: 0;
     z-index: 10;
 }
