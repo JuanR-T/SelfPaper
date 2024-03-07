@@ -124,3 +124,14 @@ export interface DeletePublicationsProps {
     editingRowId: string | null;
     setEditingRowId: Dispatch<SetStateAction<string | null>>;
 }
+
+/** Images */
+export interface Images {
+    _id: string;
+    title: string,
+    image: string
+}
+export interface ImagesApiResponse {
+    found: boolean;
+    images?: Images[];
+}

@@ -63,7 +63,36 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
             return useQueryPublishers;
         },
     );
+    const convertToBase64 = (file: File) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
 
+            reader.readAsDataURL(file);
+
+            reader.onload = () => {
+                resolve(reader.result as string);
+            };
+
+            reader.onerror = (error) => {
+                reject(error);
+            };
+        });
+    };
+    const uploadImage = async (file: any) => {
+        const convertedFile = await convertToBase64(file);
+        console.log("convertedFile", convertedFile);
+        console.log("file", file);
+        await handlePost(`${BASE_URL}/api/image/upload`, {
+            title: file.name,
+            image: convertedFile
+        })
+        toastProvider(
+            'success',
+            "L'image a été upload avec succès.",
+            'bottom-left',
+            'light',
+        );
+    };
     const onSubmit = async (values: any) => {
         await handlePost(`${BASE_URL}/api/publication/create`, {
             title: values.title,
@@ -165,6 +194,10 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                     dependencies={['typeSwitch', 'selectField', 'inputField']}
                 >
                     <Upload
+                        beforeUpload={(file) => {
+                            uploadImage(file);
+                            return false;
+                        }}
                         onChange={(info) => {
                             if (info.file.status !== 'uploading') {
                                 console.log(info.file, info.fileList);
@@ -179,7 +212,6 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                                 );
                             }
                         }}
-                        action="/upload/image"
                         listType="picture"
                     >
                         <Button icon={<UploadOutlined />}>Upload</Button>

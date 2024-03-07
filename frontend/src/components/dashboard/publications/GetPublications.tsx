@@ -19,11 +19,12 @@ import {
     RefetchTriggerProps,
     PublicationApiResponse,
     Author,
+    ImagesApiResponse,
 } from '../../../types/types';
 import dayjs, { Dayjs } from 'dayjs';
 import UpdatePublications from './UpdatePublications';
 import DeletePublications from './DeletePublications';
-import ModalProvider from '../../common/modalProvider';
+import ModalProvider from '../../common/ModalProvider';
 import CreatePublication from './CreatePublications';
 
 const GetPublications: React.FC = () => {
@@ -120,7 +121,23 @@ const GetPublications: React.FC = () => {
             return useQueryPublications;
         },
     );
-
+    const { data: useQueryImages } = useQuery('get_images',
+        async () => {
+            const useQueryImages = await handleGet(
+                `${BASE_URL}/api/image`,
+                getConfig(),
+            );
+            if (!useQueryImages) {
+                toastProvider(
+                    'error',
+                    'Une erreur est survenue pendant la récupération des images. Veuillez réessayer.',
+                    'bottom-left',
+                    'colored',
+                );
+                return undefined;
+            }
+            return useQueryImages;
+        });
     const publications = (useQueryPublications?.data as PublicationApiResponse)
         ?.publications;
     const publicationsPerPage = 10;
@@ -128,7 +145,6 @@ const GetPublications: React.FC = () => {
     const endIndex = startIndex + publicationsPerPage;
     const currentPublications = publications?.slice(startIndex, endIndex);
     const publishers = useQueryPublishers?.data.publisher;
-    console.log(publishers, 'publishers');
     useEffect(() => {
         const fetchData = async () => {
             await refetch();
@@ -400,6 +416,14 @@ const GetPublications: React.FC = () => {
     return (
         <div style={{ width: '100%' }}>
             <h2>Mes Publications</h2>
+            <div>
+                {(useQueryImages?.data as ImagesApiResponse).images?.map((item) => (
+                    <>
+                        <span>{item.title}</span>
+                        <img src={item.image} alt="Image" />
+                    </>
+                ))}
+            </div>
             <ModalProvider
                 modalContent={
                     <CreatePublication refetchTrigger={refetchTrigger} setRefetchTrigger={setRefetchTrigger} />

@@ -53,7 +53,6 @@ export const createPublisher = async (
     req: Request,
     res: Response,
 ): Promise<Response> => {
-    console.log('request ez', req.body);
     try {
         const newPublisher = await Publisher.create(req.body);
         if (!newPublisher)

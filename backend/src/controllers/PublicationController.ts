@@ -29,7 +29,6 @@ export const getPublication = async (
             });
             return { ...publication.toObject(), publicationDate: formattedPublicationDate, theme, publisher, author };
         }));
-        console.log("publications", publications)
         return res.status(200).json({ data: { found: true, publications } });
     } catch (err) {
         return handleControllerErrors(err, res, 'Publications not found');
@@ -70,13 +69,11 @@ export const createPublication = async (
 ): Promise<Response> => {
     try {
         const hasSameService = await checkPublisherService(req);
-        console.log("hasSameService", hasSameService)
         if (!hasSameService) {
             throw new Error(
                 'Publisher service from request does not match existing publisher service',
             );
         }
-        console.log("req.body", req.body)
         const newPublication = await Publication.create(req.body);
 
         if (!newPublication)
