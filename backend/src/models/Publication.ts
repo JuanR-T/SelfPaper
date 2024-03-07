@@ -4,7 +4,13 @@ const publicationSchema = new Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     thumbnail: { type: Buffer || String },
-    postImage: { type: Buffer || String },
+    postImage: [
+        {
+            type: SchemaTypes.ObjectId,
+            ref: 'Images',
+            required: false,
+        },
+    ],
     type: [{ type: String, required: true }], //DESC article, podcast...
     theme: [
         {
