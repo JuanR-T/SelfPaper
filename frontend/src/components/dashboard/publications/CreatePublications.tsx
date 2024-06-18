@@ -21,6 +21,7 @@ import dayjs, { Dayjs } from 'dayjs';
 const CreatePublication: React.FC<RefetchTriggerProps> = ({
     setRefetchTrigger,
     refetchTrigger,
+    handleCancelation,
 }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { getConfig, author } = useAuth();
@@ -113,6 +114,8 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
             'bottom-left',
             'light',
         );
+        //Checking if handleCancelation undefined or not.
+        handleCancelation?.();
     };
     return (
         <Row className="creation-form">
