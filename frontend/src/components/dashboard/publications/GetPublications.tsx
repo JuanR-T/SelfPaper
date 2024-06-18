@@ -16,7 +16,6 @@ import { useAuth } from '../../../context/AuthContext';
 import { UploadOutlined } from '@ant-design/icons';
 import {
     Publication,
-    RefetchTriggerProps,
     PublicationApiResponse,
     Author,
     ImagesApiResponse,
@@ -217,8 +216,6 @@ const GetPublications: React.FC = () => {
                             }
                         }}
                         action="/upload/image"
-                        //beforeUpload={beforeUpload}
-                        //fileList={fileList}
                         listType="picture"
                     >
                         <Button icon={<UploadOutlined />}>Upload</Button>
@@ -425,9 +422,13 @@ const GetPublications: React.FC = () => {
                 ))}
             </div>
             <ModalProvider
-                modalContent={
-                    <CreatePublication refetchTrigger={refetchTrigger} setRefetchTrigger={setRefetchTrigger} />
-                }
+                modalContent={({ handleCancelation }) => (
+                    <CreatePublication
+                        handleCancelation={handleCancelation}
+                        refetchTrigger={refetchTrigger}
+                        setRefetchTrigger={setRefetchTrigger}
+                    />
+                )}
                 contentContext="Ajouter une publication"
             />
             {currentPublications ? (

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 interface ModalProviderProps {
-    modalContent: React.ReactNode;
+    modalContent: (props: { handleCancelation: () => void }) => React.ReactNode;
     contentContext: string;
 }
 
@@ -25,7 +25,6 @@ const ModalProvider: React.FC<ModalProviderProps> = ({
     const handleCancelation = () => {
         setIsModalOpen(false);
     };
-
     return (
         <>
             <Button className="modal-button" type="primary" onClick={showModal}>
@@ -41,7 +40,7 @@ const ModalProvider: React.FC<ModalProviderProps> = ({
                 width={1000}
                 style={{ left: `calc(50% - ${siderWidth} / 2)` }}
             >
-                {modalContent}
+                {modalContent({ handleCancelation })}
             </Modal>
         </>
     );

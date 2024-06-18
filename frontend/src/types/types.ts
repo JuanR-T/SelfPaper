@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 export interface RefetchTriggerProps {
     refetchTrigger: boolean;
     setRefetchTrigger: React.Dispatch<React.SetStateAction<boolean>>;
+    handleCancelation?: (() => void | undefined) | undefined; 
 }
 
 /** Author */
