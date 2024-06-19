@@ -10,8 +10,8 @@ import ContentContainer from '../components/common/Content';
 const Home: React.FC = () => {
     return (
         <Layout>
-            <Header />
-            <Content>
+            <Content className="main-content">
+                <Header />
                 <HeroSection />
                 <CardBoard />
                 <ContentContainer />

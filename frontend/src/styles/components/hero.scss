@@ -1,29 +1,61 @@
+.hero-section.loaded {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("/photo_anne7.jpg");
+    opacity: 1; /* Final state for the fade-in effect */
+}
 .hero-section {
-    background-image: url('/path/to/your/image.jpg');
-    background-size: cover;
+    background-color: black;
     background-position: center;
-    background: rgb(159,28,28);
-    background: radial-gradient(circle, rgba(159,28,28,1) 0%, rgba(229,27,16,1) 86%);
+    background-repeat: no-repeat;
+    background-size: cover;
     width: 100%;
-    height: 100vh; /* Adjust the height as needed */
+    height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center; /* Center content vertically */
+    opacity: 0; /* Initial state for the fade-in effect */
+    transition: opacity 2.5s ease;
 }
 
 .hero-content {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    padding: 0px 0px 0px 55px;
+    position: relative;
     color: white;
+    justify-content: left;
+    width: 100%;
     h1 {
         font-size: 60px !important;
-        font-family: The Antiqua B,Georgia,Droid-serif,serif;
+        /*font-family: The Antiqua B,Georgia,Droid-serif,serif;
         margin-bottom: 16px;
         -webkit-text-stroke-width: 1px;
         letter-spacing: 0.2em;
         text-transform: uppercase;
         -webkit-text-stroke-color: $charcoal-color;
+        */
     }
+}
+
+.hero-biography {
+    width: 50%;
+    position: relative;
     p {
-        margin-bottom: 24px;
+        font-weight: bold;
+        //opacity: 0.9;
+        text-align: justify;
+        color: $milky-white-color;
+        font-size: 20px;
     }
+}
+
+.hero-image {
+    display: flex;
+    width: 30%;
+    justify-content: center;
+}
+.journalist-portrait {
+    width: 50%;  /* Adjust size as needed */
+    height: auto;
+    //margin-top: 20px;
+    border-radius: 50%; /* Optional: Make the image circular */
 }
