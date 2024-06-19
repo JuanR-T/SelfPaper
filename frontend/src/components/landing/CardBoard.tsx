@@ -1,9 +1,9 @@
-import { Card } from 'antd';
 import { useQuery } from 'react-query';
 import { handleGet } from '../../api/handleCall';
 import toastProvider from '../../lib/toastProvider';
 import { useAuth } from '../../context/AuthContext';
 import { Publication, PublicationApiResponse } from '../../types/types';
+import { FileImageOutlined } from '@ant-design/icons';
 
 const CardBoard = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -37,7 +37,9 @@ const CardBoard = () => {
                 {publications?.map((publication: Publication) => {
                     return (
                         <div className="card" key={publication._id}>
-                            <div className="card-image"></div>
+                            <div className="card-image">
+                                <FileImageOutlined style={{ fontSize: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+                            </div>
                             <h3>{publication.title}</h3>
                             <div className="card-excerpt">
                                 {publication.excerpt}
