@@ -4,10 +4,12 @@ import { handlePost } from '../../../api/handleCall';
 import { Input, Switch, Form, Select, Row, DatePicker, Button } from 'antd';
 import toastProvider from '../../../lib/toastProvider';
 interface CreatePublisherFormProps {
+    handleCancelation?: (() => void | undefined) | undefined;
     refetchTrigger: boolean;
     setRefetchTrigger: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const CreatePublisherForm: React.FC<CreatePublisherFormProps> = ({
+    handleCancelation,
     refetchTrigger,
     setRefetchTrigger,
 }) => {
@@ -50,6 +52,7 @@ const CreatePublisherForm: React.FC<CreatePublisherFormProps> = ({
             'bottom-left',
             'light',
         );
+        handleCancelation?.();
     };
     return (
         <Row className="creation-form">

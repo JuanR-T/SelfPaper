@@ -12,7 +12,7 @@ import {
 } from '../../../types/types';
 import DeleteTheme from './DeleteThemes';
 import UpdateThemes from './UpdateThemes';
-import ModalProvider from '../../common/modalProvider';
+import ModalProvider from '../../common/ModalProvider';
 import CreateTheme from './CreateThemes';
 
 const GetThemes: React.FC<RefetchTriggerProps> = ({ refetchTrigger, setRefetchTrigger }) => {
@@ -170,9 +170,12 @@ const GetThemes: React.FC<RefetchTriggerProps> = ({ refetchTrigger, setRefetchTr
         <div style={{ width: '100%' }}>
             <h2>Mes Thèmes</h2>
             <ModalProvider
-                modalContent={
-                    <CreateTheme refetchTrigger={refetchTrigger} setRefetchTrigger={setRefetchTrigger} />
-                }
+                modalContent={({ handleCancelation }) => (
+                    <CreateTheme
+                        handleCancelation={handleCancelation}
+                        refetchTrigger={refetchTrigger}
+                        setRefetchTrigger={setRefetchTrigger} />
+                )}
                 contentContext="Ajouter un Thème"
             />
             {currentThemes ? (

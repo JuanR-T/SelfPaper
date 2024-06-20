@@ -11,7 +11,7 @@ import {
     Publisher,
     RefetchTriggerProps,
 } from '../../../types/types';
-import ModalProvider from '../../common/modalProvider';
+import ModalProvider from '../../common/ModalProvider';
 import CreatePublisherForm from './CreatePublisher';
 //TODO clean this awfull code
 
@@ -312,9 +312,12 @@ const GetPublisher: React.FC<RefetchTriggerProps> = ({ refetchTrigger, setRefetc
         <div style={{ width: '100%' }}>
             <h2>Mes Éditeurs</h2>
             <ModalProvider
-                modalContent={
-                    <CreatePublisherForm refetchTrigger={refetchTrigger} setRefetchTrigger={setRefetchTrigger} />
-                }
+                modalContent={({ handleCancelation }) => (
+                    <CreatePublisherForm
+                        handleCancelation={handleCancelation}
+                        refetchTrigger={refetchTrigger}
+                        setRefetchTrigger={setRefetchTrigger} />
+                )}
                 contentContext="Ajouter un Éditeur"
             />
             {currentPublishers ? (
