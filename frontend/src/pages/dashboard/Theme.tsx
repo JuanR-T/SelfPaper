@@ -9,7 +9,10 @@ const Themes = () => {
         <Layout
             style={{ minHeight: '100vh', width: '100%', alignItems: 'center' }}
         >
-            <GetThemes setRefetchTrigger={setRefetchTrigger} refetchTrigger={refetchTrigger} />
+            <GetThemes
+                setRefetchTrigger={setRefetchTrigger}
+                refetchTrigger={refetchTrigger}
+            />
         </Layout>
     );
 };

@@ -38,7 +38,14 @@ const CardBoard = () => {
                     return (
                         <div className="card" key={publication._id}>
                             <div className="card-image">
-                                <FileImageOutlined style={{ fontSize: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+                                <FileImageOutlined
+                                    style={{
+                                        fontSize: '80px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                />
                             </div>
                             <h3>{publication.title}</h3>
                             <div className="card-excerpt">

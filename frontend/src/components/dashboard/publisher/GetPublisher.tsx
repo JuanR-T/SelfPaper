@@ -15,7 +15,10 @@ import ModalProvider from '../../common/ModalProvider';
 import CreatePublisherForm from './CreatePublisher';
 //TODO clean this awfull code
 
-const GetPublisher: React.FC<RefetchTriggerProps> = ({ refetchTrigger, setRefetchTrigger }) => {
+const GetPublisher: React.FC<RefetchTriggerProps> = ({
+    refetchTrigger,
+    setRefetchTrigger,
+}) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { getConfig } = useAuth();
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -316,7 +319,8 @@ const GetPublisher: React.FC<RefetchTriggerProps> = ({ refetchTrigger, setRefetc
                     <CreatePublisherForm
                         handleCancelation={handleCancelation}
                         refetchTrigger={refetchTrigger}
-                        setRefetchTrigger={setRefetchTrigger} />
+                        setRefetchTrigger={setRefetchTrigger}
+                    />
                 )}
                 contentContext="Ajouter un Éditeur"
             />

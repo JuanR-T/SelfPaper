@@ -6,6 +6,7 @@ const { Content } = Layout;
 import Header from '../components/landing/Header';
 import Footer from '../components/common/Footer';
 import ContentContainer from '../components/common/Content';
+import CustomCarousel from '../components/common/CustomCarousel';
 
 const Home: React.FC = () => {
     return (
@@ -13,7 +14,7 @@ const Home: React.FC = () => {
             <Content className="main-content">
                 <Header />
                 <HeroSection />
-                <CardBoard />
+                <CustomCarousel />
                 <ContentContainer />
             </Content>
             <Footer />

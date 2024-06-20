@@ -15,7 +15,10 @@ import UpdateThemes from './UpdateThemes';
 import ModalProvider from '../../common/ModalProvider';
 import CreateTheme from './CreateThemes';
 
-const GetThemes: React.FC<RefetchTriggerProps> = ({ refetchTrigger, setRefetchTrigger }) => {
+const GetThemes: React.FC<RefetchTriggerProps> = ({
+    refetchTrigger,
+    setRefetchTrigger,
+}) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { getConfig } = useAuth();
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -174,7 +177,8 @@ const GetThemes: React.FC<RefetchTriggerProps> = ({ refetchTrigger, setRefetchTr
                     <CreateTheme
                         handleCancelation={handleCancelation}
                         refetchTrigger={refetchTrigger}
-                        setRefetchTrigger={setRefetchTrigger} />
+                        setRefetchTrigger={setRefetchTrigger}
+                    />
                 )}
                 contentContext="Ajouter un Thème"
             />

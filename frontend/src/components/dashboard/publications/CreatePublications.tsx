@@ -81,12 +81,12 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
     };
     const uploadImage = async (file: any) => {
         const convertedFile = await convertToBase64(file);
-        console.log("convertedFile", convertedFile);
-        console.log("file", file);
+        console.log('convertedFile', convertedFile);
+        console.log('file', file);
         await handlePost(`${BASE_URL}/api/image/upload`, {
             title: file.name,
-            image: convertedFile
-        })
+            image: convertedFile,
+        });
         toastProvider(
             'success',
             "L'image a été upload avec succès.",
