@@ -120,23 +120,22 @@ const GetPublications: React.FC = () => {
             return useQueryPublications;
         },
     );
-    const { data: useQueryImages } = useQuery('get_images',
-        async () => {
-            const useQueryImages = await handleGet(
-                `${BASE_URL}/api/image`,
-                getConfig(),
+    const { data: useQueryImages } = useQuery('get_images', async () => {
+        const useQueryImages = await handleGet(
+            `${BASE_URL}/api/image`,
+            getConfig(),
+        );
+        if (!useQueryImages) {
+            toastProvider(
+                'error',
+                'Une erreur est survenue pendant la récupération des images. Veuillez réessayer.',
+                'bottom-left',
+                'colored',
             );
-            if (!useQueryImages) {
-                toastProvider(
-                    'error',
-                    'Une erreur est survenue pendant la récupération des images. Veuillez réessayer.',
-                    'bottom-left',
-                    'colored',
-                );
-                return undefined;
-            }
-            return useQueryImages;
-        });
+            return undefined;
+        }
+        return useQueryImages;
+    });
     const publications = (useQueryPublications?.data as PublicationApiResponse)
         ?.publications;
     const publicationsPerPage = 10;
@@ -414,12 +413,14 @@ const GetPublications: React.FC = () => {
         <div style={{ width: '100%' }}>
             <h2>Mes Publications</h2>
             <div>
-                {(useQueryImages?.data as ImagesApiResponse).images?.map((item) => (
-                    <>
-                        <span>{item.title}</span>
-                        <img src={item.image} alt="Image" />
-                    </>
-                ))}
+                {(useQueryImages?.data as ImagesApiResponse).images?.map(
+                    (item) => (
+                        <>
+                            <span>{item.title}</span>
+                            <img src={item.image} alt="Image" />
+                        </>
+                    ),
+                )}
             </div>
             <ModalProvider
                 modalContent={({ handleCancelation }) => (

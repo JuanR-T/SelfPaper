@@ -27,6 +27,7 @@
     "react-jwt": "^1.2.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.21.3",
+    "react-spring": "^9.7.3",
     "react-toastify": "^10.0.4"
   },
   "devDependencies": {

@@ -6,6 +6,7 @@ import toastProvider from '../../../lib/toastProvider';
 import { RefetchTriggerProps } from '../../../types/types';
 
 const CreateTheme: React.FC<RefetchTriggerProps> = ({
+    handleCancelation,
     setRefetchTrigger,
 }) => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -22,6 +23,7 @@ const CreateTheme: React.FC<RefetchTriggerProps> = ({
             'bottom-left',
             'light',
         );
+        handleCancelation?.();
     };
     return (
         <Row className="creation-form">

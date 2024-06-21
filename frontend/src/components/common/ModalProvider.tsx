@@ -32,7 +32,7 @@ const ModalProvider: React.FC<ModalProviderProps> = ({
                 {contentContext}
             </Button>
             <Modal
-                className='modal-provider'
+                className="modal-provider"
                 visible={isModalOpen}
                 onOk={handleValidation}
                 onCancel={handleCancelation}

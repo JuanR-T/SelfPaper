@@ -1,0 +1,53 @@
+.carousel-section {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    padding: 0px 50px;
+    h1 {
+        color: $charcoal-color;
+        margin: 20px 0px;
+    }
+    .carousel-component {
+        width: 100%;
+        display: flex;
+        position: relative;
+        .carousel-description {
+            background-color: rgb(124, 124, 124);
+            height: auto;
+            width: 40%;
+        }
+        .carousel-box {
+            width: 60%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            scroll-snap-type: x mandatory;
+            position: relative;
+        }
+        .carousel-buttons {
+            display: flex;
+            position: absolute;
+            right: 0px;
+            width: 60%;
+            height: 100%;
+            .carousel-button {
+                height: 100%;
+                width: 30%;
+                position: absolute;
+                opacity: 0;
+                border: none;
+                cursor: pointer;
+                z-index: 1;
+                &.left {
+                    left: 0px;
+                }
+                &.right {
+                    right: 0px;
+                }
+            }
+        }
+    }
+}

@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 export interface RefetchTriggerProps {
     refetchTrigger: boolean;
     setRefetchTrigger: React.Dispatch<React.SetStateAction<boolean>>;
-    handleCancelation?: (() => void | undefined) | undefined; 
+    handleCancelation?: (() => void | undefined) | undefined;
 }
 
 /** Author */
@@ -96,6 +96,7 @@ export interface UpdateThemeProps {
 /** Publications */
 
 export interface Publication {
+    indexOf(): any;
     _id: string;
     title: string,
     description: string,
