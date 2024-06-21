@@ -6,7 +6,7 @@ const { Content } = Layout;
 import Header from '../components/landing/Header';
 import Footer from '../components/common/Footer';
 import ContentContainer from '../components/common/Content';
-import CustomCarousel from '../components/common/CustomCarousel';
+import CustomCarousel from '../components/common/CarouselSection';
 
 const Home: React.FC = () => {
     return (

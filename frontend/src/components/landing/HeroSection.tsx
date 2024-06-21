@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 
 const HeroSection = () => {
     const [isLoaded, setIsLoaded] = useState(false);
-    console.log(isLoaded);
     useEffect(() => {
         setTimeout(() => setIsLoaded(true), 100); // Add a slight delay to trigger the animation
     }, []);
