@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.18.0",
+    "@use-gesture/react": "^10.3.1",
     "antd": "^5.13.3",
     "axios": "^1.6.7",
     "dart-sass": "^1.25.0",
@@ -20,6 +21,7 @@
     "gulp": "^4.0.2",
     "gulp-dart-sass": "^1.1.0",
     "gulp-rename": "^2.0.0",
+    "lodash.clamp": "^4.0.3",
     "node": "^21.6.1",
     "prettier": "^3.2.4",
     "react": "^18.2.0",
@@ -28,9 +30,11 @@
     "react-query": "^3.39.3",
     "react-router-dom": "^6.21.3",
     "react-spring": "^9.7.3",
+    "react-spring-carousel": "^2.0.19",
     "react-toastify": "^10.0.4"
   },
   "devDependencies": {
+    "@types/lodash.clamp": "^4.0.9",
     "@types/node": "^20.11.16",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
