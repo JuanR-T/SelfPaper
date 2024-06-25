@@ -7,7 +7,7 @@ import Header from '../components/landing/Header';
 import Footer from '../components/common/Footer';
 import ContentContainer from '../components/common/Content';
 import CustomCarousel from '../components/common/CarouselSection';
-
+import Viewpager from '../components/common/ViewPager';
 const Home: React.FC = () => {
     return (
         <Layout>
@@ -15,6 +15,7 @@ const Home: React.FC = () => {
                 <Header />
                 <HeroSection />
                 <CustomCarousel />
+                <Viewpager />
                 <ContentContainer />
             </Content>
             <Footer />

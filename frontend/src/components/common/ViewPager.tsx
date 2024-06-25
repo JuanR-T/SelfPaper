@@ -5,12 +5,12 @@ import toastProvider from '../../lib/toastProvider';
 import { useAuth } from '../../context/AuthContext';
 import { Publication, PublicationApiResponse } from '../../types/types';
 import { FileImageOutlined } from '@ant-design/icons';
-import { useSpring, animated } from 'react-spring';
-//just use react spring https://react-spring-carousel.emilianobucci.com/docs/use-spring-carousel/multiple-items
+import { useTransition, animated } from 'react-spring';
+
 const CarouselSection = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { getConfig } = useAuth();
-    const [selectedIndex, setSelectedIndex] = useState(1);
+    const [selectedIndex, setSelectedIndex] = useState(0);
     const [publicationList, setPublicationList] = useState<Publication[]>([]);
 
     const carouselRef = useRef<HTMLDivElement>(null);
@@ -38,48 +38,38 @@ const CarouselSection = () => {
     useEffect(() => {
         const publications = (useQueryPublications?.data as PublicationApiResponse)?.publications || [];
         setPublicationList(publications);
-
-        const carousel = carouselRef.current;
-        const selectedCard = carousel?.querySelector('.card.center');
-        selectedCard?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }, [useQueryPublications]);
 
     const nextCard = () => {
         setSelectedIndex((prevIndex) => (prevIndex + 1) % publicationList.length);
-        console.log("selectedIndexNext", selectedIndex);
     };
 
     const prevCard = () => {
         setSelectedIndex((prevIndex) =>
             (prevIndex - 1 + publicationList.length) % publicationList.length
         );
-        console.log("selectedIndexPrev", selectedIndex);
-
     };
-    const springProps = useSpring({
-        transform: `translateX(${selectedIndex * 10}%)`,
-        config: { tension: 280, friction: 60 }
+
+    const transitions = useTransition(selectedIndex, {
+        from: { opacity: 0, transform: 'scale(0.8)' },
+        enter: { opacity: 1, transform: 'scale(1)' },
+        leave: { opacity: 0, transform: 'scale(0.8)' },
+        config: { tension: 250, friction: 20 },
     });
+
     return (
         <div className="carousel-section">
             <h1>Mes Articles</h1>
             <div className="carousel-component">
                 <div className="carousel-description"></div>
                 <div className="carousel-box" ref={carouselRef}>
-                    {publicationList.slice(selectedIndex, selectedIndex + 3).map((publication: Publication, index: number) => {
-                        const adjustedIndex = (index % publicationList.length) - 1;
-                        //console.log("adjustedIndex", adjustedIndex)
-                        //console.log("publicationList", publicationList);
-                        //console.log("selectedIndex", selectedIndex)
-                        //console.log("index", index)
-                        //console.log("publicationList[selectedIndex]", publicationList[selectedIndex])
-
-
+                    {transitions((style, index) => {
+                        const publication = publicationList[(index + selectedIndex) % publicationList.length];
                         return (
                             <animated.div
-                                style={springProps}
+                                style={style}
                                 className='card'
-                                key={publication._id}
+                                key={publication?._id}
                             >
                                 <div className="card-image">
                                     <FileImageOutlined
@@ -91,17 +81,16 @@ const CarouselSection = () => {
                                         }}
                                     />
                                 </div>
-                                <h3>{publication.title}</h3>
+                                <h3>{publication?.title}</h3>
                                 <div className="card-excerpt">
-                                    {publication.excerpt}
+                                    {publication?.excerpt}
                                 </div>
                                 <div className="card-date">
-                                    Publié le {publication.publicationDate}
+                                    Publié le {publication?.publicationDate}
                                 </div>
                             </animated.div>
                         );
-                    },
-                    )}
+                    })}
                 </div>
                 <div className="carousel-buttons">
                     <button className="carousel-button left" onClick={prevCard}>Previous</button>
