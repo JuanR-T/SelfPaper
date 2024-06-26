@@ -11,7 +11,6 @@ const CarouselSection = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { getConfig } = useAuth();
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const [publicationList, setPublicationList] = useState<Publication[]>([]);
 
     const carouselRef = useRef<HTMLDivElement>(null);
 
@@ -35,26 +34,28 @@ const CarouselSection = () => {
         },
     );
 
-    useEffect(() => {
-        const publications = (useQueryPublications?.data as PublicationApiResponse)?.publications || [];
-        setPublicationList(publications);
-    }, [useQueryPublications]);
+    const publications = (useQueryPublications?.data as PublicationApiResponse)?.publications || [];
 
     const nextCard = () => {
-        setSelectedIndex((prevIndex) => (prevIndex + 1) % publicationList.length);
+        setSelectedIndex((prevIndex) => (prevIndex + 1) % publications.length);
     };
 
     const prevCard = () => {
         setSelectedIndex((prevIndex) =>
-            (prevIndex - 1 + publicationList.length) % publicationList.length
+            (prevIndex - 1 + publications.length) % publications.length
         );
     };
-
     const transitions = useTransition(selectedIndex, {
-        from: { opacity: 0, transform: 'scale(0.8)' },
-        enter: { opacity: 1, transform: 'scale(1)' },
-        leave: { opacity: 0, transform: 'scale(0.8)' },
-        config: { tension: 250, friction: 20 },
+        from: (item) => ({
+            opacity: 0.7,
+            transform: item === selectedIndex ? 'translateX(10%)' : 'translateX(-10%)',
+        }),
+        enter: { opacity: 1, transform: 'translateX(0%)' },
+        leave: (item) => ({
+            opacity: 0.7,
+            transform: item === selectedIndex ? 'translateX(-10%)' : 'translateX(10%)',
+        }),
+        config: { duration: 100, tension: 170, friction: 26 },
     });
 
     return (
@@ -64,31 +65,57 @@ const CarouselSection = () => {
                 <div className="carousel-description"></div>
                 <div className="carousel-box" ref={carouselRef}>
                     {transitions((style, index) => {
-                        const publication = publicationList[(index + selectedIndex) % publicationList.length];
+                        const prevIndex = (selectedIndex - 1 + publications?.length) % publications?.length;
+                        const nextIndex = (selectedIndex + 1) % publications?.length;
+                        console.log("publications", publications);
+                        const publicationsCarousel = [
+                            publications[prevIndex],
+                            publications[selectedIndex],
+                            publications[nextIndex]
+                        ];
                         return (
-                            <animated.div
-                                style={style}
-                                className='card'
-                                key={publication?._id}
-                            >
-                                <div className="card-image">
-                                    <FileImageOutlined
+                            publicationsCarousel?.map((publication, i) => {
+                                let position = 'prev';
+                                if (i === 1) position = 'current';
+                                else if (i === 2) position = 'next';
+                                console.log("this is i", i);
+                                return (
+                                    <animated.div
                                         style={{
-                                            fontSize: '80px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
+                                            ...style,
+                                            flex: '1 0 33.33%',
+                                            transform: position === 'prev'
+                                                ? 'translateX(-10%)'
+                                                : position === 'next'
+                                                    ? 'translateX(10%)'
+                                                    : 'translateX(0%)'
                                         }}
-                                    />
-                                </div>
-                                <h3>{publication?.title}</h3>
-                                <div className="card-excerpt">
-                                    {publication?.excerpt}
-                                </div>
-                                <div className="card-date">
-                                    Publié le {publication?.publicationDate}
-                                </div>
-                            </animated.div>
+                                        className={`card ${position}`}
+                                        key={publication?._id}
+                                    >
+                                        <div className="card-image">
+                                            <FileImageOutlined
+                                                style={{
+                                                    fontSize: '80px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                }}
+                                            />
+                                        </div>
+                                        <h3>{publication?.title}</h3>
+                                        <div className="card-excerpt">
+                                            {publication?.excerpt}
+                                        </div>
+                                        <div className="card-date">
+                                            Publié le {publication?.publicationDate}
+                                        </div>
+                                    </animated.div>
+                                );
+                            })
+
+
+
                         );
                     })}
                 </div>
