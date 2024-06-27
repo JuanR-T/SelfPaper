@@ -14,13 +14,12 @@ export const getPublication = async (
     //TODO return the matching publisher services from the publication, it returns everything now
     try {
         const publication = await Publication.find({});
-
         if (!publication) throw new Error("Couldn't find any publications");
-        
+
         const publications = await Promise.all(publication.map(async (publication) => {
             const author = await Author.findById(publication.author);
             const theme = await Theme.findById(publication.theme);
-            const publisher = await Publisher.findById(publication.publisher);
+            const publisher = [await Publisher.findById(publication.publisher?._id),{service: publication.publisher?.service}] ;
             //TODO make it generic for other models
             const formattedPublicationDate = new Date(publication.publicationDate).toLocaleDateString('fr-FR', {
                 day: '2-digit',
@@ -75,13 +74,11 @@ export const createPublication = async (
             );
         }
         const newPublication = await Publication.create(req.body);
-
         if (!newPublication)
             throw new Error('Publication could not be created. Wrong params');
 
-        return res
-            .status(200)
-            .json({ data: { created: true, newPublication } });
+        return res.status(200).json({ data: { created: true, newPublication } });
+
     } catch (err) {
         return handleControllerErrors(
             err,

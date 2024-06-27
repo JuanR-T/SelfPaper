@@ -9,7 +9,6 @@ export const getImages =  async (
 ): Promise<Response> => {
     try {
         const images = await Images.find({});
-        console.log("images", images)
         if (!images) throw new Error('Could not find any images');
         return res.status(200).json({ data: { found: true, images } });
     } catch (err) {
@@ -26,7 +25,6 @@ export const getImageById =  async (
         if (!id) throw new Error('Could not get image by id. Wrong id.');
 
         const imageById = await Images.findById(id);
-        console.log("imageById", imageById);
 
         if (!imageById) throw new Error('Could not find that image');
         return res.status(200).json({ data: { found: true, imageById } });
@@ -53,14 +51,12 @@ export const uploadImage =  async (
     try {
         upload.single('image')
         const imageUrl = req?.body?.image;
-        console.log("imageUrl", imageUrl);
         if (!imageUrl) throw new Error('Image upload failed.');
 
         const savingImage = new Images({
                 title: req.body.title,
                 image: imageUrl,
         });
-        console.log("saving",savingImage);
         await savingImage.save();
         if (!savingImage) throw new Error('Image saving to database failed.');
 

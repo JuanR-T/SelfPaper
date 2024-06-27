@@ -21,7 +21,7 @@ const publicationSchema = new Schema({
     ], //DESC Musique, Cinéma, Société, Féminisme, Racisme...
     excerpt: { type: String },
     publicationDate: { type: Date, required: true },
-    publisher: [
+    publisher: 
         {
             _id: {
                 type: SchemaTypes.ObjectId,
@@ -32,7 +32,6 @@ const publicationSchema = new Schema({
                 type: String,
             },
         },
-    ],
     author: [
         {
             type: SchemaTypes.ObjectId,

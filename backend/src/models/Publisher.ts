@@ -7,6 +7,9 @@ const publisherSchema = new Schema({
     type: { type: String, required: true }, //DESC newspaper, music platform...
     location: { type: String },
     foundedAt: { type: Date },
+    service: {
+        type: String, required: false
+    },
 });
 
 const Publisher = model('Publisher', publisherSchema);

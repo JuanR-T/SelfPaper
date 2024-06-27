@@ -9,6 +9,7 @@ export const getPublisher = async (
 ): Promise<Response> => {
     try {
         const publisher = await Publisher.find({});
+
         if (!publisher) throw new Error('Could not find any publishers');
 
         return res.status(200).json({ data: { found: true, publisher } });
