@@ -11,6 +11,7 @@ const CarouselSection = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { getConfig } = useAuth();
     const [selectedIndex, setSelectedIndex] = useState(0);
+    const [publicationsCarousel, setPublicationsCarousel] = useState<Publication[]>([]);
 
     const carouselRef = useRef<HTMLDivElement>(null);
 
@@ -36,26 +37,46 @@ const CarouselSection = () => {
 
     const publications = (useQueryPublications?.data as PublicationApiResponse)?.publications || [];
 
+    useEffect(() => {
+        if (publications.length > 0) {
+            const prevIndex = (selectedIndex - 1 + publications.length) % publications.length;
+            const nextIndex = (selectedIndex + 1) % publications.length;
+
+            setPublicationsCarousel([
+                { ...publications[prevIndex], position: 'prev' },
+                { ...publications[selectedIndex], position: 'current' },
+                { ...publications[nextIndex], position: 'next' },
+            ]);
+        }
+    }, [selectedIndex]);
+
     const nextCard = () => {
+        setPublicationsCarousel([]);
         setSelectedIndex((prevIndex) => (prevIndex + 1) % publications.length);
     };
 
     const prevCard = () => {
+        setPublicationsCarousel([]);
         setSelectedIndex((prevIndex) =>
             (prevIndex - 1 + publications.length) % publications.length
         );
     };
-    const transitions = useTransition(selectedIndex, {
-        from: (item) => ({
+
+    const transitions = useTransition(publicationsCarousel, {
+        from: {
             opacity: 0.7,
-            transform: item === selectedIndex ? 'translateX(10%)' : 'translateX(-10%)',
-        }),
-        enter: { opacity: 1, transform: 'translateX(0%)' },
-        leave: (item) => ({
+            transition: 'transform 2s, opacity 0.5s'
+        },
+        enter: {
+            opacity: 1,
+            transition: 'transform 0.5s, opacity 1s'
+        },
+        leave: {
             opacity: 0.7,
-            transform: item === selectedIndex ? 'translateX(-10%)' : 'translateX(10%)',
-        }),
-        config: { duration: 100, tension: 170, friction: 26 },
+            transition: 'transform 2s, opacity 0.7s'
+        },
+        config: { duration: 400, tension: 200, friction: 30 },
+        keys: publication => publication._id // Ensure that the transitions identify each item correctly
     });
 
     return (
@@ -64,58 +85,36 @@ const CarouselSection = () => {
             <div className="carousel-component">
                 <div className="carousel-description"></div>
                 <div className="carousel-box" ref={carouselRef}>
-                    {transitions((style, index) => {
-                        const prevIndex = (selectedIndex - 1 + publications?.length) % publications?.length;
-                        const nextIndex = (selectedIndex + 1) % publications?.length;
-                        console.log("publications", publications);
-                        const publicationsCarousel = [
-                            publications[prevIndex],
-                            publications[selectedIndex],
-                            publications[nextIndex]
-                        ];
+                    {transitions((style, item) => {
                         return (
-                            publicationsCarousel?.map((publication, i) => {
-                                let position = 'prev';
-                                if (i === 1) position = 'current';
-                                else if (i === 2) position = 'next';
-                                console.log("this is i", i);
-                                return (
-                                    <animated.div
+                            <animated.div
+                                style={{
+                                    ...style,
+                                    transform: item.position === 'current' ? 'scale(1)' : 'scale(0.8)',
+                                    opacity: item.position === 'current' ? 1 : 0.7,
+                                    transition: 'transform 0.5s, opacity 0.7s'
+                                }}
+                                className={`card ${item.position}`}
+                                key={item._id}
+                            >
+                                <div className="card-image">
+                                    <FileImageOutlined
                                         style={{
-                                            ...style,
-                                            flex: '1 0 33.33%',
-                                            transform: position === 'prev'
-                                                ? 'translateX(-10%)'
-                                                : position === 'next'
-                                                    ? 'translateX(10%)'
-                                                    : 'translateX(0%)'
+                                            fontSize: '80px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
                                         }}
-                                        className={`card ${position}`}
-                                        key={publication?._id}
-                                    >
-                                        <div className="card-image">
-                                            <FileImageOutlined
-                                                style={{
-                                                    fontSize: '80px',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                }}
-                                            />
-                                        </div>
-                                        <h3>{publication?.title}</h3>
-                                        <div className="card-excerpt">
-                                            {publication?.excerpt}
-                                        </div>
-                                        <div className="card-date">
-                                            Publié le {publication?.publicationDate}
-                                        </div>
-                                    </animated.div>
-                                );
-                            })
-
-
-
+                                    />
+                                </div>
+                                <h3>{item.title}</h3>
+                                <div className="card-excerpt">
+                                    {item.excerpt}
+                                </div>
+                                <div className="card-date">
+                                    Publié le {item.publicationDate}
+                                </div>
+                            </animated.div>
                         );
                     })}
                 </div>
@@ -124,7 +123,7 @@ const CarouselSection = () => {
                     <button className="carousel-button right" onClick={nextCard}>Next</button>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

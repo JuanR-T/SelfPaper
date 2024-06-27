@@ -107,7 +107,8 @@ export interface Publication {
     excerpt: string,
     publicationDate: string,
     publisher: Publisher,
-    author: any
+    author: any,
+    position?: string
 }
 
 export interface UpdatePublicationsProps {
