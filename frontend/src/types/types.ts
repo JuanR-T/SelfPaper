@@ -96,7 +96,6 @@ export interface UpdateThemeProps {
 /** Publications */
 
 export interface Publication {
-    indexOf(): any;
     _id: string;
     title: string,
     description: string,

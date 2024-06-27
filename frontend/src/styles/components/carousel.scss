@@ -10,15 +10,17 @@
         margin: 20px 0px;
     }
     .carousel-component {
+        height: 600px;
         width: 100%;
         display: flex;
         position: relative;
         .carousel-description {
-            background-color: rgb(124, 124, 124);
+            //background-color: rgb(124, 124, 124);
             height: auto;
             width: 40%;
         }
         .carousel-box {
+            height: 100%;
             width: 60%;
             display: flex;
             justify-content: center;
