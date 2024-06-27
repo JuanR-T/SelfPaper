@@ -5,18 +5,27 @@ h1 {
     font-family: $title-font;
     font-size: $title-font-size-xl !important;
     display: block;
-    &::first-letter {
-        text-transform: uppercase;
-    }
 }
 h2 {
     font-family: $title-font-h2;
     font-size: $title-font-size-md;
     display: block;
-    text-transform: lowercase;
-    &::first-letter {
-        text-transform: uppercase;
-    }
+}
+h3 {
+    font-family: $title-font-h2;
+    font-size: $title-font-size-xs;
+    font-weight: 800;
+    text-align: left;
+    display: block;
+    color: $eighties-purple-darker;
+
+}
+h4 {
+    font-family: $title-font-h2;
+    font-size: $title-font-size-xs;
+    font-weight: 800;
+    text-align: center;
+    color: $charcoal-darker-color;
 }
 p {
     font-family: $text-font;

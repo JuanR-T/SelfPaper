@@ -26,8 +26,10 @@
     transition: 0.2s;
     text-align: center;
     padding: 10px;
+    margin: 10px 0px;
     border: none;
     font-weight: bold;
+    width: fit-content;
     &:hover,
     &:focus,
     &:active {

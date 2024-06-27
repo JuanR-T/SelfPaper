@@ -6,7 +6,7 @@
     box-shadow: $box-shadow-light;
     border-radius: $border-radius-md;
     flex: 0 0 33%;
-    h3 {
+    h4 {
         text-align: center;
     }
     transition: transform 0.3s, opacity 0.3s;
@@ -22,15 +22,16 @@
     }
     .card-excerpt {
         margin: 10px 0px;
+        padding: 0px 50px;
         line-break: anywhere;
         text-align: justify;
-        height: 40px;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         overflow: hidden;
         -webkit-line-clamp: 2;
     }
     .card-date {
+        margin: 20px 0px;
         font-family: "Roboto", sans-serif;
         font-weight: 500;
         font-style: italic;

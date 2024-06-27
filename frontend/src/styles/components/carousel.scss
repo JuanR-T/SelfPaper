@@ -15,8 +15,31 @@
         display: flex;
         position: relative;
         .carousel-description {
-            //background-color: rgb(124, 124, 124);
+            h1 {
+                text-align: left;
+            }
+            .carousel-publication-origin {
+                text-align: left;
+                color: $charcoal-color;
+                font-style: italic;
+                margin: 16px 0px;
+                display: flex;
+                justify-content: space-between;
+            }
+            p {
+                text-align: justify;
+                display: -webkit-box;
+                -webkit-box-orient:vertical;
+                line-break: anywhere;
+                width: 50%;
+                font-size: larger;
+            }
             height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-content: center;
+            flex-wrap: wrap;
             width: 40%;
         }
         .carousel-box {
