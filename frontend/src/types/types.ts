@@ -57,6 +57,7 @@ export interface Publisher {
     location: string;
     founded_at: string;
     services?: string[];
+    service?: string;
 }
 
 /** Themes */
@@ -96,7 +97,6 @@ export interface UpdateThemeProps {
 /** Publications */
 
 export interface Publication {
-    indexOf(): any;
     _id: string;
     title: string,
     description: string,

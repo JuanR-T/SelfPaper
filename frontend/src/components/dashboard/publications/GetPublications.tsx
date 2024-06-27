@@ -55,7 +55,8 @@ const GetPublications: React.FC = () => {
         },
         excerpt: '',
         publicationDate: '',
-        publisher: {
+        publisher:
+        {
             _id: '',
             title: '',
             description: '',
@@ -63,6 +64,7 @@ const GetPublications: React.FC = () => {
             location: '',
             founded_at: '',
             services: [''],
+            service: '',
         },
         author: author?.id,
     });
@@ -349,7 +351,7 @@ const GetPublications: React.FC = () => {
             },
         },
         {
-            title: 'Éditeur',
+            title: 'Éditeur / Service',
             dataIndex: 'publisher',
             width: '10%',
             render: (text: string, record: Publication) => {
@@ -368,7 +370,7 @@ const GetPublications: React.FC = () => {
                         ))}
                     </Select>
                 ) : (
-                    record.publisher.title
+                    record.publisher[0].title + " / " + record.publisher[1].service
                 );
             },
         },
