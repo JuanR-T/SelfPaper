@@ -4,7 +4,8 @@ import { handleGet } from '../../api/handleCall';
 import toastProvider from '../../lib/toastProvider';
 import { useAuth } from '../../context/AuthContext';
 import { Publication, PublicationApiResponse } from '../../types/types';
-import { FileImageOutlined } from '@ant-design/icons';
+import { FileImageOutlined, FileTextOutlined, TagOutlined } from '@ant-design/icons';
+import Capitalize from '../../lib/capitalizeLetter';
 
 const CarouselSection = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -59,7 +60,7 @@ const CarouselSection = () => {
     };
 
     const currentPublicationData = publicationsCarousel?.find(publication => publication.position === 'current');
-
+    /** TODO Change publicationType type, its array now  */
     return (
         <div className="carousel-section">
             <h1>Mes Articles</h1>
@@ -69,14 +70,17 @@ const CarouselSection = () => {
                     {currentPublicationData ? (
                         <>
                             <h1>{currentPublicationData.title}</h1>
+                            <h3><TagOutlined /> {" " + currentPublicationData.theme.title}</h3>
                             <p>{currentPublicationData.description}</p>
-                            <p>{currentPublicationData.publisher[0].title}</p>
-                            <p>{currentPublicationData.publisher[0].type}</p>
-                            <p>{currentPublicationData.theme.title}</p>
-                            <p>{currentPublicationData.publisher[1].service}</p>
+                            <div className="carousel-publication-origin">
+                                {Capitalize(currentPublicationData.publisher[0].type) + " "}
+                                {currentPublicationData.publisher[0].title}
+                                {" : " + currentPublicationData.publisher[1].service}
+                                <span><FileTextOutlined /> {" " + (currentPublicationData.type)}</span>
+                            </div>
+                            <button className="read-more-button">Lire l'article</button>
                         </>
                     ) : ('')}
-
                 </div>
                 <div className="carousel-box" ref={carouselRef}>
                     {publicationsCarousel?.map((publicationCard) => {
@@ -101,7 +105,7 @@ const CarouselSection = () => {
                                         }}
                                     />
                                 </div>
-                                <h3>{publicationCard.title}</h3>
+                                <h4>{publicationCard.title}</h4>
                                 <div className="card-excerpt">
                                     {publicationCard.excerpt}
                                 </div>

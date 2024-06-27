@@ -17,6 +17,7 @@ import { Publisher, RefetchTriggerProps } from '../../../types/types';
 import { useQuery } from 'react-query';
 import { useAuth } from '../../../context/AuthContext';
 import dayjs, { Dayjs } from 'dayjs';
+import Capitalize from '../../../lib/capitalizeLetter';
 
 const CreatePublication: React.FC<RefetchTriggerProps> = ({
     setRefetchTrigger,
@@ -119,7 +120,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
     };
     return (
         <Row className="creation-form">
-            <h2>Ajouter une publication</h2>
+            <h2>{Capitalize('Ajouter une publication')}</h2>
             <Form
                 name="creation-form"
                 initialValues={{ remember: true }}
@@ -221,7 +222,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                     </Upload>
                 </Form.Item>
                 <Form.Item
-                    label={'type'}
+                    label={'Format'}
                     name={'type'}
                     rules={[
                         {
@@ -230,7 +231,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                         },
                     ]}
                 >
-                    <Input.TextArea placeholder="Type(s) de la publication" />
+                    <Input.TextArea placeholder="Quel format ? Article, podcast..." />
                 </Form.Item>
                 <Form.Item
                     label={'Thèmes'}
@@ -243,7 +244,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                     ]}
                 >
                     <Select
-                        placeholder="Choisir un type"
+                        placeholder="Choisir un Thème"
                         options={useQueryThemes?.data.theme.map(
                             (item: any) => ({
                                 value: item._id,

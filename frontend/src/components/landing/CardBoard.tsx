@@ -47,7 +47,7 @@ const CardBoard = () => {
                                     }}
                                 />
                             </div>
-                            <h3>{publication.title}</h3>
+                            <h2>{publication.title}</h2>
                             <div className="card-excerpt">
                                 {publication.excerpt}
                             </div>
