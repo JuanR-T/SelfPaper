@@ -57,6 +57,7 @@ export interface Publisher {
     location: string;
     founded_at: string;
     services?: string[];
+    service?: string;
 }
 
 /** Themes */

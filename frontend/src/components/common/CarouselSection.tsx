@@ -70,9 +70,10 @@ const CarouselSection = () => {
                         <>
                             <h1>{currentPublicationData.title}</h1>
                             <p>{currentPublicationData.description}</p>
-                            <p>{currentPublicationData.publisher.title}</p>
-                            <p>{currentPublicationData.publisher.type}</p>
+                            <p>{currentPublicationData.publisher[0].title}</p>
+                            <p>{currentPublicationData.publisher[0].type}</p>
                             <p>{currentPublicationData.theme.title}</p>
+                            <p>{currentPublicationData.publisher[1].service}</p>
                         </>
                     ) : ('')}
 
