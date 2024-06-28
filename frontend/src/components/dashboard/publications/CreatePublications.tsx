@@ -99,6 +99,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
         await handlePost(`${BASE_URL}/api/publication/create`, {
             title: values.title,
             description: values.description,
+            link: values.link,
             thumbnail: values.thumbnail,
             postImage: values.postImage,
             type: values.type,
@@ -138,7 +139,6 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                     ]}
                 >
                     <Input
-                        prefix={<BookOutlined />}
                         placeholder="Almond mom..."
                     />
                 </Form.Item>
@@ -148,11 +148,19 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                     rules={[
                         {
                             required: true,
-                            message: 'Description de la publication',
+                            message: 'Veuillez inscrire une description !',
                         },
                     ]}
                 >
                     <Input.TextArea placeholder="Résumé de la publication" />
+                </Form.Item>
+                <Form.Item
+                    label={'Lien de la publication'}
+                    name={'link'}
+                >
+                    <Input
+                        placeholder="https://www.lemonde.fr/signataires/anne-chirol/"
+                    />
                 </Form.Item>
                 <Form.Item
                     label={'Thumbnail'}

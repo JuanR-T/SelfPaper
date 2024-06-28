@@ -44,6 +44,7 @@ const GetPublications: React.FC = () => {
         _id: '',
         title: '',
         description: '',
+        link: '',
         thumbnail: '',
         postImage: '',
         type: [''],
@@ -67,22 +68,6 @@ const GetPublications: React.FC = () => {
             service: '',
         },
         author: author?.id,
-    });
-    const { data: useQueryThemes }: any = useQuery('get_themes', async () => {
-        const useQueryThemes = await handleGet(
-            `${BASE_URL}/api/theme`,
-            getConfig(),
-        );
-        if (!useQueryThemes || !useQueryThemes.data) {
-            toastProvider(
-                'error',
-                'Une erreur est survenue pendant la récupération des thèmes. Veuillez réessayer.',
-                'bottom-left',
-                'colored',
-            );
-            return undefined;
-        }
-        return useQueryThemes;
     });
     const { data: useQueryPublishers }: any = useQuery(
         'get_publishers',
@@ -157,7 +142,7 @@ const GetPublications: React.FC = () => {
         {
             title: 'Nom',
             dataIndex: 'title',
-            width: '10%',
+            responsive: ['sm'],
             editable: true,
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
@@ -178,7 +163,7 @@ const GetPublications: React.FC = () => {
         {
             title: 'Description',
             dataIndex: 'description',
-            width: '20%',
+            responsive: ['sm'],
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Input.TextArea
@@ -191,14 +176,34 @@ const GetPublications: React.FC = () => {
                         value={editingRowData.description}
                     ></Input.TextArea>
                 ) : (
-                    text
+                    <p className="dashboard-formatted-content">{text}</p>
+                );
+            },
+        },
+        {
+            title: 'Lien',
+            dataIndex: 'link',
+            responsive: ['sm'],
+            render: (text: string, record: Publication) => {
+                return isEditingPublication && editingRowId === record._id ? (
+                    <Input.TextArea
+                        onChange={(e) => {
+                            setEditingRowData({
+                                ...editingRowData,
+                                link: e.target.value,
+                            });
+                        }}
+                        value={editingRowData.link}
+                    ></Input.TextArea>
+                ) : (
+                    <a className='formatted-link' target="_blank" href={text}>{text}</a>
                 );
             },
         },
         {
             title: 'Thumbnail',
             dataIndex: 'thumbnail',
-            width: '5%',
+            responsive: ['sm'],
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Upload
@@ -229,7 +234,7 @@ const GetPublications: React.FC = () => {
         {
             title: 'Image',
             dataIndex: 'postImage',
-            width: '5%',
+            responsive: ['sm'],
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Upload
@@ -262,7 +267,7 @@ const GetPublications: React.FC = () => {
         {
             title: 'Type',
             dataIndex: 'type',
-            width: '5%',
+            responsive: ['sm'],
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Input.TextArea
@@ -282,7 +287,7 @@ const GetPublications: React.FC = () => {
         {
             title: 'Thème',
             dataIndex: 'theme',
-            width: '5%',
+            responsive: ['sm'],
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Select
@@ -304,8 +309,8 @@ const GetPublications: React.FC = () => {
         {
             title: 'Excerpt',
             dataIndex: 'excerpt',
-            width: '20%',
             editable: true,
+            responsive: ['sm'],
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Input.TextArea
@@ -318,14 +323,14 @@ const GetPublications: React.FC = () => {
                         value={editingRowData.excerpt}
                     ></Input.TextArea>
                 ) : (
-                    text
+                    <p className="dashboard-formatted-content">{text}</p>
                 );
             },
         },
         {
             title: 'Date de publication',
             dataIndex: 'publicationDate',
-            width: '10%',
+            responsive: ['sm'],
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <DatePicker
@@ -353,7 +358,7 @@ const GetPublications: React.FC = () => {
         {
             title: 'Éditeur / Service',
             dataIndex: 'publisher',
-            width: '10%',
+            responsive: ['sm'],
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Select
@@ -377,7 +382,7 @@ const GetPublications: React.FC = () => {
         {
             title: 'Auteur',
             dataIndex: 'author',
-            width: '20%',
+            responsive: ['sm'],
             render: (record: Author) => {
                 if (record) {
                     return record?.firstName + ' ' + record?.lastName;
@@ -387,7 +392,7 @@ const GetPublications: React.FC = () => {
         },
         {
             title: 'Actions',
-            width: '15%',
+            responsive: ['sm'],
             render: (record: Publication) => {
                 return (
                     <>

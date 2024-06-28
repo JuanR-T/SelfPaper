@@ -100,6 +100,7 @@ export interface Publication {
     _id: string;
     title: string,
     description: string,
+    link?: string,
     thumbnail: Buffer | string ,
     postImage: Buffer | string ,
     type: string[],
