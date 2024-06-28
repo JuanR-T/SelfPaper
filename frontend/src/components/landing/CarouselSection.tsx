@@ -63,24 +63,24 @@ const CarouselSection = () => {
     /** TODO Change publicationType type, its array now  */
     return (
         <div className="carousel-section">
-            <h1>Mes Articles</h1>
             <div className="carousel-component">
                 <div className="carousel-description">
-
-                    {currentPublicationData ? (
-                        <>
-                            <h1>{currentPublicationData.title}</h1>
-                            <h3><TagOutlined /> {" " + currentPublicationData.theme.title}</h3>
-                            <p>{currentPublicationData.description}</p>
-                            <div className="carousel-publication-origin">
-                                {Capitalize(currentPublicationData.publisher[0].type) + " "}
-                                {currentPublicationData.publisher[0].title}
-                                {" : " + currentPublicationData.publisher[1].service}
-                                <span><FileTextOutlined /> {" " + (currentPublicationData.type)}</span>
-                            </div>
-                            <button className="read-more-button">Lire l'article</button>
-                        </>
-                    ) : ('')}
+                    <div className="carousel-description-box">
+                        {currentPublicationData ? (
+                            <>
+                                <h2>{currentPublicationData.title}</h2>
+                                <h3><TagOutlined /> {" " + currentPublicationData.theme.title}</h3>
+                                <p>{currentPublicationData.description}</p>
+                                <div className="carousel-publication-origin">
+                                    {Capitalize(currentPublicationData.publisher[0].type) + " "}
+                                    {currentPublicationData.publisher[0].title}
+                                    {" : " + currentPublicationData.publisher[1].service}
+                                    <span><FileTextOutlined /> {" " + (currentPublicationData.type)}</span>
+                                </div>
+                                <a className="read-more-button" target="_blank" href={currentPublicationData.link}>Lire l'article</a>
+                            </>
+                        ) : ('')}
+                    </div>
                 </div>
                 <div className="carousel-box" ref={carouselRef}>
                     {publicationsCarousel?.map((publicationCard) => {
@@ -96,14 +96,14 @@ const CarouselSection = () => {
                                 key={publicationCard._id}
                             >
                                 <div className="card-image">
-                                    <FileImageOutlined
+                                    {/* <FileImageOutlined
                                         style={{
                                             fontSize: '80px',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
                                         }}
-                                    />
+                                    /> */}
                                 </div>
                                 <h4>{publicationCard.title}</h4>
                                 <div className="card-excerpt">

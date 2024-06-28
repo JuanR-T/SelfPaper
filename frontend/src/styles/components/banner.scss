@@ -1,0 +1,11 @@
+.banner-container {
+    text-align: center;
+    display: flex;
+    position: relative;
+    width: 100%;
+    padding: 0px 50px;
+    height: 600px;
+    .card {
+        height: 100%;
+    }
+}

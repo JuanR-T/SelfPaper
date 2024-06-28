@@ -11,7 +11,7 @@ import {
     Publisher,
     RefetchTriggerProps,
 } from '../../../types/types';
-import ModalProvider from '../../common/ModalProvider';
+import ModalProvider from '../../utils/ModalProvider';
 import CreatePublisherForm from './CreatePublisher';
 //TODO clean this awfull code
 

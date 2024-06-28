@@ -1,8 +1,4 @@
-import { Typography } from 'antd';
-import photoAnne from '../../assets/photo_anne.jpg';
 import { useEffect, useState } from 'react';
-
-//const { Title, Paragraph } = Typography;
 
 const HeroSection = () => {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -29,6 +25,5 @@ const HeroSection = () => {
         </div>
     );
 };
-//this goes in hero-image is needed in the end <img src={photoAnne} alt="Anne Chirol" className="journalist-portrait" />
 
 export default HeroSection;

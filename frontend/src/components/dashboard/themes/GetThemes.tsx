@@ -12,7 +12,7 @@ import {
 } from '../../../types/types';
 import DeleteTheme from './DeleteThemes';
 import UpdateThemes from './UpdateThemes';
-import ModalProvider from '../../common/ModalProvider';
+import ModalProvider from '../../utils/ModalProvider';
 import CreateTheme from './CreateThemes';
 
 const GetThemes: React.FC<RefetchTriggerProps> = ({
