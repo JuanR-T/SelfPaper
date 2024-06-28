@@ -1,5 +1,5 @@
 import { useAuth } from '../../context/AuthContext';
-import Contact from './Contact';
+import Contact from '../ui/Contact';
 
 const Footer = () => {
     const { author } = useAuth();

@@ -23,7 +23,7 @@ import {
 import dayjs, { Dayjs } from 'dayjs';
 import UpdatePublications from './UpdatePublications';
 import DeletePublications from './DeletePublications';
-import ModalProvider from '../../common/ModalProvider';
+import ModalProvider from '../../utils/ModalProvider';
 import CreatePublication from './CreatePublications';
 
 const GetPublications: React.FC = () => {

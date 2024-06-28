@@ -1,5 +1,5 @@
-import Contact from '../common/Contact';
-import Nav from '../common/Nav';
+import Contact from '../ui/Contact';
+import Nav from '../ui/Nav';
 
 const Header = () => {
     return (
