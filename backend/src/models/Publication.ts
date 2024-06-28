@@ -3,6 +3,7 @@ import { Schema, SchemaTypes, model } from 'mongoose';
 const publicationSchema = new Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
+    link: {type: String},
     thumbnail: { type: Buffer || String },
     postImage: [
         {
