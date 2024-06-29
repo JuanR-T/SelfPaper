@@ -1,5 +1,11 @@
+
+/* Tailwind CSS */
+@import '../../node_modules/tailwindcss/base.css';
+@import '../../node_modules/tailwindcss/components.css';
+@import '../../node_modules/tailwindcss/utilities.css';
+
+/* Custom CSS */
 @import "./button/button.scss";
-@import "./components/main.scss";
 @import "./components/form.scss";
 @import "./conf/variables.scss";
 @import "./font.scss";
