@@ -1,4 +1,3 @@
-import React from 'react'
 import { useQuery } from 'react-query';
 import { handleGet } from '../../api/handleCall';
 import toastProvider from '../../lib/toastProvider';
@@ -40,7 +39,6 @@ const AnimatedBanner = () => {
                 speed="slow"
                 pauseOnHover={true}
             />
-            AnimatedBanner
         </div>
     )
 }

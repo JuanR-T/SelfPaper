@@ -11,6 +11,13 @@ const config = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'custom-gradient': 'linear-gradient(rgba(0, 0, 0, 0.062745098), rgba(0, 0, 0, 0.7))',
+      },
+      colors: {
+        'charcoal-color': '#2e3239',
+        'charcoal-darker-color': '#26292b'
+      },
       animation: {
         scroll:
           "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
