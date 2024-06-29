@@ -1,3 +1,6 @@
+.main-content {
+    background-color: $milky-white-darker-color;
+}
 body {
     margin: 0px;
 }
@@ -9,7 +12,9 @@ h1 {
 h2 {
     font-family: $title-font-h2;
     font-size: $title-font-size-md;
+    font-weight: 900;
     display: block;
+    margin: 10px 0px;
 }
 h3 {
     font-family: $title-font-h2;
@@ -18,7 +23,7 @@ h3 {
     text-align: left;
     display: block;
     color: $eighties-purple-darker;
-
+    margin: 10px 0px;
 }
 h4 {
     font-family: $title-font-h2;
@@ -30,6 +35,7 @@ h4 {
 p {
     font-family: $text-font;
     font-size: $title-font-size-xs;
+    margin: 10px 0px;
 }
 .page-title {
     display: block;

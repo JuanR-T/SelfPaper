@@ -14,6 +14,7 @@ const Home: React.FC = () => {
             <Content className="main-content">
                 <Header />
                 <HeroSection />
+                <CustomCarousel />
                 <AnimatedBanner />
                 <ContentContainer />
                 <ContentContainer />

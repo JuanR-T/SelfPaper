@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import { Publication, PublicationApiResponse } from '../../types/types';
 import { FileImageOutlined, FileTextOutlined, TagOutlined } from '@ant-design/icons';
 import Capitalize from '../../lib/capitalizeLetter';
+import { HeroParallax } from '../ui/HeroParallax';
 
 const CarouselSection = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -13,7 +14,7 @@ const CarouselSection = () => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [publicationsCarousel, setPublicationsCarousel] = useState<Publication[]>([]);
     const carouselRef = useRef<HTMLDivElement>(null);
-
+    //TODO Refacto all useQuery get_publications in order to avoid multiple calls
     const { data: useQueryPublications } = useQuery(
         'get_publications',
         async () => {
@@ -62,66 +63,69 @@ const CarouselSection = () => {
     const currentPublicationData = publicationsCarousel?.find(publication => publication.position === 'current');
     /** TODO Change publicationType type, its array now  */
     return (
-        <div className="carousel-section">
-            <div className="carousel-component">
-                <div className="carousel-description">
-                    <div className="carousel-description-box">
-                        {currentPublicationData ? (
-                            <>
-                                <h2>{currentPublicationData.title}</h2>
-                                <h3><TagOutlined /> {" " + currentPublicationData.theme.title}</h3>
-                                <p>{currentPublicationData.description}</p>
-                                <div className="carousel-publication-origin">
-                                    {Capitalize(currentPublicationData.publisher[0].type) + " "}
-                                    {currentPublicationData.publisher[0].title}
-                                    {" : " + currentPublicationData.publisher[1].service}
-                                    <span><FileTextOutlined /> {" " + (currentPublicationData.type)}</span>
+        <>
+            <HeroParallax publications={publications} />
+            <div className="carousel-section">
+                <div className="carousel-component">
+                    <div className="carousel-description">
+                        <div className="carousel-description-box">
+                            {currentPublicationData ? (
+                                <>
+                                    <h2>{currentPublicationData.title}</h2>
+                                    <h3><TagOutlined /> {" " + currentPublicationData.theme.title}</h3>
+                                    <p>{currentPublicationData.description}</p>
+                                    <div className="carousel-publication-origin">
+                                        {Capitalize(currentPublicationData.publisher[0].type) + " "}
+                                        {currentPublicationData.publisher[0].title}
+                                        {" : " + currentPublicationData.publisher[1].service}
+                                        <span><FileTextOutlined /> {" " + (currentPublicationData.type)}</span>
+                                    </div>
+                                    <a className="read-more-button" target="_blank" href={currentPublicationData.link}>Lire l'article</a>
+                                </>
+                            ) : ('')}
+                        </div>
+                    </div>
+                    <div className="carousel-box" ref={carouselRef}>
+                        {publicationsCarousel?.map((publicationCard) => {
+                            return (
+                                <div
+                                    style={{
+
+                                        transform: publicationCard.position === 'current' ? 'scale(1)' : 'scale(0.8)',
+                                        opacity: publicationCard.position === 'current' ? 1 : 0.7,
+                                        transition: 'transform 0.5s, opacity 0.7s'
+                                    }}
+                                    className={`card ${publicationCard.position}`}
+                                    key={publicationCard._id}
+                                >
+                                    <div className="card-image">
+                                        {/* <FileImageOutlined
+                                            style={{
+                                                fontSize: '80px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                            }}
+                                        /> */}
+                                    </div>
+                                    <h4>{publicationCard.title}</h4>
+                                    <div className="card-excerpt">
+                                        {publicationCard.excerpt}
+                                    </div>
+                                    <div className="card-date">
+                                        Publié le {publicationCard.publicationDate}
+                                    </div>
                                 </div>
-                                <a className="read-more-button" target="_blank" href={currentPublicationData.link}>Lire l'article</a>
-                            </>
-                        ) : ('')}
+                            );
+                        })}
+                    </div>
+                    <div className="carousel-buttons">
+                        <button className="carousel-button left" onClick={prevCard}>Previous</button>
+                        <button className="carousel-button right" onClick={nextCard}>Next</button>
                     </div>
                 </div>
-                <div className="carousel-box" ref={carouselRef}>
-                    {publicationsCarousel?.map((publicationCard) => {
-                        return (
-                            <div
-                                style={{
-
-                                    transform: publicationCard.position === 'current' ? 'scale(1)' : 'scale(0.8)',
-                                    opacity: publicationCard.position === 'current' ? 1 : 0.7,
-                                    transition: 'transform 0.5s, opacity 0.7s'
-                                }}
-                                className={`card ${publicationCard.position}`}
-                                key={publicationCard._id}
-                            >
-                                <div className="card-image">
-                                    {/* <FileImageOutlined
-                                        style={{
-                                            fontSize: '80px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                        }}
-                                    /> */}
-                                </div>
-                                <h4>{publicationCard.title}</h4>
-                                <div className="card-excerpt">
-                                    {publicationCard.excerpt}
-                                </div>
-                                <div className="card-date">
-                                    Publié le {publicationCard.publicationDate}
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-                <div className="carousel-buttons">
-                    <button className="carousel-button left" onClick={prevCard}>Previous</button>
-                    <button className="carousel-button right" onClick={nextCard}>Next</button>
-                </div>
-            </div>
-        </div >
+            </div >
+        </>
     );
 };
 
