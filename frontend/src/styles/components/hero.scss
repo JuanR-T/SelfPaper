@@ -11,10 +11,11 @@
     height: 100vh;
     display: flex;
     align-items: center;
-    justify-content: center; /* Center content vertically */
-    opacity: 0; /* Initial state for the fade-in effect */
-    transition: opacity 2.5s ease;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 2.5s ease, transform 1s ease;
     h1{
+        font-size: 60px !important;
         color: #fff;
         margin-bottom: 16px;
         -webkit-text-stroke-width: 1px;
@@ -48,7 +49,6 @@
     position: relative;
     p {
         font-weight: bold;
-        //opacity: 0.9;
         text-align: justify;
         color: $milky-white-color;
         font-size: 20px;

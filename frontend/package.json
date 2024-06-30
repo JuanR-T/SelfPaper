@@ -35,6 +35,7 @@
     "react-spring": "^9.7.3",
     "react-spring-carousel": "^2.0.19",
     "react-toastify": "^10.0.4",
+    "svelte-motion": "^0.12.2",
     "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
