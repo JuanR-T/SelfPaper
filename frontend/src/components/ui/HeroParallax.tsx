@@ -7,7 +7,7 @@ import {
     MotionValue,
 } from "framer-motion";
 import { Publication } from "../../types/types";
-
+import { HeroHighlight } from "./HeroHighlight";
 export const HeroParallax = ({
     publications,
 }: {
@@ -53,7 +53,7 @@ export const HeroParallax = ({
     return (
         <div
             ref={ref}
-            className="h-[250vh] py-40 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
+            className="h-[250vh] py-36 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
         >
             <Header />
             <motion.div
@@ -92,7 +92,6 @@ export const HeroParallax = ({
                         />
                     ))}
                 </motion.div>
-
             </motion.div>
         </div>
     );
@@ -100,11 +99,11 @@ export const HeroParallax = ({
 
 export const Header = () => {
     return (
-        <div className="max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full  left-0 top-0">
-            <h1 className="text-charcoal-color text-2xl md:text-7xl font-bold dark:text-white">
-                Anne Chirol <br /> Journaliste au journal Le Monde.
+        <div className="max-w-7xl flex align-middle flex-col relative mx-auto py-20 md:py-40 px-4">
+            <h1 className="text-zinc-950 text-7xl md:text-7xl font-bold dark:text-white text-center">
+                Mes articles
             </h1>
-            <p className="text-charcoal-color max-w-2xl text-base md:text-xl mt-8 dark:text-neutral-200">
+            <p className="text-zinc-900 font-medium max-w-2xl md:text-xl mt-8 dark:text-neutral-200 text-left">
                 Anne Chirol est une journaliste pigiste pour divers services du journal Le Monde, elle est connue notamment pour sa chronique hebdomadaire "Toi meme", dans laquelle elle dépeint des archétypes sociaux issues d'internet...
             </p>
         </div>
@@ -145,9 +144,10 @@ export const PublicationCard = ({
             <p className="absolute top-11 left-4 text-white">
                 {publication.publicationDate}
             </p>
-            <p className="z-30 card-excerpt opacity-0 group-hover/publication:opacity-100 overflow-hidden w-[100%] mt-72 p-5 bottom-10 left-4 text-white">
+            <p className="card-excerpt font-extrabold opacity-0 group-hover/publication:opacity-100 overflow-hidden w-[100%] mt-72 p-5 bottom-10 left-4 text-white">
                 {publication.description}
             </p>
         </motion.div>
+
     );
 };
