@@ -6,6 +6,8 @@ export interface RefetchTriggerProps {
     handleCancelation?: (() => void | undefined) | undefined;
 }
 
+export type CapitalizeLetterTypes = string | string[];
+
 /** Author */
 export interface Author {
     id: string;

@@ -7,6 +7,9 @@ import { Publication, PublicationApiResponse } from '../../types/types';
 import { FileImageOutlined, FileTextOutlined, TagOutlined } from '@ant-design/icons';
 import Capitalize from '../../lib/capitalizeLetter';
 import { HeroParallax } from '../ui/HeroParallax';
+import { HeroHighlight, Highlight } from '../ui/HeroHighlight';
+import { motion } from 'framer-motion';
+import MagicText from '../ui/MagicText';
 
 const CarouselSection = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -62,9 +65,11 @@ const CarouselSection = () => {
 
     const currentPublicationData = publicationsCarousel?.find(publication => publication.position === 'current');
     /** TODO Change publicationType type, its array now  */
+    /** Use tabs aceternity ui component to make the carousel */
     return (
         <>
             <HeroParallax publications={publications} />
+            <MagicText />
             <div className="carousel-section">
                 <div className="carousel-component">
                     <div className="carousel-description">
