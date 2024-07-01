@@ -65,7 +65,7 @@ const CarouselSection = () => {
 
     const currentPublicationData = publicationsCarousel?.find(publication => publication.position === 'current');
     /** TODO Change publicationType type, its array now  */
-
+    /** Use tabs aceternity ui component to make the carousel */
     return (
         <>
             <HeroParallax publications={publications} />
