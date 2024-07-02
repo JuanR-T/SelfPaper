@@ -4,7 +4,6 @@ import toastProvider from '../../lib/toastProvider';
 import { useAuth } from '../../context/AuthContext';
 import { PublicationApiResponse } from '../../types/types';
 import { HeroParallax } from '../ui/HeroParallax';
-import MagicText from '../ui/MagicText';
 
 const CarouselSection = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -39,7 +38,6 @@ const CarouselSection = () => {
     return (
         <>
             <HeroParallax publications={publications} />
-            <MagicText />
         </>
     );
 };
