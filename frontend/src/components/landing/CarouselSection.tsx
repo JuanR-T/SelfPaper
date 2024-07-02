@@ -4,10 +4,7 @@ import toastProvider from '../../lib/toastProvider';
 import { useAuth } from '../../context/AuthContext';
 import { PublicationApiResponse } from '../../types/types';
 import { Tabs } from '../ui/Tabs';
-import {
-    FileTextOutlined,
-    TagOutlined,
-} from '@ant-design/icons';
+import { FileTextOutlined, TagOutlined } from '@ant-design/icons';
 import {
     CardBody,
     CardContainer,
@@ -50,11 +47,12 @@ const CarouselSection = () => {
         value: publication?._id,
         content: (
             <>
-                <CardContainer
-                    containerClassName={'custom-carousel-container'}
-                >
+                <CardContainer containerClassName={'custom-carousel-container'}>
                     <CardBody className={'custom-carousel-body'}>
-                        <CardItem translateZ="100" className="h-full justify-between flex flex-col space-x-0 > * w-full mt-4">
+                        <CardItem
+                            translateZ="100"
+                            className="h-full justify-between flex flex-col space-x-0 > * w-full mt-4"
+                        >
                             <>
                                 <h2>{publication.title}</h2>
                                 <h3>
@@ -63,14 +61,10 @@ const CarouselSection = () => {
                                 </h3>
                                 <p>{publication.description}</p>
                                 <div className="carousel-publication-origin">
-                                    {Capitalize(
-                                        publication.publisher[0]
-                                            .type,
-                                    ) + ' '}
+                                    {Capitalize(publication.publisher[0].type) +
+                                        ' '}
                                     {publication.publisher[0].title}
-                                    {' : ' +
-                                        publication.publisher[1]
-                                            .service}
+                                    {' : ' + publication.publisher[1].service}
                                     <span>
                                         <FileTextOutlined />{' '}
                                         {' ' + publication.type}
@@ -85,10 +79,7 @@ const CarouselSection = () => {
                                 </a>
                             </>
                         </CardItem>
-                        <CardItem
-                            translateZ="100"
-                            className="w-full mt-4"
-                        >
+                        <CardItem translateZ="100" className="w-full mt-4">
                             <div className="rounded-xl group-hover/card:shadow-xl custom-carousel-image"></div>
                         </CardItem>
                     </CardBody>
@@ -96,11 +87,15 @@ const CarouselSection = () => {
             </>
         ),
     }));
-    console.log("tabs", tabs)
+    console.log('tabs', tabs);
     return (
         <>
             <div className="h-[20rem] md:h-[40rem] [perspective:1000px] relative b flex flex-col max-w-5xl mx-auto w-full  items-start justify-start my-40">
-                {tabs.length !== 0 ? <Tabs tabs={tabs} contentClassName={""} /> : ""}
+                {tabs.length !== 0 ? (
+                    <Tabs tabs={tabs} contentClassName={''} />
+                ) : (
+                    ''
+                )}
             </div>
         </>
     );

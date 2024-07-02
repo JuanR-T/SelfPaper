@@ -4,10 +4,7 @@ import { handleGet } from '../../api/handleCall';
 import toastProvider from '../../lib/toastProvider';
 import { PublicationApiResponse } from '../../types/types';
 import { useAuth } from '../../context/AuthContext';
-import {
-    FileTextOutlined,
-    TagOutlined,
-} from '@ant-design/icons';
+import { FileTextOutlined, TagOutlined } from '@ant-design/icons';
 import { Publication } from '../../types/types';
 import Capitalize from '../../lib/capitalizeLetter';
 
