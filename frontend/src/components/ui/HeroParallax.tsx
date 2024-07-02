@@ -22,7 +22,7 @@ export const HeroParallax = ({
         target: ref,
         offset: ['start start', 'end start'],
     });
-    console.log("scroll progress", scrollYProgress);
+    console.log('scroll progress', scrollYProgress);
 
     const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
 
@@ -107,9 +107,14 @@ export const HeroParallax = ({
                     }}
                     className="fixed text-center justify-center items-center bottom-10 flex flex-col left-1/2 transform -translate-x-1/2"
                 >
-                    <h1 className="text-2xl font-bold mb-4">Pour voir le reste de mes articles ainsi que mes livres <br /> vous pouvez cliquer sur ce lien
+                    <h1 className="text-2xl font-bold mb-4">
+                        Pour voir le reste de mes articles ainsi que mes livres{' '}
+                        <br /> vous pouvez cliquer sur ce lien
                     </h1>
-                    <a href="#more-content" className="read-more-button text-blue-500 underline">
+                    <a
+                        href="#more-content"
+                        className="read-more-button text-blue-500 underline"
+                    >
                         Read More
                     </a>
                 </motion.div>
