@@ -56,8 +56,7 @@ const GetPublications: React.FC = () => {
         },
         excerpt: '',
         publicationDate: '',
-        publisher:
-        {
+        publisher: {
             _id: '',
             title: '',
             description: '',
@@ -196,7 +195,9 @@ const GetPublications: React.FC = () => {
                         value={editingRowData.link}
                     ></Input.TextArea>
                 ) : (
-                    <a className='formatted-link' target="_blank" href={text}>{text}</a>
+                    <a className="formatted-link" target="_blank" href={text}>
+                        {text}
+                    </a>
                 );
             },
         },
@@ -375,7 +376,9 @@ const GetPublications: React.FC = () => {
                         ))}
                     </Select>
                 ) : (
-                    record.publisher[0].title + " / " + record.publisher[1].service
+                    record.publisher[0].title +
+                        ' / ' +
+                        record.publisher[1].service
                 );
             },
         },

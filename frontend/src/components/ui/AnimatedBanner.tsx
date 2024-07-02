@@ -3,7 +3,7 @@ import { handleGet } from '../../api/handleCall';
 import toastProvider from '../../lib/toastProvider';
 import { PublicationApiResponse } from '../../types/types';
 import { useAuth } from '../../context/AuthContext';
-import { InfiniteMovingCards } from '../ui/InfiniteMovingCards';
+import { InfiniteMovingCards } from './InfiniteMovingCards';
 
 const AnimatedBanner = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -29,7 +29,9 @@ const AnimatedBanner = () => {
         },
     );
 
-    const publications = (useQueryPublications?.data as PublicationApiResponse)?.publications || [];
+    const publications =
+        (useQueryPublications?.data as PublicationApiResponse)?.publications ||
+        [];
 
     return (
         <div className="banner-container">
@@ -40,7 +42,7 @@ const AnimatedBanner = () => {
                 pauseOnHover={true}
             />
         </div>
-    )
-}
+    );
+};
 
-export default AnimatedBanner
+export default AnimatedBanner;
