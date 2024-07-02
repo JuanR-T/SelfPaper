@@ -81,3 +81,35 @@
         }
     }
 }
+
+.custom-carousel-container {
+    display: flex;
+    width: 100%;
+    height: 600px;
+    padding: 10px;
+    .custom-carousel-body {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        padding: 10px 40px;
+        background-color: $milky-white-color;
+        box-shadow: $box-shadow-light;
+        border-radius: $border-radius-md;
+        .custom-carousel-content {
+            width: 100%;
+            height: 100%;
+        }
+        .custom-carousel-image{
+            border: 1px solid black;
+            background-color: $eighties-purple;
+            padding: 0px 20px;
+            //margin: 20px;
+            width: 100%;
+            height: 100%;
+            background-image: url("/photo_anne3.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+    }
+}
