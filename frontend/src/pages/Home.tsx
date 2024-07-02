@@ -6,7 +6,7 @@ import Header from '../components/landing/Header';
 import Footer from '../components/landing/Footer';
 import ContentContainer from '../components/landing/Content';
 import CustomCarousel from '../components/landing/CarouselSection';
-import AnimatedBanner from '../components/landing/AnimatedBanner';
+import AnimatedBanner from '../components/ui/AnimatedBanner';
 import BiographySection from '../components/landing/BiographySection';
 
 const Home: React.FC = () => {

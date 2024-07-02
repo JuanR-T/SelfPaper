@@ -39,8 +39,11 @@ const MagicText = () => {
                 animate={controls}
                 className="text-2xl px-4 md:text-4xl lg:text-5xl font-bold text-neutral-700 dark:text-white max-w-4xl leading-relaxed lg:leading-snug text-center mx-auto"
             >
-                Pour voir le reste de mes articles ainsi que mes livres vous pouvez cliquer sur ce lien <br />
-                <a href="#" className="read-more-button">Voir plus d'articles</a>
+                Pour voir le reste de mes articles ainsi que mes livres vous
+                pouvez cliquer sur ce lien <br />
+                <a href="#" className="read-more-button">
+                    Voir plus d'articles
+                </a>
             </motion.h1>
         </div>
     );

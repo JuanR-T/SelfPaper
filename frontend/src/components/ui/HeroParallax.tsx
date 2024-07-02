@@ -1,18 +1,17 @@
-import React from "react";
-import { Publication } from "../../types/types";
+import React from 'react';
+import { Publication } from '../../types/types';
 import {
     motion,
     useScroll,
     useTransform,
     useSpring,
     MotionValue,
-} from "framer-motion";
-
+} from 'framer-motion';
 
 export const HeroParallax = ({
     publications,
 }: {
-    publications: Publication[]
+    publications: Publication[];
 }) => {
     const firstRow = publications.slice(0, 5);
     const secondRow = publications.slice(5, 10);
@@ -21,34 +20,34 @@ export const HeroParallax = ({
     const ref = React.useRef(null);
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ["start start", "end start"],
+        offset: ['start start', 'end start'],
     });
 
     const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
 
     const translateX = useSpring(
         useTransform(scrollYProgress, [0, 1], [0, 1000]),
-        springConfig
+        springConfig,
     );
     const translateXReverse = useSpring(
         useTransform(scrollYProgress, [0, 1], [0, -1000]),
-        springConfig
+        springConfig,
     );
     const rotateX = useSpring(
         useTransform(scrollYProgress, [0, 0.2], [15, 0]),
-        springConfig
+        springConfig,
     );
     const opacity = useSpring(
         useTransform(scrollYProgress, [0, 0.2], [0.3, 1]),
-        springConfig
+        springConfig,
     );
     const rotateZ = useSpring(
         useTransform(scrollYProgress, [0, 0.2], [20, 0]),
-        springConfig
+        springConfig,
     );
     const translateY = useSpring(
         useTransform(scrollYProgress, [0, 0.2], [-700, 500]),
-        springConfig
+        springConfig,
     );
     return (
         <div
@@ -104,7 +103,10 @@ export const Header = () => {
                 Mes articles
             </h1>
             <p className="text-zinc-900 font-medium max-w-2xl md:text-xl mt-8 dark:text-neutral-200 text-left">
-                Anne Chirol est une journaliste pigiste pour divers services du journal Le Monde, elle est connue notamment pour sa chronique hebdomadaire "Toi meme", dans laquelle elle dépeint des archétypes sociaux issues d'internet...
+                Anne Chirol est une journaliste pigiste pour divers services du
+                journal Le Monde, elle est connue notamment pour sa chronique
+                hebdomadaire "Toi meme", dans laquelle elle dépeint des
+                archétypes sociaux issues d'internet...
             </p>
         </div>
     );
@@ -114,7 +116,7 @@ export const PublicationCard = ({
     publication,
     translate,
 }: {
-    publication: Publication
+    publication: Publication;
     translate: MotionValue<number>;
 }) => {
     return (
@@ -127,16 +129,15 @@ export const PublicationCard = ({
             style={{
                 x: translate,
                 backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.062745098)), url("/toi_meme_logo.png")`,
-                backgroundSize: 'cover', backgroundPosition: 'center'
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
             }}
             className="cursor-pointer group/publication h-[24rem] w-[28rem] rounded-xl relative flex-shrink-0"
         >
             <a
                 href={publication.link}
                 className="block group-hover/publication:shadow-2xl"
-            >
-
-            </a>
+            ></a>
             <div className="absolute inset-0 rounded-xl h-full w-full opacity-0 group-hover/publication:opacity-40 bg-black pointer-events-none"></div>
             <h2 className="absolute top-0 left-4 text-white">
                 {publication.title}
@@ -148,6 +149,5 @@ export const PublicationCard = ({
                 {publication.description}
             </p>
         </motion.div>
-
     );
 };

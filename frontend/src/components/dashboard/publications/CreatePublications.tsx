@@ -138,9 +138,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                         },
                     ]}
                 >
-                    <Input
-                        placeholder="Almond mom..."
-                    />
+                    <Input placeholder="Almond mom..." />
                 </Form.Item>
                 <Form.Item
                     label={'Description'}
@@ -154,13 +152,8 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                 >
                     <Input.TextArea placeholder="Résumé de la publication" />
                 </Form.Item>
-                <Form.Item
-                    label={'Lien de la publication'}
-                    name={'link'}
-                >
-                    <Input
-                        placeholder="https://www.lemonde.fr/signataires/anne-chirol/"
-                    />
+                <Form.Item label={'Lien de la publication'} name={'link'}>
+                    <Input placeholder="https://www.lemonde.fr/signataires/anne-chirol/" />
                 </Form.Item>
                 <Form.Item
                     label={'Thumbnail'}

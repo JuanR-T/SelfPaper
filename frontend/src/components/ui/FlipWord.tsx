@@ -1,8 +1,8 @@
-"use client";
-import { useCallback, useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { cn } from "../../lib/cn";
-import Capitalize from "../../lib/capitalizeLetter";
+'use client';
+import { useCallback, useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { cn } from '../../lib/cn';
+import Capitalize from '../../lib/capitalizeLetter';
 
 export const FlipWords = ({
     words,
@@ -18,7 +18,9 @@ export const FlipWords = ({
     const wordsFormatted = Capitalize(words);
 
     const startAnimation = useCallback(() => {
-        const word = wordsFormatted[wordsFormatted.indexOf(currentWord) + 1] || wordsFormatted[0];
+        const word =
+            wordsFormatted[wordsFormatted.indexOf(currentWord) + 1] ||
+            wordsFormatted[0];
         setCurrentWord(word);
         setIsAnimating(true);
     }, [currentWord, wordsFormatted]);
@@ -47,8 +49,8 @@ export const FlipWords = ({
                 }}
                 transition={{
                     duration: 0.4,
-                    ease: "easeInOut",
-                    type: "spring",
+                    ease: 'easeInOut',
+                    type: 'spring',
                     stiffness: 100,
                     damping: 10,
                 }}
@@ -56,21 +58,21 @@ export const FlipWords = ({
                     opacity: 0,
                     y: -40,
                     x: 40,
-                    filter: "blur(8px)",
+                    filter: 'blur(8px)',
                     scale: 2,
-                    position: "absolute",
+                    position: 'absolute',
                 }}
                 className={cn(
-                    "z-10 inline-block relative text-left text-neutral-900 dark:text-neutral-100",
-                    className
+                    'z-10 inline-block relative text-left text-neutral-900 dark:text-neutral-100',
+                    className,
                 )}
                 key={currentWord}
             >
-                {currentWord.split("").map((letter, index) => (
+                {currentWord.split('').map((letter, index) => (
                     <motion.span
                         key={currentWord + index}
-                        initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
-                        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                        initial={{ opacity: 0, y: 10, filter: 'blur(8px)' }}
+                        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                         transition={{
                             delay: index * 0.08,
                             duration: 0.4,
