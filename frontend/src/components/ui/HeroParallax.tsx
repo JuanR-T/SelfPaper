@@ -1,4 +1,5 @@
 import React from "react";
+import { Publication } from "../../types/types";
 import {
     motion,
     useScroll,
@@ -6,8 +7,8 @@ import {
     useSpring,
     MotionValue,
 } from "framer-motion";
-import { Publication } from "../../types/types";
-import { HeroHighlight } from "./HeroHighlight";
+
+
 export const HeroParallax = ({
     publications,
 }: {
@@ -16,7 +17,6 @@ export const HeroParallax = ({
     const firstRow = publications.slice(0, 5);
     const secondRow = publications.slice(5, 10);
     const thirdRow = publications.slice(10, 15);
-    console.log("rows", firstRow, secondRow, thirdRow);
 
     const ref = React.useRef(null);
     const { scrollYProgress } = useScroll({
