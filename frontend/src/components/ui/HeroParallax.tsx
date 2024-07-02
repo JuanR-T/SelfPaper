@@ -22,6 +22,7 @@ export const HeroParallax = ({
         target: ref,
         offset: ['start start', 'end start'],
     });
+    console.log("scroll progress", scrollYProgress);
 
     const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
 
@@ -49,10 +50,18 @@ export const HeroParallax = ({
         useTransform(scrollYProgress, [0, 0.2], [-700, 500]),
         springConfig,
     );
+    const newDivOpacity = useSpring(
+        useTransform(scrollYProgress, [0, 0.8], [0, 1]),
+        springConfig,
+    );
+    const newDivTranslateY = useSpring(
+        useTransform(scrollYProgress, [0.8, 1], [100, 0]),
+        springConfig,
+    );
     return (
         <div
             ref={ref}
-            className="h-[250vh] py-36 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
+            className="h-[195vh] py-36 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
         >
             <Header />
             <motion.div
@@ -90,6 +99,19 @@ export const HeroParallax = ({
                             key={publication.title}
                         />
                     ))}
+                </motion.div>
+                <motion.div
+                    style={{
+                        opacity: newDivOpacity,
+                        translateY: newDivTranslateY,
+                    }}
+                    className="fixed text-center justify-center items-center bottom-10 flex flex-col left-1/2 transform -translate-x-1/2"
+                >
+                    <h1 className="text-2xl font-bold mb-4">Pour voir le reste de mes articles ainsi que mes livres <br /> vous pouvez cliquer sur ce lien
+                    </h1>
+                    <a href="#more-content" className="read-more-button text-blue-500 underline">
+                        Read More
+                    </a>
                 </motion.div>
             </motion.div>
         </div>
