@@ -30,23 +30,9 @@ const HeroSection = () => {
                     <h1>Anne Chirol</h1>
                     <div className="hero-biography">
                         <span className="hero-flip-word">
-                            <FlipWords
-                                words={[
-                                    'journaliste',
-                                    'écrivaine',
-                                    'autrice',
-                                    'pigiste',
-                                ]}
-                                className="hero-flip-word"
-                            />
+                            Journaliste indépendante
                         </span>
-                        <p>
-                            Anne Chirol est une journaliste pigiste pour divers
-                            services du journal Le Monde, elle est connue
-                            notamment pour sa chronique hebdomadaire "Toi meme",
-                            dans laquelle elle dépeint des archétypes sociaux
-                            issues d'internet...
-                        </p>
+
                         <button className="read-more-button">
                             En savoir plus
                         </button>

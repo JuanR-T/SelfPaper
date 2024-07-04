@@ -1,7 +1,6 @@
 .card {
     height: 80%;
     padding: 10px;
-    cursor: pointer;
     background-image: linear-gradient(#00000010, rgba(0, 0, 0, 0.7)), url("/toi_meme_logo.png");
     background-size: cover;
     background-repeat: no-repeat;
@@ -15,16 +14,13 @@
         color: $milky-white-color;
         text-align: center;
     }
-    transition: transform 0.3s, opacity 0.3s;
-    opacity: 0.5;
-    transform: scale(0.8);
-    &.center {
-        transform: scale(1);
-        opacity: 1;
-    }
-    &.left, &.right {
-        opacity: 0.7;
-        transform: scale(0.9);
+    pointer-events: none;
+    &.current {
+        pointer-events: unset;
+        cursor: 'pointer';
+        a {
+            color: white;
+        }
     }
     .card-excerpt {
         margin: 10px 0px;

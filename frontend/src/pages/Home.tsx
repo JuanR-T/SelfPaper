@@ -5,9 +5,9 @@ const { Content } = Layout;
 import Header from '../components/landing/Header';
 import Footer from '../components/landing/Footer';
 import ContentContainer from '../components/landing/Content';
-import CustomCarousel from '../components/landing/CarouselSection';
-import AnimatedBanner from '../components/ui/AnimatedBanner';
 import BiographySection from '../components/landing/BiographySection';
+import PublicationsParallax from '../components/landing/PublicationsParallax';
+import CustomCarousel from '../components/ui/CustomCarousel';
 
 const Home: React.FC = () => {
     return (
@@ -17,6 +17,7 @@ const Home: React.FC = () => {
                 <HeroSection />
                 <CustomCarousel />
                 <BiographySection />
+                <PublicationsParallax />
                 <ContentContainer />
             </Content>
             <Footer />

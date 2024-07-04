@@ -4,7 +4,7 @@ import { handleGet } from '../../api/handleCall';
 import toastProvider from '../../lib/toastProvider';
 import { PublicationApiResponse } from '../../types/types';
 import { useAuth } from '../../context/AuthContext';
-import { FileTextOutlined, TagOutlined } from '@ant-design/icons';
+import { FileTextOutlined, TagOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Publication } from '../../types/types';
 import Capitalize from '../../lib/capitalizeLetter';
 
@@ -68,14 +68,16 @@ const CustomCarousel = () => {
                 (prevIndex - 1 + publications.length) % publications.length,
         );
     };
+    console.log("currentPublicationData", currentPublicationData)
     return (
         <div className="carousel-section">
+            <h1 className='text-zinc-950 py-10 lg:text-7xl md:text-5xl sm:text-3xl font-bold dark:text-white text-center'>Ma chronique "Toi meme" </h1>
             <div className="carousel-component">
                 <div className="carousel-description">
                     <div className="carousel-description-box">
                         {currentPublicationData ? (
                             <>
-                                <h2>{currentPublicationData.title}</h2>
+                                <h2 className='text-zinc-950 lg:text-2xl md:text-xl sm:text-sm font-bold dark:text-white text-center'>{currentPublicationData.title}</h2>
                                 <h3>
                                     <TagOutlined />{' '}
                                     {' ' + currentPublicationData.theme.title}
@@ -109,6 +111,9 @@ const CustomCarousel = () => {
                     </div>
                 </div>
                 <div className="carousel-box" ref={carouselRef}>
+                    <button className="carousel-button left" onClick={prevCard}>
+                        <LeftOutlined className='lg:text-3xl md:text-xl sm:text-lg' />
+                    </button>
                     {publicationsCarousel?.map((publicationCard) => {
                         return (
                             <div
@@ -122,44 +127,42 @@ const CustomCarousel = () => {
                                             ? 1
                                             : 0.7,
                                     transition: 'transform 0.5s, opacity 0.7s',
+                                    zIndex: '10'
                                 }}
                                 className={`card ${publicationCard.position}`}
                                 key={publicationCard._id}
                             >
-                                <div className="card-image">
-                                    {/* <FileImageOutlined
-                                            style={{
-                                                fontSize: '80px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                            }}
-                                        /> */}
-                                </div>
-                                <h4>{publicationCard.title}</h4>
-                                <div className="card-excerpt">
-                                    {publicationCard.excerpt}
-                                </div>
-                                <div className="card-date">
-                                    Publié le {publicationCard.publicationDate}
-                                </div>
+                                <a className="h-full w-full text-white" target="_blank" href={publicationCard.position === "current" ? publicationCard?.link : ""}>
+                                    <div className="card-image">
+                                        {/* <FileImageOutlined
+                                                style={{
+                                                    fontSize: '80px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                }}
+                                            /> */}
+                                    </div>
+                                    <h4>{publicationCard.title}</h4>
+                                    <div className="card-excerpt">
+                                        {publicationCard.excerpt}
+                                    </div>
+                                    <div className="card-date">
+                                        Publié le {publicationCard.publicationDate}
+                                    </div>
+                                </a>
                             </div>
                         );
                     })}
-                </div>
-                <div className="carousel-buttons">
-                    <button className="carousel-button left" onClick={prevCard}>
-                        Previous
-                    </button>
                     <button
                         className="carousel-button right"
                         onClick={nextCard}
                     >
-                        Next
+                        <RightOutlined className='lg:text-3xl md:text-xl sm:text-lg' />
                     </button>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

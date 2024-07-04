@@ -5,10 +5,6 @@
     position: relative;
     width: 100%;
     padding: 0px 50px;
-    h1 {
-        color: $charcoal-color;
-        margin: 20px 0px;
-    }
     .carousel-component {
         height: 600px;
         width: 100%;
@@ -19,7 +15,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-content: center;
+            align-content: end;
             flex-wrap: wrap;
             width: 40%;
             .carousel-description-box {
@@ -67,7 +63,7 @@
                 height: 100%;
                 width: 30%;
                 position: absolute;
-                opacity: 0;
+                //opacity: 0;
                 border: none;
                 cursor: pointer;
                 z-index: 1;
@@ -100,13 +96,11 @@
             height: 100%;
         }
         .custom-carousel-image{
-            border: 1px solid black;
             background-color: $eighties-purple;
             padding: 0px 20px;
-            //margin: 20px;
             width: 100%;
             height: 100%;
-            background-image: url("/photo_anne3.jpg");
+            background-image: url("/toi_meme_logo.png");
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
