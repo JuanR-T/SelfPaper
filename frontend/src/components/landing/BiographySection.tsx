@@ -7,7 +7,7 @@ import {
 const BiographySection = () => {
     return (
         <>
-            <div className="biography-container">
+            <div id="biography-container" className="biography-container">
                 <div className="biography-box">
                     <div className="biography-content">
                         <h2>Un parcours hors des sentiers battus.</h2>

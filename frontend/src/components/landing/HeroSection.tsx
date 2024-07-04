@@ -32,10 +32,9 @@ const HeroSection = () => {
                         <span className="hero-flip-word">
                             Journaliste indépendante
                         </span>
-
-                        <button className="read-more-button">
+                        <a href="#biography-container" className="my-10 shadow-[0_0_0_1px_#000000_inset] px-6 py-2 bg-green-800 border border-white dark:border-black dark:text-black text-white rounded-xl font-bold transform hover:-translate-y-2 transition duration-200 hover:text-white">
                             En savoir plus
-                        </button>
+                        </a>
                     </div>
                 </div>
             </motion.div>
