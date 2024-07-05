@@ -6,13 +6,15 @@ body {
 }
 h1 {
     font-family: $title-font;
-    font-size: $title-font-size-xl;
+    font-size: $title-font-size-lg;
     display: block;
+    padding: 40px 0px;
+    line-height: 1;
+    text-align: center;
 }
 h2 {
-    font-family: $title-font-h2;
+    font-family: $title-font;
     font-size: $title-font-size-md;
-    font-weight: 900;
     display: block;
     margin: 10px 0px;
 }
@@ -28,9 +30,11 @@ h3 {
 h4 {
     font-family: $title-font-h2;
     font-size: $title-font-size-xs;
-    font-weight: 800;
+    font-weight: bold;
     text-align: center;
     color: $charcoal-darker-color;
+    margin: 5px 0px;
+    padding: 0px 5px;
 }
 p {
     font-family: $text-font;
@@ -40,10 +44,47 @@ p {
 .page-title {
     display: block;
     font-family: $title-font;
-    font-size: $title-font-size-xl;
+    font-size: $title-font-size-lg;
     margin-bottom: 0.6rem;
     text-transform: lowercase;
     &::first-letter {
         text-transform: uppercase;
+    }
+}
+
+@media (max-width: $lg) {
+    h1 {
+        font-size: $title-font-size-lg;
+        padding: 10px 0px;
+    }
+    h2 {
+        font-size: $title-font-size-sm;
+    }
+    h3 {
+        margin: 5px 0px;
+    }
+}
+
+@media (max-width: $md) {
+    h1 {
+        font-size: $title-font-size-md;
+    }
+    h2 {
+        font-size: $title-font-size-xs;
+    }
+}
+
+@media (max-width: $mobile) {
+    h1 {
+        font-size: $title-font-size-sm;
+    }
+    h2 {
+        font-size: $title-font-size-xs;
+    }
+    h4 {
+        font-size: small;
+    }
+    p {
+        font-size: 14px;
     }
 }

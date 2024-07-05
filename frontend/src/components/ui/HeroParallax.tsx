@@ -77,7 +77,7 @@ export const HeroParallax = ({
 export const Header = () => {
     return (
         <div className="max-w-7xl flex align-middle flex-col relative mx-auto px-4">
-            <h1 className="text-zinc-950 text-7xl md:text-7xl sm:text-3xl font-bold dark:text-white text-center">
+            <h1>
                 Mes enquêtes phares
             </h1>
         </div>

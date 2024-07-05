@@ -4,7 +4,7 @@ import { handleGet } from '../../api/handleCall';
 import toastProvider from '../../lib/toastProvider';
 import { PublicationApiResponse } from '../../types/types';
 import { useAuth } from '../../context/AuthContext';
-import { FileTextOutlined, TagOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { FileTextOutlined, TagOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons';
 import { Publication } from '../../types/types';
 import Capitalize from '../../lib/capitalizeLetter';
 
@@ -68,16 +68,15 @@ const CustomCarousel = () => {
                 (prevIndex - 1 + publications.length) % publications.length,
         );
     };
-    console.log("currentPublicationData", currentPublicationData)
     return (
         <div className="carousel-section">
-            <h1 className='text-zinc-950 py-10 lg:text-7xl md:text-5xl sm:text-3xl font-bold dark:text-white text-center'>Ma chronique "Toi meme" </h1>
+            <h1>Ma chronique "Toi meme" </h1>
             <div className="carousel-component">
                 <div className="carousel-description">
                     <div className="carousel-description-box">
                         {currentPublicationData ? (
                             <>
-                                <h2 className='text-zinc-950 lg:text-2xl md:text-xl sm:text-sm font-bold dark:text-white text-center'>{currentPublicationData.title}</h2>
+                                <h2 className='lg:text-2xl md:text-xl sm:text-sm font-bold dark:text-white text-center'>{currentPublicationData.title}</h2>
                                 <h3>
                                     <TagOutlined />{' '}
                                     {' ' + currentPublicationData.theme.title}
@@ -98,7 +97,7 @@ const CustomCarousel = () => {
                                     </span>
                                 </div>
                                 <a
-                                    className="my-10 w-1/5 shadow-[0_0_0_1px_#000000_inset] px-6 py-2 bg-green-800 border border-white dark:border-black dark:text-black text-white rounded-xl font-bold transform hover:-translate-y-2 transition duration-200 hover:text-white"
+                                    className="my-10 w-fit shadow-[0_0_0_1px_#000000_inset] px-6 py-2 bg-green-800 border border-white dark:border-black dark:text-black text-white rounded-xl font-bold transform hover:-translate-y-2 transition duration-200 hover:text-white"
                                     target="_blank"
                                     href={currentPublicationData.link}
                                 >
@@ -112,9 +111,7 @@ const CustomCarousel = () => {
                     </div>
                 </div>
                 <div className="carousel-box" ref={carouselRef}>
-                    <button className="carousel-button left" onClick={prevCard}>
-                        <LeftOutlined className='lg:text-3xl md:text-xl sm:text-lg' />
-                    </button>
+                    <LeftCircleOutlined onClick={prevCard} className='lg:text-4xl md:text-3xl sm:hidden carousel-button left' />
                     {publicationsCarousel?.map((publicationCard) => {
                         return (
                             <div
@@ -155,12 +152,7 @@ const CustomCarousel = () => {
                             </div>
                         );
                     })}
-                    <button
-                        className="carousel-button right"
-                        onClick={nextCard}
-                    >
-                        <RightOutlined className='lg:text-3xl md:text-xl sm:text-lg' />
-                    </button>
+                    <RightCircleOutlined onClick={nextCard} className='lg:text-4xl md:text-3xl sm:hidden carousel-button right' />
                 </div>
             </div>
         </div >

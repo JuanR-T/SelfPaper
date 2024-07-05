@@ -42,7 +42,7 @@ const BiographySection = () => {
                         </p>
                     </div>
                     <CardContainer
-                        containerClassName={'w-[50%] h-full'}
+                        containerClassName={'biography-image-container'}
                     >
                         <CardBody className={'w-full h-full'}>
                             <CardItem

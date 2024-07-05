@@ -3,28 +3,88 @@
     width: 100%;
     height: 80vh;
     padding: 50px;
-    h1 {
-        font-size: 60px;
-        position: absolute
-    }
+
     .biography-box {
         display: flex;
-        justify-content: space-between;
         width: 100%;
+        height: 100%;
         padding: 50px;
-        //height: 100%;
+        justify-content: space-between;
+
         .biography-content {
             width: 50%;
+            height: 100%;
             text-align: justify;
+            padding: 0 50px;
+            line-break: anywhere;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            .biography-text {
+                height: 100%;
+            }
+        }
+
+        .biography-image-container {
+            width: 50%;
+            height: 100%;
             padding: 0px 50px;
+
+            .biography-image {
+                width: 100%;
+                height: 100%;
+                background-image: url("/photo_anne3.jpg");
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+            }
+        }
+    }
+
+    @media (min-width: $lg) {
+        .biography-box {
+            flex-direction: row;
+        }
+    }
+
+    @media (max-width: $lg) {
+        padding: 30px;
+        .biography-box {
+            flex-direction: column;
+            padding: 0px;
+
+            .biography-content {
+                width: 100% !important;
+                height: 100%;
+                max-height: 700px;
+                padding: 0;
+                h2 {
+                    font-size: 30px
+                }
+                .biography-text {
+                    height: 100%;
+                }
+            }
+
+            .biography-image-container {
+                width: 100%;
+                padding: 0px;
+                .biography-image {
+                    width: 100%;
+                    height: 100%;
+                    
+                }
+            }
+        }
+    }
+    @media (max-width: 420px) {
+        height: 55vh;
+        .biography-content {
+            h2 {
+                font-size: 26px;
+            }
         }
         .biography-image {
-            width: 100%;
-            height: 100%;
-            background-image: url("/photo_anne3.jpg");
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
+            visibility: hidden; 
         }
     }
 }
