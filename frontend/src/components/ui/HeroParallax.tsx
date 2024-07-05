@@ -22,7 +22,6 @@ export const HeroParallax = ({
         target: ref,
         offset: ['start start', 'end start'],
     });
-    console.log('scroll progress', scrollYProgress);
 
     const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
 
@@ -34,44 +33,14 @@ export const HeroParallax = ({
         useTransform(scrollYProgress, [0, 1], [0, -1000]),
         springConfig,
     );
-    const rotateX = useSpring(
-        useTransform(scrollYProgress, [0, 0.2], [15, 0]),
-        springConfig,
-    );
-    const opacity = useSpring(
-        useTransform(scrollYProgress, [0, 0.2], [0.3, 1]),
-        springConfig,
-    );
-    const rotateZ = useSpring(
-        useTransform(scrollYProgress, [0, 0.2], [20, 0]),
-        springConfig,
-    );
-    const translateY = useSpring(
-        useTransform(scrollYProgress, [0, 0.2], [-700, 500]),
-        springConfig,
-    );
-    const newDivOpacity = useSpring(
-        useTransform(scrollYProgress, [0, 0.8], [0, 1]),
-        springConfig,
-    );
-    const newDivTranslateY = useSpring(
-        useTransform(scrollYProgress, [0.8, 1], [100, 0]),
-        springConfig,
-    );
     return (
         <div
             ref={ref}
-            className="h-[195vh] py-36 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
+            className="h-[auto] py-36 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
         >
             <Header />
             <motion.div
-                style={{
-                    rotateX,
-                    rotateZ,
-                    translateY,
-                    opacity,
-                }}
-                className=""
+                className="py-36"
             >
                 <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20">
                     {firstRow.map((publication) => (
@@ -82,7 +51,7 @@ export const HeroParallax = ({
                         />
                     ))}
                 </motion.div>
-                <motion.div className="flex flex-row  mb-20 space-x-20 ">
+                <motion.div className="flex flex-row mb-20 space-x-20 ">
                     {secondRow.map((publication) => (
                         <PublicationCard
                             publication={publication}
@@ -100,24 +69,6 @@ export const HeroParallax = ({
                         />
                     ))}
                 </motion.div>
-                <motion.div
-                    style={{
-                        opacity: newDivOpacity,
-                        translateY: newDivTranslateY,
-                    }}
-                    className="fixed text-center justify-center items-center bottom-10 flex flex-col left-1/2 transform -translate-x-1/2"
-                >
-                    <h1 className="text-2xl font-bold mb-4">
-                        Pour voir le reste de mes articles ainsi que mes livres{' '}
-                        <br /> vous pouvez cliquer sur ce lien
-                    </h1>
-                    <a
-                        href="#more-content"
-                        className="read-more-button text-blue-500 underline"
-                    >
-                        Read More
-                    </a>
-                </motion.div>
             </motion.div>
         </div>
     );
@@ -125,16 +76,10 @@ export const HeroParallax = ({
 
 export const Header = () => {
     return (
-        <div className="max-w-7xl flex align-middle flex-col relative mx-auto py-20 md:py-40 px-4">
-            <h1 className="text-zinc-950 text-7xl md:text-7xl font-bold dark:text-white text-center">
-                Mes articles
+        <div className="max-w-7xl flex align-middle flex-col relative mx-auto px-4">
+            <h1>
+                Mes enquêtes phares
             </h1>
-            <p className="text-zinc-900 font-medium max-w-2xl md:text-xl mt-8 dark:text-neutral-200 text-left">
-                Anne Chirol est une journaliste pigiste pour divers services du
-                journal Le Monde, elle est connue notamment pour sa chronique
-                hebdomadaire "Toi meme", dans laquelle elle dépeint des
-                archétypes sociaux issues d'internet...
-            </p>
         </div>
     );
 };

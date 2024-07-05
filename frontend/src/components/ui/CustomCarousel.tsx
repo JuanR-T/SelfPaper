@@ -4,7 +4,7 @@ import { handleGet } from '../../api/handleCall';
 import toastProvider from '../../lib/toastProvider';
 import { PublicationApiResponse } from '../../types/types';
 import { useAuth } from '../../context/AuthContext';
-import { FileTextOutlined, TagOutlined } from '@ant-design/icons';
+import { FileTextOutlined, TagOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons';
 import { Publication } from '../../types/types';
 import Capitalize from '../../lib/capitalizeLetter';
 
@@ -70,12 +70,13 @@ const CustomCarousel = () => {
     };
     return (
         <div className="carousel-section">
+            <h1>Ma chronique "Toi meme" </h1>
             <div className="carousel-component">
                 <div className="carousel-description">
                     <div className="carousel-description-box">
                         {currentPublicationData ? (
                             <>
-                                <h2>{currentPublicationData.title}</h2>
+                                <h2 className='lg:text-2xl md:text-xl sm:text-sm font-bold dark:text-white text-center'>{currentPublicationData.title}</h2>
                                 <h3>
                                     <TagOutlined />{' '}
                                     {' ' + currentPublicationData.theme.title}
@@ -96,12 +97,13 @@ const CustomCarousel = () => {
                                     </span>
                                 </div>
                                 <a
-                                    className="read-more-button"
+                                    className="my-10 w-fit shadow-[0_0_0_1px_#000000_inset] px-6 py-2 bg-green-800 border border-white dark:border-black dark:text-black text-white rounded-xl font-bold transform hover:-translate-y-2 transition duration-200 hover:text-white"
                                     target="_blank"
                                     href={currentPublicationData.link}
                                 >
                                     Lire l'article
                                 </a>
+
                             </>
                         ) : (
                             ''
@@ -109,6 +111,7 @@ const CustomCarousel = () => {
                     </div>
                 </div>
                 <div className="carousel-box" ref={carouselRef}>
+                    <LeftCircleOutlined onClick={prevCard} className='lg:text-4xl md:text-3xl sm:hidden carousel-button left' />
                     {publicationsCarousel?.map((publicationCard) => {
                         return (
                             <div
@@ -122,44 +125,37 @@ const CustomCarousel = () => {
                                             ? 1
                                             : 0.7,
                                     transition: 'transform 0.5s, opacity 0.7s',
+                                    zIndex: '10'
                                 }}
                                 className={`card ${publicationCard.position}`}
                                 key={publicationCard._id}
                             >
-                                <div className="card-image">
-                                    {/* <FileImageOutlined
-                                            style={{
-                                                fontSize: '80px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                            }}
-                                        /> */}
-                                </div>
-                                <h4>{publicationCard.title}</h4>
-                                <div className="card-excerpt">
-                                    {publicationCard.excerpt}
-                                </div>
-                                <div className="card-date">
-                                    Publié le {publicationCard.publicationDate}
-                                </div>
+                                <a className="h-full w-full text-white" target="_blank" href={publicationCard.position === "current" ? publicationCard?.link : ""}>
+                                    <div className="card-image">
+                                        {/* <FileImageOutlined
+                                                style={{
+                                                    fontSize: '80px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                }}
+                                            /> */}
+                                    </div>
+                                    <h4>{publicationCard.title}</h4>
+                                    <div className="card-excerpt">
+                                        {publicationCard.excerpt}
+                                    </div>
+                                    <div className="card-date">
+                                        Publié le {publicationCard.publicationDate}
+                                    </div>
+                                </a>
                             </div>
                         );
                     })}
-                </div>
-                <div className="carousel-buttons">
-                    <button className="carousel-button left" onClick={prevCard}>
-                        Previous
-                    </button>
-                    <button
-                        className="carousel-button right"
-                        onClick={nextCard}
-                    >
-                        Next
-                    </button>
+                    <RightCircleOutlined onClick={nextCard} className='lg:text-4xl md:text-3xl sm:hidden carousel-button right' />
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

@@ -30,8 +30,8 @@ $eighties-purple-darker: #894de3;
  * Text Styles
  */
 
-$title-font: 'Yantramanav', sans-serif;
-$title-font-h2: 'Roboto', sans-serif;
+$title-font: 'Roboto', sans-serif;
+$title-font-h2: 'Yantramanav', sans-serif;
 $text-font: Marr Sans,Arial,Roboto,sans-serif;
 
 /**
@@ -47,8 +47,8 @@ $border-radius-xl: 25px;
 $body-font-size: 14px;
 $secondary-font-size: 12px;
 $extra-information-font-size: 10px;
-$title-font-size-xl: 40px;
-$title-font-size-md: 36px;
+$title-font-size-lg: 36px;
+$title-font-size-md: 30px;
 $title-font-size-sm: 24px;
 $title-font-size-s: 18px;
 $title-font-size-xs: 16px;
@@ -56,12 +56,11 @@ $title-font-size-xs: 16px;
 /**
  * Screen sizes for responsive
  */
-$xs: 360px;
-$sm: 768px;
-$mobile: 500px;
-$md: 1024px;
-$lg: 1200px;
-
+$mobile: 640px;
+$md: 768px;
+$lg: 1024px;
+$xl: 1280px;
+$xl2: 1536px;
 /**
  * Box Shadows : remember to add -webkit-box-shadow and -moz-box-shadow in the corresponding scss
  */
