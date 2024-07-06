@@ -15,4 +15,21 @@
             }
         }
     }
+    &.mobile {
+        padding: 0px;
+        .socials {
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: start;
+            a {
+                font-size: medium;
+                color: $milky-white-color;
+                padding: unset;
+                :hover {
+                    transform: scale(1.1);
+                    transition: transform 100ms linear;
+                }
+            }
+        }
+    }
 }
