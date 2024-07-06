@@ -1,17 +1,25 @@
 .content-container {
-    height: 60vh;
-    width: 60%;
-    padding: 20px 50px;
+    height: 40vh;
+    width: 100%;
+    padding: 0px 150px;
     display: flex;
-    align-items: center;
     justify-content: center;
+    text-align: justify;
     .content-description {
+        h1 {
+            padding: 0px;
+        }
         height: 80%;
         width: 100%;
-        padding: 20px;
         border-radius: $border-radius-md;
         p {
             margin: 40px 0px;
         }
+    }
+    @media (max-width: $lg) {
+        padding: 30px;
+    }
+    @media (max-width: $md) {
+        height: 50vh;
     }
 }

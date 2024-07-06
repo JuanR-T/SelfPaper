@@ -70,7 +70,7 @@ const CustomCarousel = () => {
     };
     return (
         <div className="carousel-section">
-            <h1>Ma chronique "Toi meme" </h1>
+            <h1>Ma chronique : Toi mème </h1>
             <div className="carousel-component">
                 <div className="carousel-description">
                     <div className="carousel-description-box">
