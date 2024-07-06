@@ -4,8 +4,7 @@ const ContentContainer = () => {
             <div className="content-container">
                 <div className="content-description">
                     <h1>
-                        "Mal du pays" <br /> Ces voyageurs aux racines
-                        profondes.{' '}
+                        Mon podcast : Mal du pays
                     </h1>
                     <p>
                         {' '}

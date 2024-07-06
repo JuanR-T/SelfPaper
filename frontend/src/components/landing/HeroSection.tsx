@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
-import { FlipWords } from '../ui/FlipWord';
 
 const HeroSection = () => {
     const [isLoaded, setIsLoaded] = useState(false);

@@ -1,8 +1,14 @@
+import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 
-const Nav = () => {
+const Nav = ({
+    isMobile
+}: {
+    isMobile: boolean
+}) => {
+    console.log("isMobile", isMobile)
     return (
-        <div className="nav">
+        <div className={clsx("nav", isMobile ? "mobile" : "")}>
             <ul>
                 <li>
                     <Link to={'/'}> Home </Link>
