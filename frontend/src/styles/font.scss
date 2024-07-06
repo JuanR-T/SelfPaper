@@ -19,16 +19,16 @@ h2 {
     margin: 10px 0px;
 }
 h3 {
-    font-family: $title-font-h2;
+    font-family: $title-font;
     font-size: $title-font-size-xs;
-    font-weight: 800;
+    font-weight: 500;
     text-align: left;
     display: block;
     color: $eighties-purple-darker;
     margin: 10px 0px;
 }
 h4 {
-    font-family: $title-font-h2;
+    font-family: $title-font;
     font-size: $title-font-size-xs;
     font-weight: bold;
     text-align: center;
@@ -37,7 +37,7 @@ h4 {
     padding: 0px 5px;
 }
 p {
-    font-family: $text-font;
+    font-family: "system-ui";
     font-size: $title-font-size-xs;
     margin: 10px 0px;
 }
@@ -58,7 +58,7 @@ p {
         padding: 10px 0px;
     }
     h2 {
-        font-size: $title-font-size-sm;
+        font-size: $title-font-size-lg;
     }
     h3 {
         margin: 5px 0px;
@@ -70,7 +70,7 @@ p {
         font-size: $title-font-size-md;
     }
     h2 {
-        font-size: $title-font-size-xs;
+        font-size: $title-font-size-md;
     }
 }
 
@@ -79,7 +79,7 @@ p {
         font-size: $title-font-size-sm;
     }
     h2 {
-        font-size: $title-font-size-xs;
+        font-size: $title-font-size-sm;
     }
     h4 {
         font-size: small;

@@ -36,11 +36,10 @@ export const HeroParallax = ({
     return (
         <div
             ref={ref}
-            className="h-[auto] py-36 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
+            className="h-[auto] py-8 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
         >
             <Header />
             <motion.div
-                className="py-36"
             >
                 <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20">
                     {firstRow.map((publication) => (
@@ -76,7 +75,7 @@ export const HeroParallax = ({
 
 export const Header = () => {
     return (
-        <div className="max-w-7xl flex align-middle flex-col relative mx-auto px-4">
+        <div className="max-w-7xl flex align-middle flex-col py-5 relative mx-auto px-4">
             <h1>
                 Mes enquêtes phares
             </h1>

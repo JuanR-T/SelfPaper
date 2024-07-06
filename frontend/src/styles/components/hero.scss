@@ -26,24 +26,47 @@
         align-items: center;
         width: 100%;
         h1 {
-            font-size: 90px !important;
+            font-size: 90px;
             color: $milky-white-color;
+            font-weight: bold;
         }
         .hero-biography {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 30%;
+            //width: 30%;
             position: relative;
-            .hero-flip-word {
-                font-weight: bold;
+            .hero-subtitle {
+                font-weight: 500;
                 color: $milky-white-color;
-                font-size: 36px;
+                font-size: $title-font-size-lg;
             }
             p {
                 text-align: justify;
                 color: $milky-white-color;
                 font-size: 20px;
+            }
+        }
+    }
+    @media (max-width: $md) {
+        .hero-content {
+            margin: 30% 0%;
+        }
+    }
+    @media (max-width: $mobile) {
+        .hero-content {
+            margin: 70% 0%;
+            h1 {
+                font-size: 40px;
+            }
+            .hero-biography {
+                width: 70%;
+                text-align: center;
+                .hero-subtitle {
+                    font-size: $title-font-size-s;
+                    width: 100%;
+
+                }
             }
         }
     }
