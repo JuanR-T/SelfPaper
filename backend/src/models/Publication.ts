@@ -17,7 +17,6 @@ const publicationSchema = new Schema({
         {
             type: SchemaTypes.ObjectId,
             ref: 'Theme',
-            required: false, //TODO remove this false
         },
     ], //DESC Musique, Cinéma, Société, Féminisme, Racisme...
     excerpt: { type: String },

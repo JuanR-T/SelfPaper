@@ -5,6 +5,7 @@ import { publisherRoutes } from './routes/PublisherRoutes';
 import { authorRoutes } from './routes/AuthorRoutes';
 import { themeRoutes } from './routes/ThemeRoutes';
 import { imagesRoutes } from './routes/ImagesRoutes';
+import { booksRoutes } from './routes/BooksRoutes';
 
 import cors from 'cors';
 const app = express();
@@ -29,6 +30,7 @@ app.use('/api/publisher', publisherRoutes());
 app.use('/api/author', authorRoutes());
 app.use('/api/theme', themeRoutes());
 app.use('/api/image', imagesRoutes());
+app.use('/api/books', booksRoutes());
 
 mongoose
     .connect(MONGO_URL)
