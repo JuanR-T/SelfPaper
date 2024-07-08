@@ -27,7 +27,7 @@ const UpdatePublications = ({
         if (!updatedTheme || !updatedTheme.data) {
             toastProvider(
                 'error',
-                'Une erreur est survenue pendant la mise à jour du thème. Veuillez réessayer.',
+                'Une erreur est survenue pendant la mise à jour de la publication. Veuillez réessayer.',
                 'bottom-left',
                 'colored',
             );

@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Publisher from './pages/dashboard/Publisher';
 import Account from './pages/dashboard/Account';
 import Themes from './pages/dashboard/Theme';
+import Books from './pages/dashboard/Books';
 
 const App = () => {
     const { getItem } = useLocalStorage();
@@ -35,6 +36,10 @@ const App = () => {
                         <Route
                             path="publications"
                             element={<Publications />}
+                        ></Route>
+                        <Route
+                            path="books"
+                            element={<Books />}
                         ></Route>
                         <Route path="publisher" element={<Publisher />}></Route>
                         <Route path="themes" element={<Themes />}></Route>
