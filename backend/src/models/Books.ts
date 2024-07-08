@@ -5,14 +5,6 @@ const booksSchema = new Schema({
     description: { type: String, required: true },
     link: {type: String},
     bookPublicationDate: { type: Date, required: true },
-    thumbnail: { type: Buffer || String },
-    bookPublisher: {
-        _id: {
-            type: SchemaTypes.ObjectId,
-            ref: 'Publisher',
-            required: true,
-        },
-    },
     bookAuthor: [
         {
             type: SchemaTypes.ObjectId,
@@ -20,6 +12,13 @@ const booksSchema = new Schema({
             required: true,
         },
     ],
+    bookPublisher: {
+        _id: {
+            type: SchemaTypes.ObjectId,
+            ref: 'Publisher',
+            required: true,
+        },
+    },
     bookImage: [
         {
             type: SchemaTypes.ObjectId,
@@ -27,6 +26,7 @@ const booksSchema = new Schema({
             required: false,
         },
     ],
+    thumbnail: { type: Buffer || String },
     theme: [
         {
             type: SchemaTypes.ObjectId,
