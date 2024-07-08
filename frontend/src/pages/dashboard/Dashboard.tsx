@@ -5,6 +5,7 @@ import {
     ContainerOutlined,
     UserOutlined,
     HomeOutlined,
+    AuditOutlined
 } from '@ant-design/icons';
 import { useAuth } from '../../context/AuthContext';
 const { Sider, Content } = Layout;
@@ -31,8 +32,15 @@ const Dashboard = () => {
                         Publications
                     </Menu.Item>
                     <Menu.Item
-                        key="publisher"
+                        key="books"
                         icon={<BookOutlined />}
+                        onClick={() => tabSwitch('books')}
+                    >
+                        Books
+                    </Menu.Item>
+                    <Menu.Item
+                        key="publisher"
+                        icon={<AuditOutlined />}
                         onClick={() => tabSwitch('publisher')}
                     >
                         Éditeurs

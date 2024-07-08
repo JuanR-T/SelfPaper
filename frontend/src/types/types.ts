@@ -141,3 +141,39 @@ export interface ImagesApiResponse {
     found: boolean;
     images?: Images[];
 }
+
+/** Books */
+
+export interface BooksApiResponse {
+    found: boolean;
+    books?: Book[];
+}
+export interface Book {
+    _id: string;
+    title: string;
+    description: string;
+    link: string;
+    bookPublicationDate: string;
+    bookAuthor: string | undefined;
+    bookPublisher: Publisher;
+    bookImage: Buffer | string ;
+    thumbnail: Buffer | string ;
+    theme: Theme;
+}
+
+export interface UpdateBooksProps{
+    record: Book;
+    editingRowId: string | null;
+    isEditingBooks: boolean;
+    editingRowData: Book;
+    setIsEditingBooks: Dispatch<SetStateAction<boolean>>;
+    setEditingRowId: Dispatch<SetStateAction<string | null>>;
+    setEditingRowData: Dispatch<SetStateAction<Book>>;
+}
+
+export interface DeleteBooksProps {
+    record: Book;
+    setIsDeletingBooks: Dispatch<SetStateAction<boolean>>;
+    editingRowId: string | null;
+    setEditingRowId: Dispatch<SetStateAction<string | null>>;
+}
