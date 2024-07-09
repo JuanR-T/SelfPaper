@@ -1,10 +1,24 @@
-import { useEffect, useState } from 'react'
-import { useQuery } from 'react-query'
-import { handleGet } from '../../../api/handleCall'
+import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import { handleGet } from '../../../api/handleCall';
 import { useAuth } from '../../../context/AuthContext';
 import toastProvider from '../../../lib/toastProvider';
-import { Author, BooksApiResponse, ImagesApiResponse, PublisherApiResponse } from '../../../types/types';
-import { Input, Upload, message, Button, Select, DatePicker, Table, Pagination } from 'antd';
+import {
+    Author,
+    BooksApiResponse,
+    ImagesApiResponse,
+    PublisherApiResponse,
+} from '../../../types/types';
+import {
+    Input,
+    Upload,
+    message,
+    Button,
+    Select,
+    DatePicker,
+    Table,
+    Pagination,
+} from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import ModalProvider from '../../utils/ModalProvider';
 import CreatePublication from '../publications/CreatePublications';
@@ -24,10 +38,8 @@ const GetBooks = () => {
     const [selectThemeValue, setSelectThemeValue] = useState('');
     const [selectPublisherValue, setSelectPublisherValue] = useState('');
     const [editingRowId, setEditingRowId] = useState<string | null>(null);
-    const [isDeletingBooks, setIsDeletingBooks] =
-        useState<boolean>(false);
-    const [isEditingBooks, setIsEditingBooks] =
-        useState<boolean>(false);
+    const [isDeletingBooks, setIsDeletingBooks] = useState<boolean>(false);
+    const [isEditingBooks, setIsEditingBooks] = useState<boolean>(false);
     const [editingRowData, setEditingRowData] = useState<Book>({
         _id: '',
         title: '',
@@ -61,7 +73,7 @@ const GetBooks = () => {
                 `${BASE_URL}/api/books`,
                 getConfig(),
             );
-            console.log("useQueryBooksRequest", useQueryBooksRequest)
+            console.log('useQueryBooksRequest', useQueryBooksRequest);
             if (!useQueryBooksRequest || !useQueryBooksRequest.data) {
                 toastProvider(
                     'error',
@@ -72,8 +84,8 @@ const GetBooks = () => {
                 return undefined;
             }
             return useQueryBooksRequest?.data;
-        }
-    )
+        },
+    );
     const { data: useQueryPublishers }: any = useQuery(
         'get_publishers',
         async () => {
@@ -110,12 +122,12 @@ const GetBooks = () => {
         return useQueryImages;
     });
     const books = (useQueryBooks as BooksApiResponse)?.books;
-    console.log("books", books);
+    console.log('books', books);
     const currentBooksDisplayed = books?.slice(startIndex, endIndex);
-    console.log("currentBooksDisplayed", currentBooksDisplayed);
+    console.log('currentBooksDisplayed', currentBooksDisplayed);
     const publishers = (useQueryPublishers as PublisherApiResponse)?.publisher;
-    console.log("publishers", publishers)
-    console.log("books", books);
+    console.log('publishers', publishers);
+    console.log('books', books);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -201,7 +213,8 @@ const GetBooks = () => {
                                 const dayjsDate = dayjs(date);
                                 setEditingRowData({
                                     ...editingRowData,
-                                    bookPublicationDate: dayjsDate.toISOString(),
+                                    bookPublicationDate:
+                                        dayjsDate.toISOString(),
                                 });
                             } else {
                                 setEditingRowData({
@@ -406,7 +419,7 @@ const GetBooks = () => {
                 <>Chargement des Publications...</>
             )}
         </div>
-    )
-}
+    );
+};
 
-export default GetBooks
+export default GetBooks;

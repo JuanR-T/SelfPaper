@@ -27,7 +27,8 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { getConfig, author } = useAuth();
     const [selectThemeValue, setSelectThemeValue] = useState('');
-    const [bookPublicationDateValue, setBookPublicationDateValue] = useState('');
+    const [bookPublicationDateValue, setBookPublicationDateValue] =
+        useState('');
     const [selectPublisherValue, setSelectPublisherValue] = useState<any>({});
 
     const { data: useQueryThemes }: any = useQuery('get_themes', async () => {

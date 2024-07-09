@@ -3,9 +3,7 @@ const ContentContainer = () => {
         <>
             <div className="content-container">
                 <div className="content-description">
-                    <h1>
-                        Mon podcast : Mal du pays
-                    </h1>
+                    <h1>Mon podcast : Mal du pays</h1>
                     <p>
                         {' '}
                         Lorem ipsum dolor sit amet consectetur adipisicing elit.

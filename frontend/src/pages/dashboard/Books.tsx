@@ -9,6 +9,6 @@ const Books = () => {
             <GetBooks />
         </Layout>
     );
-}
+};
 
-export default Books
+export default Books;

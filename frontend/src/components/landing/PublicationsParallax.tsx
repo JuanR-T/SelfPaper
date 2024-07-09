@@ -8,7 +8,7 @@ import { HeroParallax } from '../ui/HeroParallax';
 const PublicationsParallax = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { getConfig } = useAuth();
-    //TODO Refacto all useQuery get_publications in order to avoid multiple calls. Use context or 
+    //TODO Refacto all useQuery get_publications in order to avoid multiple calls. Use context or
     const { data: useQueryPublications } = useQuery(
         'get_publications',
         async () => {

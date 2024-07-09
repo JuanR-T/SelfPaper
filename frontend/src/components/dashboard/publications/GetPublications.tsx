@@ -377,8 +377,8 @@ const GetPublications: React.FC = () => {
                     </Select>
                 ) : (
                     record.publisher[0].title +
-                    ' / ' +
-                    record.publisher[1].service
+                        ' / ' +
+                        record.publisher[1].service
                 );
             },
         },
