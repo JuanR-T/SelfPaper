@@ -39,8 +39,7 @@ export const HeroParallax = ({
             className="h-[auto] py-8 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
         >
             <Header />
-            <motion.div
-            >
+            <motion.div>
                 <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20">
                     {firstRow.map((publication) => (
                         <PublicationCard
@@ -76,9 +75,7 @@ export const HeroParallax = ({
 export const Header = () => {
     return (
         <div className="max-w-7xl flex align-middle flex-col py-5 relative mx-auto px-4">
-            <h1>
-                Mes enquêtes phares
-            </h1>
+            <h1>Mes enquêtes phares</h1>
         </div>
     );
 };

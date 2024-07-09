@@ -5,7 +5,7 @@ import {
     ContainerOutlined,
     UserOutlined,
     HomeOutlined,
-    AuditOutlined
+    AuditOutlined,
 } from '@ant-design/icons';
 import { useAuth } from '../../context/AuthContext';
 const { Sider, Content } = Layout;

@@ -7,13 +7,9 @@ import {
 } from '@ant-design/icons';
 import clsx from 'clsx';
 
-const Contact = ({
-    isMobile
-}: {
-    isMobile: boolean
-}) => {
+const Contact = ({ isMobile }: { isMobile: boolean }) => {
     return (
-        <div className={clsx("contact-section", isMobile ? "mobile" : "")}>
+        <div className={clsx('contact-section', isMobile ? 'mobile' : '')}>
             <div className="socials">
                 <a target="blank" href="https://www.instagram.com/annechirol/">
                     <InstagramOutlined /> {clsx(isMobile ? 'Instagram' : '')}

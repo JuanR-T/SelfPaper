@@ -1,12 +1,8 @@
-import { Menu, MenuProps } from "antd";
+import { Menu, MenuProps } from 'antd';
 import Nav from '../ui/Nav';
 import Contact from '../ui/Contact';
 
-const BurgerMenu = ({
-    isMobile
-}: {
-    isMobile: boolean
-}) => {
+const BurgerMenu = ({ isMobile }: { isMobile: boolean }) => {
     const items = [
         {
             key: 'sub1',
@@ -25,7 +21,7 @@ const BurgerMenu = ({
                     children: [],
                 },
             ],
-        }
+        },
     ];
 
     const onClick: MenuProps['onClick'] = (e) => {
@@ -38,9 +34,9 @@ const BurgerMenu = ({
                 onClick={onClick}
                 style={{
                     width: 200,
-                    color: "white",
-                    backgroundColor: "transparent",
-                    fontSize: "18px"
+                    color: 'white',
+                    backgroundColor: 'transparent',
+                    fontSize: '18px',
                 }}
                 mode="inline"
                 items={items}

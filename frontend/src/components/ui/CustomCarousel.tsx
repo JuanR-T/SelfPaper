@@ -4,7 +4,12 @@ import { handleGet } from '../../api/handleCall';
 import toastProvider from '../../lib/toastProvider';
 import { PublicationApiResponse } from '../../types/types';
 import { useAuth } from '../../context/AuthContext';
-import { FileTextOutlined, TagOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons';
+import {
+    FileTextOutlined,
+    TagOutlined,
+    LeftCircleOutlined,
+    RightCircleOutlined,
+} from '@ant-design/icons';
 import { Publication } from '../../types/types';
 import Capitalize from '../../lib/capitalizeLetter';
 
@@ -76,7 +81,9 @@ const CustomCarousel = () => {
                     <div className="carousel-description-box">
                         {currentPublicationData ? (
                             <>
-                                <h2 className='lg:text-2xl md:text-xl sm:text-lg sm:text-center md:text-left text-black font-medium dark:text-white'>{currentPublicationData.title}</h2>
+                                <h2 className="lg:text-2xl md:text-xl sm:text-lg sm:text-center md:text-left text-black font-medium dark:text-white">
+                                    {currentPublicationData.title}
+                                </h2>
                                 <h3>
                                     <TagOutlined />{' '}
                                     {' ' + currentPublicationData.theme.title}
@@ -103,7 +110,6 @@ const CustomCarousel = () => {
                                 >
                                     Lire l'article
                                 </a>
-
                             </>
                         ) : (
                             ''
@@ -111,7 +117,10 @@ const CustomCarousel = () => {
                     </div>
                 </div>
                 <div className="carousel-box" ref={carouselRef}>
-                    <LeftCircleOutlined onClick={prevCard} className='lg:text-4xl md:text-3xl sm:text-2xl carousel-button left' />
+                    <LeftCircleOutlined
+                        onClick={prevCard}
+                        className="lg:text-4xl md:text-3xl sm:text-2xl carousel-button left"
+                    />
                     {publicationsCarousel?.map((publicationCard) => {
                         return (
                             <div
@@ -125,12 +134,20 @@ const CustomCarousel = () => {
                                             ? 1
                                             : 0.7,
                                     transition: 'transform 0.5s, opacity 0.7s',
-                                    zIndex: '10'
+                                    zIndex: '10',
                                 }}
                                 className={`card ${publicationCard.position}`}
                                 key={publicationCard._id}
                             >
-                                <a className="h-full w-full text-white" target="_blank" href={publicationCard.position === "current" ? publicationCard?.link : ""}>
+                                <a
+                                    className="h-full w-full text-white"
+                                    target="_blank"
+                                    href={
+                                        publicationCard.position === 'current'
+                                            ? publicationCard?.link
+                                            : ''
+                                    }
+                                >
                                     <div className="card-image">
                                         {/* <FileImageOutlined
                                                 style={{
@@ -146,16 +163,20 @@ const CustomCarousel = () => {
                                         {publicationCard.excerpt}
                                     </div>
                                     <div className="card-date">
-                                        Publié le {publicationCard.publicationDate}
+                                        Publié le{' '}
+                                        {publicationCard.publicationDate}
                                     </div>
                                 </a>
                             </div>
                         );
                     })}
-                    <RightCircleOutlined onClick={nextCard} className='lg:text-4xl md:text-3xl sm:hidden carousel-button right' />
+                    <RightCircleOutlined
+                        onClick={nextCard}
+                        className="lg:text-4xl md:text-3xl sm:hidden carousel-button right"
+                    />
                 </div>
             </div>
-        </div >
+        </div>
     );
 };
 

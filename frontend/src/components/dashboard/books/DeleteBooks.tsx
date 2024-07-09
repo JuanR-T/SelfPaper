@@ -55,9 +55,7 @@ const DeleteBooks = ({
                 <WarningOutlined style={{ color: 'red' }} />
                 <p>Êtes vous sûre de vouloir supprimer ce livre ? </p>
                 <Button onClick={hide}>Annuler</Button>
-                <Button onClick={() => deleteBook(record)}>
-                    Confirmer
-                </Button>
+                <Button onClick={() => deleteBook(record)}>Confirmer</Button>
             </>
         );
     };
