@@ -17,13 +17,13 @@ export const getBooks = async (
         const books = await Promise.all(book.map(async(book) => {
             const author = await Author.findById(book.bookAuthor);
             const theme = await Theme.findById(book.theme);
-            const publisher = [await Publisher.findById(book.bookPublisher?._id)];
-            const formattedPublicationDate = new Date(book.bookPublicationDate).toLocaleDateString('fr-FR', {
+            const bookPublisher = [await Publisher.findById(book.bookPublisher?._id)];
+            const formattedBookPublicationDate = new Date(book.bookPublicationDate).toLocaleDateString('fr-FR', {
                 day: '2-digit',
                 month: 'long',
                 year: 'numeric',
             });
-            return { ...book.toObject(), bookPublicationDate: formattedPublicationDate, theme, publisher, author };
+            return { ...book.toObject(), bookPublicationDate: formattedBookPublicationDate, theme, bookPublisher, author };
         }))
         return res.status(200).json({ data: { found: true, books } });
 
@@ -39,8 +39,7 @@ export const createBook = async (
     try {
         const newBook = await Books.create(req.body);
         if (!newBook) throw new Error("Book could not be created. Wrong params.");
-
-        return res.status(200).json({data: {created: true, newBook }});
+        return res.status(200).json({data: {created: true,  }});
     } catch (err) {
         return handleControllerErrors(err, res, "Couldn't create a book")
     }
@@ -56,7 +55,7 @@ export const updateBook = async (
             throw new Error(
                 'Could not find publication id for update. Wrong id',
             );
-
+        console.log(req.params,"SEPARATE", req.body)
         const updatedBook = await Books.findByIdAndUpdate(
             id,
             req.body,
