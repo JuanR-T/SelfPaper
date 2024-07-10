@@ -2,8 +2,10 @@ import { Button } from 'antd';
 import { handlePut } from '../../../api/handleCall';
 import toastProvider from '../../../lib/toastProvider';
 import { UpdateBooksProps, Book } from '../../../types/types';
+import dayjs from 'dayjs';
 
 const UpdateBooks = ({
+    refetch,
     record,
     isEditingBooks,
     editingRowId,
@@ -17,12 +19,16 @@ const UpdateBooks = ({
     const handleEditBookRow = (record: Book) => {
         setIsEditingBooks(true);
         setEditingRowData({ ...record });
+        console.log("editingRowRecord", editingRowData)
         setEditingRowId(record._id);
     };
     const updatePublication = async () => {
+        const formattedDate = dayjs(editingRowData.bookPublicationDate, "DD MMMM YYYY").toISOString();
+        console.log("formattedDate", formattedDate)
+        const editedBook = { ...editingRowData, bookPublicationDate: formattedDate };
         const updatedBook = await handlePut(
             `${BASE_URL}/api/books/update/${editingRowData._id}`,
-            { ...editingRowData },
+            { ...editedBook },
         );
         if (!updatedBook || !updatedBook.data) {
             toastProvider(
@@ -35,6 +41,7 @@ const UpdateBooks = ({
         }
         setIsEditingBooks(false);
         setEditingRowId(null);
+        refetch();
         return updatedBook;
     };
     return isEditingBooks && editingRowId ? (

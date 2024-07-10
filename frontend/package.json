@@ -18,7 +18,7 @@
     "axios": "^1.6.7",
     "clsx": "^2.1.1",
     "dart-sass": "^1.25.0",
-    "dayjs": "^1.11.10",
+    "dayjs": "^1.11.11",
     "framer-motion": "^11.2.12",
     "gulp": "^4.0.2",
     "gulp-dart-sass": "^1.1.0",

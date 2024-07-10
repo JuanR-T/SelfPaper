@@ -1,3 +1,4 @@
+import { Dayjs } from "dayjs";
 import { Dispatch, SetStateAction } from "react";
 /** Misc */
 export interface RefetchTriggerProps {
@@ -153,7 +154,7 @@ export interface Book {
     title: string;
     description: string;
     link: string;
-    bookPublicationDate: string;
+    bookPublicationDate:any;
     bookAuthor: string | undefined;
     bookPublisher: Publisher;
     bookImage: Buffer | string ;
@@ -163,6 +164,8 @@ export interface Book {
 
 export interface UpdateBooksProps{
     record: Book;
+    refetch: Function;
+    books: Book[] | undefined;
     editingRowId: string | null;
     isEditingBooks: boolean;
     editingRowData: Book;
