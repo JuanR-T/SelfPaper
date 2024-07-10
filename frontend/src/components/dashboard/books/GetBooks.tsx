@@ -102,11 +102,7 @@ const GetBooks = () => {
     const books = (useQueryBooks as BooksApiResponse)?.books;
     const currentBooksDisplayed = books?.slice(startIndex, endIndex);
     const publishers = (useQueryPublishers as PublisherApiResponse)?.publisher;
-
-    //const editingThisBook = books?.find(book => book._id === editingRowId);
-    //const thisBookPublicationDate = dayjs(editingThisBook?.bookPublicationDate, 'DD MMMM YYYY');
-
-    const [editingRowData, setEditingRowData] = useState<Book>({
+    const bookInitialState = {
         _id: '',
         title: '',
         description: '',
@@ -131,12 +127,13 @@ const GetBooks = () => {
             description: '',
             image: '',
         },
-    });
+    };
+    const [editingRowData, setEditingRowData] = useState<Book>(bookInitialState);
     const editingBookPublicationDate = (date: any | null) => {
         setIsBookDateEdited(true);
         setEditingRowData({
             ...editingRowData,
-            bookPublicationDate: dayjs(date),
+            bookPublicationDate: dayjs(date, 'DD MMMM YYYY')
         });
     }
     useEffect(() => {
@@ -356,6 +353,9 @@ const GetBooks = () => {
                     <>
                         <UpdateBooks
                             record={record}
+                            bookInitialState={bookInitialState}
+                            isBookDateEdited={isBookDateEdited}
+                            setIsBookDateEdited={setIsBookDateEdited}
                             refetch={refetch}
                             books={books}
                             isEditingBooks={isEditingBooks}
