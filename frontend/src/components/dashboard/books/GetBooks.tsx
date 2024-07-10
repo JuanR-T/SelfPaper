@@ -3,6 +3,8 @@ import { useQuery } from 'react-query';
 import { handleGet } from '../../../api/handleCall';
 import { useAuth } from '../../../context/AuthContext';
 import toastProvider from '../../../lib/toastProvider';
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import 'dayjs/locale/fr';
 import {
     Author,
     BooksApiResponse,
@@ -28,6 +30,8 @@ import DeleteBooks from './DeleteBooks';
 import UpdateBooks from './UpdateBooks';
 import CreateBooks from './CreateBooks';
 const GetBooks = () => {
+    dayjs.extend(customParseFormat);
+    dayjs.locale('fr');
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { getConfig, author } = useAuth();
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -40,32 +44,7 @@ const GetBooks = () => {
     const [editingRowId, setEditingRowId] = useState<string | null>(null);
     const [isDeletingBooks, setIsDeletingBooks] = useState<boolean>(false);
     const [isEditingBooks, setIsEditingBooks] = useState<boolean>(false);
-    const [editingRowData, setEditingRowData] = useState<Book>({
-        _id: '',
-        title: '',
-        description: '',
-        link: '',
-        bookPublicationDate: '',
-        bookAuthor: author?.id,
-        bookPublisher: {
-            _id: '',
-            title: '',
-            description: '',
-            type: '',
-            location: '',
-            founded_at: '',
-            services: [''],
-            service: '',
-        },
-        bookImage: '',
-        thumbnail: '',
-        theme: {
-            _id: '',
-            title: '',
-            description: '',
-            image: '',
-        },
-    });
+    const [isBookDateEdited, setIsBookDateEdited] = useState<boolean>(false);
     const { data: useQueryBooks, refetch }: any = useQuery(
         'get_books',
         async () => {
@@ -73,7 +52,6 @@ const GetBooks = () => {
                 `${BASE_URL}/api/books`,
                 getConfig(),
             );
-            console.log('useQueryBooksRequest', useQueryBooksRequest);
             if (!useQueryBooksRequest || !useQueryBooksRequest.data) {
                 toastProvider(
                     'error',
@@ -122,13 +100,45 @@ const GetBooks = () => {
         return useQueryImages;
     });
     const books = (useQueryBooks as BooksApiResponse)?.books;
-    console.log('books', books);
     const currentBooksDisplayed = books?.slice(startIndex, endIndex);
-    console.log('currentBooksDisplayed', currentBooksDisplayed);
     const publishers = (useQueryPublishers as PublisherApiResponse)?.publisher;
-    console.log('publishers', publishers);
-    console.log('books', books);
 
+    //const editingThisBook = books?.find(book => book._id === editingRowId);
+    //const thisBookPublicationDate = dayjs(editingThisBook?.bookPublicationDate, 'DD MMMM YYYY');
+
+    const [editingRowData, setEditingRowData] = useState<Book>({
+        _id: '',
+        title: '',
+        description: '',
+        link: '',
+        bookPublicationDate: '',
+        bookAuthor: author?.id,
+        bookPublisher: {
+            _id: '',
+            title: '',
+            description: '',
+            type: '',
+            location: '',
+            founded_at: '',
+            services: [''],
+            service: '',
+        },
+        bookImage: '',
+        thumbnail: '',
+        theme: {
+            _id: '',
+            title: '',
+            description: '',
+            image: '',
+        },
+    });
+    const editingBookPublicationDate = (date: any | null) => {
+        setIsBookDateEdited(true);
+        setEditingRowData({
+            ...editingRowData,
+            bookPublicationDate: dayjs(date),
+        });
+    }
     useEffect(() => {
         const fetchData = async () => {
             await refetch();
@@ -206,27 +216,14 @@ const GetBooks = () => {
             dataIndex: 'bookPublicationDate',
             responsive: ['sm'],
             render: (text: string, record: Book) => {
+                const formattedBookPublicationDate = dayjs(record?.bookPublicationDate, 'DD MMMM YYYY');
                 return isEditingBooks && editingRowId === record._id ? (
                     <DatePicker
-                        onChange={(date: Dayjs | null) => {
-                            if (date) {
-                                const dayjsDate = dayjs(date);
-                                setEditingRowData({
-                                    ...editingRowData,
-                                    bookPublicationDate:
-                                        dayjsDate.toISOString(),
-                                });
-                            } else {
-                                setEditingRowData({
-                                    ...editingRowData,
-                                    bookPublicationDate: '',
-                                });
-                            }
-                        }}
-                        value={dayjs(editingRowData.bookPublicationDate)}
+                        onChange={editingBookPublicationDate}
+                        value={isBookDateEdited ? editingRowData.bookPublicationDate : formattedBookPublicationDate}
                     />
                 ) : (
-                    text
+                    record.bookPublicationDate
                 );
             },
         },
@@ -241,32 +238,30 @@ const GetBooks = () => {
                 return '';
             },
         },
-        // {
-        //     title: 'Éditeur / Service',
-        //     dataIndex: 'publisher',
-        //     responsive: ['sm'],
-        //     render: (text: string, record: Book) => {
-        //         return isEditingBooks && editingRowId === record._id ? (
-        //             <Select
-        //                 placeholder="Choisir un éditeur"
-        //                 onSelect={(value) => setSelectPublisherValue(value)}
-        //             >
-        //                 {publishers?.map((publisher: any) => (
-        //                     <Select.Option
-        //                         key={publisher._id}
-        //                         value={publisher._id}
-        //                     >
-        //                         {publisher.title}
-        //                     </Select.Option>
-        //                 ))}
-        //             </Select>
-        //         ) : (
-        //             record.bookPublisher[0].title +
-        //             ' / ' +
-        //             record.bookPublisher[1].service
-        //         );
-        //     },
-        // },
+        {
+            title: 'Éditeur',
+            dataIndex: 'bookPublisher',
+            responsive: ['sm'],
+            render: (text: string, record: Book) => {
+                return isEditingBooks && editingRowId === record._id ? (
+                    <Select
+                        placeholder="Choisir un éditeur"
+                        onSelect={(value) => setSelectPublisherValue(value)}
+                    >
+                        {publishers?.map((publisher: any) => (
+                            <Select.Option
+                                key={publisher._id}
+                                value={publisher._id}
+                            >
+                                {publisher.title}
+                            </Select.Option>
+                        ))}
+                    </Select>
+                ) : (
+                    record.bookPublisher[0].title
+                );
+            },
+        },
         {
             title: 'Image',
             dataIndex: 'postImage',
@@ -361,6 +356,8 @@ const GetBooks = () => {
                     <>
                         <UpdateBooks
                             record={record}
+                            refetch={refetch}
+                            books={books}
                             isEditingBooks={isEditingBooks}
                             editingRowId={editingRowId}
                             editingRowData={editingRowData}
