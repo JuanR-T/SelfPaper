@@ -1,5 +1,5 @@
-import { Dayjs } from "dayjs";
 import { Dispatch, SetStateAction } from "react";
+import { UseQueryResult } from "react-query";
 /** Misc */
 export interface RefetchTriggerProps {
     refetchTrigger: boolean;
@@ -39,6 +39,12 @@ export interface AuthContextType {
     ) => Promise<void>;
     getConfig: () => Record<string, unknown>;
 }
+export interface ApiContextType {
+    publicationsQuery: UseQueryResult<PublicationQueryResponse, Error>,
+    booksQuery: UseQueryResult<BooksQueryResponse, Error>
+    publishersQuery: UseQueryResult<PublisherQueryResponse, Error>,
+    imagesQuery: UseQueryResult<ImagesQueryResponse, Error>,
+}
 
 export type LoginResponse = {
     token: string;
@@ -47,7 +53,7 @@ export type LoginResponse = {
 
 /** Publisher */
 
-export interface PublisherApiResponse {
+export interface PublisherQueryResponse {
     found: boolean;
     publisher?: Publisher[];
 }
@@ -69,7 +75,7 @@ export interface ThemeApiResponse {
     found: boolean;
     theme?: Theme[];
 }
-export interface PublicationApiResponse {
+export interface PublicationQueryResponse {
     found: boolean;
     publications?: Publication[];
 }
@@ -138,14 +144,14 @@ export interface Images {
     title: string,
     image: string
 }
-export interface ImagesApiResponse {
+export interface ImagesQueryResponse {
     found: boolean;
     images?: Images[];
 }
 
 /** Books */
 
-export interface BooksApiResponse {
+export interface BooksQueryResponse {
     found: boolean;
     books?: Book[];
 }

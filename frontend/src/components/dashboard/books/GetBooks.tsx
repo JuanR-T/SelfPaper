@@ -1,38 +1,37 @@
+import { UploadOutlined } from '@ant-design/icons';
+import {
+    Button,
+    DatePicker,
+    Input,
+    Pagination,
+    Select,
+    Table,
+    Upload,
+    message,
+} from 'antd';
+import dayjs from 'dayjs';
+import 'dayjs/locale/fr';
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { handleGet } from '../../../api/handleCall';
+import { useApiContext } from '../../../context/ApiContext';
 import { useAuth } from '../../../context/AuthContext';
 import toastProvider from '../../../lib/toastProvider';
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import 'dayjs/locale/fr';
 import {
     Author,
-    BooksApiResponse,
-    ImagesApiResponse,
-    PublisherApiResponse,
+    Book,
+    PublisherApiResponse
 } from '../../../types/types';
-import {
-    Input,
-    Upload,
-    message,
-    Button,
-    Select,
-    DatePicker,
-    Table,
-    Pagination,
-} from 'antd';
-import dayjs, { Dayjs } from 'dayjs';
 import ModalProvider from '../../utils/ModalProvider';
-import CreatePublication from '../publications/CreatePublications';
-import { UploadOutlined } from '@ant-design/icons';
-import { Book } from '../../../types/types';
+import CreateBooks from './CreateBooks';
 import DeleteBooks from './DeleteBooks';
 import UpdateBooks from './UpdateBooks';
-import CreateBooks from './CreateBooks';
 const GetBooks = () => {
     dayjs.extend(customParseFormat);
     dayjs.locale('fr');
     const BASE_URL = import.meta.env.VITE_BASE_URL;
+    const { booksQuery, publishersQuery, imagesQuery } = useApiContext();
     const { getConfig, author } = useAuth();
     const [currentPage, setCurrentPage] = useState<number>(1);
     const booksPerPage = 10;
@@ -99,7 +98,8 @@ const GetBooks = () => {
         }
         return useQueryImages;
     });
-    const books = (useQueryBooks as BooksApiResponse)?.books;
+    console.log("this is booksquery", booksQuery);
+    const books = booksQuery?.data?.books;
     const currentBooksDisplayed = books?.slice(startIndex, endIndex);
     const publishers = (useQueryPublishers as PublisherApiResponse)?.publisher;
     const bookInitialState = {
@@ -138,11 +138,11 @@ const GetBooks = () => {
     }
     useEffect(() => {
         const fetchData = async () => {
-            await refetch();
+            await booksQuery.refetch();
         };
         setIsDeletingBooks(false);
         fetchData();
-    }, [isDeletingBooks, editingRowId, refetchTrigger, refetch]);
+    }, [isDeletingBooks, editingRowId, refetchTrigger]);
 
     const columns: any = [
         {
