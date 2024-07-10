@@ -165,6 +165,9 @@ export interface Book {
 export interface UpdateBooksProps{
     record: Book;
     refetch: Function;
+    bookInitialState: SetStateAction<Book>;
+    isBookDateEdited: boolean;
+    setIsBookDateEdited: Dispatch<SetStateAction<boolean>>
     books: Book[] | undefined;
     editingRowId: string | null;
     isEditingBooks: boolean;
