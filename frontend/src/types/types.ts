@@ -2,31 +2,31 @@ import { AxiosResponse } from "axios";
 import { Dispatch, SetStateAction } from "react";
 import { UseQueryResult } from "react-query";
 /** Misc */
-export type ApiDataResponse = Book | Publication | Publisher | Images | Theme;
-//export type TData = ApiDataResponse
-export type TVariables = {
-    data: ApiDataResponse
-    config?: object
-}
 export interface RefetchTriggerProps {
     refetchTrigger: boolean;
     setRefetchTrigger: React.Dispatch<React.SetStateAction<boolean>>;
     handleCancelation?: (() => void | undefined) | undefined;
 }
 
-export interface MutationConfig<ApiDataResponse, TError, TVariables> {
-        method: HandleApiCall<ApiDataResponse, TVariables>;
+export interface MutationConfig<TData extends ApiDataResponse, TError> {
+        method: HandleApiCall<TData>;
         url: string;
         successMessage: string;
         errorMessage: string;
     }
 
-export interface HandleApiCall<ApiDataResponse, TVariables> {(
+    export type TVariables<TData> = {
+    data: TData; // Adjust as per your API payload structure
+    config?: object; // Optional config
+};
+    
+export interface HandleApiCall<TData> {(
     url: string, 
-    data: TVariables, 
+    data: TData, 
     config?: object
-): Promise<AxiosResponse<ApiDataResponse> | undefined>;
+): Promise<AxiosResponse<TData> | undefined>;
 }
+export type ApiDataResponse = Book | Publication | Publisher | Images | Theme;
 
 export type CapitalizeLetterTypes = string | string[];
 

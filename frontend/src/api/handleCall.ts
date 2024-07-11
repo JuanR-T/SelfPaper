@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ApiDataResponse, HandleApiCall, TVariables } from "../types/types";
+import { ApiDataResponse, HandleApiCall } from "../types/types";
 
 const defaultConfig = {
     headers: {
@@ -7,8 +7,9 @@ const defaultConfig = {
     },
 };
 
-export const handleGet: HandleApiCall<ApiDataResponse, Record<string, unknown>>= async (
+export const handleGet: HandleApiCall<ApiDataResponse>= async (
     url,
+    data,
     config,
 ) => {
     const res = await axios
@@ -19,12 +20,11 @@ export const handleGet: HandleApiCall<ApiDataResponse, Record<string, unknown>>=
     return res.data;
 };
 
-export const handlePost: HandleApiCall<ApiDataResponse, TVariables> = async (
+export const handlePost: HandleApiCall<ApiDataResponse> = async (
     url,
     data,
     config,
 ) => {
-    console.log("handle post data", data, config, url)
     const res = await axios
         .post(url, data, config ?? defaultConfig)
         .catch((err) => err.response);
@@ -34,7 +34,7 @@ export const handlePost: HandleApiCall<ApiDataResponse, TVariables> = async (
     return res.data;
 };
 
-export const handlePut: HandleApiCall<ApiDataResponse, Record<string, unknown>> = async (
+export const handlePut: HandleApiCall<ApiDataResponse> = async (
     url,
     data,
     config,
@@ -47,8 +47,9 @@ export const handlePut: HandleApiCall<ApiDataResponse, Record<string, unknown>> 
     return res.data;
 };
 
-export const handleDelete: HandleApiCall<ApiDataResponse, Record<string, unknown>> = async (
+export const handleDelete: HandleApiCall<ApiDataResponse> = async (
     url,
+    data,
     config,
 ) => {
     const res = await axios

@@ -1,24 +1,20 @@
 import { UseMutationResult, useMutation } from "react-query";
 import { useApiContext } from "../context/ApiContext";
 import toastProvider from "../lib/toastProvider";
-import { MutationConfig } from "../types/types";
+import { ApiDataResponse, MutationConfig, TVariables } from "../types/types";
 
-const mutationController = <TData, TError, TVariables>({
+const mutationController = <TData extends ApiDataResponse, TError>({
     method,
     url,
     successMessage,
     errorMessage,
-}: MutationConfig<TData, TError, TVariables>): UseMutationResult<
-    TData,
-    TError,
-    TVariables,
-    unknown
-> => {
+}: MutationConfig<TData, TError>): UseMutationResult<TData, TError, TVariables<TData>, unknown> => {
     const { booksQuery } = useApiContext();
-    return useMutation<TData, TError, TVariables, unknown>(
-        async (variables: TVariables) => {
-            const response = await method(url, variables);
-            console.log("response createMutationController : ", response)
+
+    return useMutation<TData, TError, TVariables<TData>, unknown>(
+        async (variables: TVariables<TData>) => {
+            const response = await method(url, variables.data, variables.config);
+
             if (!response || !response.data) {
                 toastProvider(
                     'error',
@@ -28,12 +24,12 @@ const mutationController = <TData, TError, TVariables>({
                 );
                 throw new Error(errorMessage);
             }
+
             return response.data;
         },
         {
             onSuccess: () => {
-                //TODO Make this query generic
-                booksQuery.refetch();
+                booksQuery.refetch(); // Ensure this is correctly typed in your context
                 toastProvider(
                     'success',
                     successMessage,
@@ -42,7 +38,6 @@ const mutationController = <TData, TError, TVariables>({
                 );
             },
         },
-
     );
 };
 
