@@ -4,8 +4,7 @@ import toastProvider from '../../../lib/toastProvider';
 import { UpdateBooksProps, Book } from '../../../types/types';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/fr';
-import customParseFormat from "dayjs/plugin/customParseFormat";
-
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 const UpdateBooks = ({
     refetch,
@@ -26,16 +25,22 @@ const UpdateBooks = ({
 
     const handleEditBookRow = (record: Book) => {
         setIsEditingBooks(true);
-        console.log("record", record)
-        console.log("editingrowdata", editingRowData);
+        console.log('record', record);
+        console.log('editingrowdata', editingRowData);
         setEditingRowData({ ...record });
         setEditingRowId(record._id);
     };
     const updatePublication = async () => {
-        const formattedDate = dayjs(editingRowData.bookPublicationDate, "DD MMMM YYYY").toISOString();
-        console.log("formattedDate", formattedDate)
-        const editedBook = { ...editingRowData, bookPublicationDate: formattedDate };
-        console.log("editedBook", editedBook)
+        const formattedDate = dayjs(
+            editingRowData.bookPublicationDate,
+            'DD MMMM YYYY',
+        ).toISOString();
+        console.log('formattedDate', formattedDate);
+        const editedBook = {
+            ...editingRowData,
+            bookPublicationDate: formattedDate,
+        };
+        console.log('editedBook', editedBook);
         const updatedBook = await handlePut(
             `${BASE_URL}/api/books/update/${editingRowData._id}`,
             { ...editedBook },
@@ -51,7 +56,7 @@ const UpdateBooks = ({
         }
         setIsEditingBooks(false);
         setEditingRowId(null);
-        setEditingRowData(bookInitialState)
+        setEditingRowData(bookInitialState);
         setIsBookDateEdited(false);
         return updatedBook;
     };

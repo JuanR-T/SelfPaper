@@ -11,14 +11,11 @@ import {
 } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
-import customParseFormat from "dayjs/plugin/customParseFormat";
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useEffect, useState } from 'react';
 import { useApiContext } from '../../../context/ApiContext';
 import { useAuth } from '../../../context/AuthContext';
-import {
-    Author,
-    Book
-} from '../../../types/types';
+import { Author, Book } from '../../../types/types';
 import ModalProvider from '../../utils/ModalProvider';
 import CreateBooks from './CreateBooks';
 import DeleteBooks from './DeleteBooks';
@@ -41,7 +38,10 @@ const GetBooks = () => {
     const [isEditingBooks, setIsEditingBooks] = useState<boolean>(false);
     const [isBookDateEdited, setIsBookDateEdited] = useState<boolean>(false);
 
-    const currentBooksDisplayed = booksQuery?.data?.books?.slice(startIndex, endIndex);
+    const currentBooksDisplayed = booksQuery?.data?.books?.slice(
+        startIndex,
+        endIndex,
+    );
     const bookInitialState = {
         _id: '',
         title: '',
@@ -68,15 +68,16 @@ const GetBooks = () => {
             image: '',
         },
     };
-    const [editingRowData, setEditingRowData] = useState<Book>(bookInitialState);
+    const [editingRowData, setEditingRowData] =
+        useState<Book>(bookInitialState);
 
     const editingBookPublicationDate = (date: any | null) => {
         setIsBookDateEdited(true);
         setEditingRowData({
             ...editingRowData,
-            bookPublicationDate: dayjs(date, 'DD MMMM YYYY')
+            bookPublicationDate: dayjs(date, 'DD MMMM YYYY'),
         });
-    }
+    };
     useEffect(() => {
         const fetchData = async () => {
             await booksQuery.refetch();
@@ -154,11 +155,18 @@ const GetBooks = () => {
             dataIndex: 'bookPublicationDate',
             responsive: ['sm'],
             render: (text: string, record: Book) => {
-                const formattedBookPublicationDate = dayjs(record?.bookPublicationDate, 'DD MMMM YYYY');
+                const formattedBookPublicationDate = dayjs(
+                    record?.bookPublicationDate,
+                    'DD MMMM YYYY',
+                );
                 return isEditingBooks && editingRowId === record._id ? (
                     <DatePicker
                         onChange={editingBookPublicationDate}
-                        value={isBookDateEdited ? editingRowData.bookPublicationDate : formattedBookPublicationDate}
+                        value={
+                            isBookDateEdited
+                                ? editingRowData.bookPublicationDate
+                                : formattedBookPublicationDate
+                        }
                     />
                 ) : (
                     record.bookPublicationDate
@@ -186,14 +194,16 @@ const GetBooks = () => {
                         placeholder="Choisir un éditeur"
                         onSelect={(value) => setSelectPublisherValue(value)}
                     >
-                        {publishersQuery?.data?.publisher?.map((publisher: any) => (
-                            <Select.Option
-                                key={publisher._id}
-                                value={publisher._id}
-                            >
-                                {publisher.title}
-                            </Select.Option>
-                        ))}
+                        {publishersQuery?.data?.publisher?.map(
+                            (publisher: any) => (
+                                <Select.Option
+                                    key={publisher._id}
+                                    value={publisher._id}
+                                >
+                                    {publisher.title}
+                                </Select.Option>
+                            ),
+                        )}
                     </Select>
                 ) : (
                     record.bookPublisher[0].title
