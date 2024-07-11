@@ -1,9 +1,9 @@
-import { handleControllerErrors } from '../utils/handleControllerErrors';
-import { Request, Response, response } from 'express';
-import Books from '../models/Books';
+import { Request, Response } from 'express';
 import Author from '../models/Author';
+import Books from '../models/Books';
 import Publisher from '../models/Publisher';
 import Theme from '../models/Theme';
+import { handleControllerErrors } from '../utils/handleControllerErrors';
 
 export const getBooks = async (
     req: Request,
@@ -37,7 +37,9 @@ export const createBook = async (
     res: Response
 ) : Promise<Response> => {
     try {
+        console.log("reqBody", req.body);
         const newBook = await Books.create(req.body);
+        console.log("newbook", newBook);
         if (!newBook) throw new Error("Book could not be created. Wrong params.");
         return res.status(200).json({data: {created: true,  }});
     } catch (err) {
@@ -55,7 +57,6 @@ export const updateBook = async (
             throw new Error(
                 'Could not find publication id for update. Wrong id',
             );
-        console.log(req.params,"SEPARATE", req.body)
         const updatedBook = await Books.findByIdAndUpdate(
             id,
             req.body,
