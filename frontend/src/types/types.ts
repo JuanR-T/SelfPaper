@@ -1,23 +1,33 @@
 import { AxiosResponse } from "axios";
 import { Dispatch, SetStateAction } from "react";
-import { UseMutationResult, UseQueryResult } from "react-query";
+import { UseQueryResult } from "react-query";
 /** Misc */
+export type ApiDataResponse = Book | Publication | Publisher | Images | Theme;
+//export type TData = ApiDataResponse
+export type TVariables = {
+    data: ApiDataResponse
+    config?: object
+}
 export interface RefetchTriggerProps {
     refetchTrigger: boolean;
     setRefetchTrigger: React.Dispatch<React.SetStateAction<boolean>>;
     handleCancelation?: (() => void | undefined) | undefined;
 }
 
-export interface MutationConfig<TData, TError, TVariables, TContext> {
-        method: HandleApiCall<TData, TError, TVariables, TContext>;
+export interface MutationConfig<ApiDataResponse, TError, TVariables> {
+        method: HandleApiCall<ApiDataResponse, TVariables>;
         url: string;
         successMessage: string;
         errorMessage: string;
     }
-export interface HandleApiCall<TData, TError, TVariables, TContext> {
-    (url: string, data: TVariables, config?: TVariables): Promise<AxiosResponse<TData> | undefined>;
+
+export interface HandleApiCall<ApiDataResponse, TVariables> {(
+    url: string, 
+    data: TVariables, 
+    config?: object
+): Promise<AxiosResponse<ApiDataResponse> | undefined>;
 }
-export type ApiDataResponse = Book | Publication | Publisher | Images | Theme;
+
 export type CapitalizeLetterTypes = string | string[];
 
 /** Author */
@@ -50,13 +60,18 @@ export interface AuthContextType {
     ) => Promise<void>;
     getConfig: () => Record<string, unknown>;
 }
+export interface MutationProps {
+    dataUrl: String;
+    dataType: String;
+}
 export interface ApiContextType {
     publicationsQuery: UseQueryResult<PublicationQueryResponse, Error>,
     booksQuery: UseQueryResult<BooksQueryResponse, Error>
     publishersQuery: UseQueryResult<PublisherQueryResponse, Error>,
+    themesQuery: UseQueryResult<ThemeQueryResponse, Error>,
     imagesQuery: UseQueryResult<ImagesQueryResponse, Error>,
-    createBookMutation: UseMutationResult<any, unknown, void, unknown>,
 }
+//createMutation: (props: MutationProps) => UseMutationResult<ApiDataResponse, Error>,
 
 export type LoginResponse = {
     token: string;

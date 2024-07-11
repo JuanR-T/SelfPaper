@@ -8,7 +8,8 @@ const publisherSchema = new Schema({
     location: { type: String },
     foundedAt: { type: Date },
     service: {
-        type: String, required: false
+        type: String,
+        required: false,
     },
 });
 

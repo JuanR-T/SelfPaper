@@ -19,16 +19,16 @@ export const checkPublisherService = async (req: Request): Promise<boolean> => {
         }
 
         const requestPublishers: PublisherRequestBody =
-            (req.body.publisher) || [];
-            const hasSameService = publishers.some((publisher) => {
+            req.body.publisher || [];
+        const hasSameService = publishers.some((publisher) => {
             return (
-                    publisher._id.equals(requestPublishers._id) &&
-                    publisher.services.some(
-                        (service) =>
-                            service.toLowerCase() ===
-                            requestPublishers.service.toLowerCase(),
-                    ))
-
+                publisher._id.equals(requestPublishers._id) &&
+                publisher.services.some(
+                    (service) =>
+                        service.toLowerCase() ===
+                        requestPublishers.service.toLowerCase(),
+                )
+            );
         });
 
         return hasSameService;

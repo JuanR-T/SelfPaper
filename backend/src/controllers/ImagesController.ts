@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import Images from "../models/Images";
+import Images from '../models/Images';
 import { handleControllerErrors } from '../utils/handleControllerErrors';
-import multer from "multer";
+import multer from 'multer';
 
-export const getImages =  async (
+export const getImages = async (
     req: Request,
     res: Response,
 ): Promise<Response> => {
@@ -16,7 +16,7 @@ export const getImages =  async (
     }
 };
 
-export const getImageById =  async (
+export const getImageById = async (
     req: Request,
     res: Response,
 ): Promise<Response> => {
@@ -39,34 +39,36 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         cb(null, Date.now() + '-'); // Use a unique filename
-    }
+    },
 });
 
 const upload = multer({ storage: storage });
 
-export const uploadImage =  async (
+export const uploadImage = async (
     req: Request,
     res: Response,
 ): Promise<Response> => {
     try {
-        upload.single('image')
+        upload.single('image');
         const imageUrl = req?.body?.image;
         if (!imageUrl) throw new Error('Image upload failed.');
 
         const savingImage = new Images({
-                title: req.body.title,
-                image: imageUrl,
+            title: req.body.title,
+            image: imageUrl,
         });
         await savingImage.save();
         if (!savingImage) throw new Error('Image saving to database failed.');
 
-        return res.status(200).json({data:{ saved: true, imageUrl: imageUrl }});
+        return res
+            .status(200)
+            .json({ data: { saved: true, imageUrl: imageUrl } });
     } catch (err) {
         return handleControllerErrors(err, res, 'Failed to upload image.');
     }
 };
 
-export const deleteImage =  async (
+export const deleteImage = async (
     req: Request,
     res: Response,
 ): Promise<Response> => {
@@ -75,14 +77,15 @@ export const deleteImage =  async (
         if (!id) throw new Error('Could not delete image. Wrong id.');
 
         const deletedImage = await Images.findByIdAndDelete(id);
-        if (!deletedImage) throw new Error('Could not find or delete that image');
+        if (!deletedImage)
+            throw new Error('Could not find or delete that image');
         return res.status(200).json({ data: { deleted: true, deletedImage } });
     } catch (err) {
         return handleControllerErrors(err, res, 'Could not delete that image.');
     }
 };
 
-export const updateImage =  async (
+export const updateImage = async (
     req: Request,
     res: Response,
 ): Promise<Response> => {
@@ -90,8 +93,11 @@ export const updateImage =  async (
         const { id } = req.params;
         if (!id) throw new Error('Could not update image. Wrong id.');
 
-        const updatedImage = await Images.findByIdAndUpdate(id, req.body, { new: true });
-        if (!updatedImage) throw new Error('Could not find or update that image');
+        const updatedImage = await Images.findByIdAndUpdate(id, req.body, {
+            new: true,
+        });
+        if (!updatedImage)
+            throw new Error('Could not find or update that image');
         return res.status(200).json({ data: { updated: true, updatedImage } });
     } catch (err) {
         return handleControllerErrors(err, res, 'Could not update that image.');

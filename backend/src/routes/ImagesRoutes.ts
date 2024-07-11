@@ -4,7 +4,7 @@ import {
     getImageById,
     uploadImage,
     deleteImage,
-    updateImage
+    updateImage,
 } from '../controllers/ImagesController';
 
 export const imagesRoutes = () => {
