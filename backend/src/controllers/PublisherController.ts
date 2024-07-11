@@ -108,7 +108,7 @@ export const updatePublisher = async (
         const updatedPublisher = await Publisher.findByIdAndUpdate(
             id,
             req.body,
-            { new: true, runValidators: true }
+            { new: true, runValidators: true },
         );
         if (!updatedPublisher) throw new Error('Could not update publisher');
 

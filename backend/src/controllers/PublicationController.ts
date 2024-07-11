@@ -16,18 +16,31 @@ export const getPublication = async (
         const publication = await Publication.find({});
         if (!publication) throw new Error("Couldn't find any publications");
 
-        const publications = await Promise.all(publication.map(async (publication) => {
-            const author = await Author.findById(publication.author);
-            const theme = await Theme.findById(publication.theme);
-            const publisher = [await Publisher.findById(publication.publisher?._id),{service: publication.publisher?.service}] ;
-            //TODO make it generic for other models
-            const formattedPublicationDate = new Date(publication.publicationDate).toLocaleDateString('fr-FR', {
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric',
-            });
-            return { ...publication.toObject(), publicationDate: formattedPublicationDate, theme, publisher, author };
-        }));
+        const publications = await Promise.all(
+            publication.map(async (publication) => {
+                const author = await Author.findById(publication.author);
+                const theme = await Theme.findById(publication.theme);
+                const publisher = [
+                    await Publisher.findById(publication.publisher?._id),
+                    { service: publication.publisher?.service },
+                ];
+                //TODO make it generic for other models
+                const formattedPublicationDate = new Date(
+                    publication.publicationDate,
+                ).toLocaleDateString('fr-FR', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric',
+                });
+                return {
+                    ...publication.toObject(),
+                    publicationDate: formattedPublicationDate,
+                    theme,
+                    publisher,
+                    author,
+                };
+            }),
+        );
         return res.status(200).json({ data: { found: true, publications } });
     } catch (err) {
         return handleControllerErrors(err, res, 'Publications not found');
@@ -77,8 +90,9 @@ export const createPublication = async (
         if (!newPublication)
             throw new Error('Publication could not be created. Wrong params');
 
-        return res.status(200).json({ data: { created: true, newPublication } });
-
+        return res
+            .status(200)
+            .json({ data: { created: true, newPublication } });
     } catch (err) {
         return handleControllerErrors(
             err,

@@ -1,9 +1,9 @@
-import { model, Schema, SchemaTypes } from "mongoose";
+import { model, Schema, SchemaTypes } from 'mongoose';
 
 const booksSchema = new Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
-    link: {type: String},
+    link: { type: String },
     bookPublicationDate: { type: Date, required: true },
     bookAuthor: [
         {
