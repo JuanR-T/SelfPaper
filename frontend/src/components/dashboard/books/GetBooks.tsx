@@ -1,39 +1,34 @@
-import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
-import { handleGet } from '../../../api/handleCall';
-import { useAuth } from '../../../context/AuthContext';
-import toastProvider from '../../../lib/toastProvider';
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import 'dayjs/locale/fr';
+import { UploadOutlined } from '@ant-design/icons';
 import {
-    Author,
-    BooksApiResponse,
-    ImagesApiResponse,
-    PublisherApiResponse,
-} from '../../../types/types';
-import {
+    Button,
+    DatePicker,
     Input,
+    Pagination,
+    Select,
+    Table,
     Upload,
     message,
-    Button,
-    Select,
-    DatePicker,
-    Table,
-    Pagination,
 } from 'antd';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import 'dayjs/locale/fr';
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { useEffect, useState } from 'react';
+import { useApiContext } from '../../../context/ApiContext';
+import { useAuth } from '../../../context/AuthContext';
+import {
+    Author,
+    Book
+} from '../../../types/types';
 import ModalProvider from '../../utils/ModalProvider';
-import CreatePublication from '../publications/CreatePublications';
-import { UploadOutlined } from '@ant-design/icons';
-import { Book } from '../../../types/types';
+import CreateBooks from './CreateBooks';
 import DeleteBooks from './DeleteBooks';
 import UpdateBooks from './UpdateBooks';
-import CreateBooks from './CreateBooks';
 const GetBooks = () => {
     dayjs.extend(customParseFormat);
     dayjs.locale('fr');
-    const BASE_URL = import.meta.env.VITE_BASE_URL;
-    const { getConfig, author } = useAuth();
+    const { booksQuery, publishersQuery, imagesQuery } = useApiContext();
+    const { author } = useAuth();
+
     const [currentPage, setCurrentPage] = useState<number>(1);
     const booksPerPage = 10;
     const startIndex = (currentPage - 1) * booksPerPage;
@@ -45,63 +40,8 @@ const GetBooks = () => {
     const [isDeletingBooks, setIsDeletingBooks] = useState<boolean>(false);
     const [isEditingBooks, setIsEditingBooks] = useState<boolean>(false);
     const [isBookDateEdited, setIsBookDateEdited] = useState<boolean>(false);
-    const { data: useQueryBooks, refetch }: any = useQuery(
-        'get_books',
-        async () => {
-            const useQueryBooksRequest = await handleGet(
-                `${BASE_URL}/api/books`,
-                getConfig(),
-            );
-            if (!useQueryBooksRequest || !useQueryBooksRequest.data) {
-                toastProvider(
-                    'error',
-                    'Une erreur est survenue pendant la récupération des livres. Veuillez réessayer.',
-                    'bottom-left',
-                    'colored',
-                );
-                return undefined;
-            }
-            return useQueryBooksRequest?.data;
-        },
-    );
-    const { data: useQueryPublishers }: any = useQuery(
-        'get_publishers',
-        async () => {
-            const useQueryPublishers = await handleGet(
-                `${BASE_URL}/api/publisher`,
-                getConfig(),
-            );
-            if (!useQueryPublishers || !useQueryPublishers.data) {
-                toastProvider(
-                    'error',
-                    'Une erreur est survenue pendant la récupération des éditeurs. Veuillez réessayer.',
-                    'bottom-left',
-                    'colored',
-                );
-                return undefined;
-            }
-            return useQueryPublishers;
-        },
-    );
-    const { data: useQueryImages } = useQuery('get_images', async () => {
-        const useQueryImages = await handleGet(
-            `${BASE_URL}/api/image`,
-            getConfig(),
-        );
-        if (!useQueryImages) {
-            toastProvider(
-                'error',
-                'Une erreur est survenue pendant la récupération des images. Veuillez réessayer.',
-                'bottom-left',
-                'colored',
-            );
-            return undefined;
-        }
-        return useQueryImages;
-    });
-    const books = (useQueryBooks as BooksApiResponse)?.books;
-    const currentBooksDisplayed = books?.slice(startIndex, endIndex);
-    const publishers = (useQueryPublishers as PublisherApiResponse)?.publisher;
+
+    const currentBooksDisplayed = booksQuery?.data?.books?.slice(startIndex, endIndex);
     const bookInitialState = {
         _id: '',
         title: '',
@@ -129,6 +69,7 @@ const GetBooks = () => {
         },
     };
     const [editingRowData, setEditingRowData] = useState<Book>(bookInitialState);
+
     const editingBookPublicationDate = (date: any | null) => {
         setIsBookDateEdited(true);
         setEditingRowData({
@@ -138,11 +79,11 @@ const GetBooks = () => {
     }
     useEffect(() => {
         const fetchData = async () => {
-            await refetch();
+            await booksQuery.refetch();
         };
         setIsDeletingBooks(false);
         fetchData();
-    }, [isDeletingBooks, editingRowId, refetchTrigger, refetch]);
+    }, [isDeletingBooks, editingRowId, refetchTrigger]);
 
     const columns: any = [
         {
@@ -245,7 +186,7 @@ const GetBooks = () => {
                         placeholder="Choisir un éditeur"
                         onSelect={(value) => setSelectPublisherValue(value)}
                     >
-                        {publishers?.map((publisher: any) => (
+                        {publishersQuery?.data?.publisher?.map((publisher: any) => (
                             <Select.Option
                                 key={publisher._id}
                                 value={publisher._id}
@@ -356,8 +297,8 @@ const GetBooks = () => {
                             bookInitialState={bookInitialState}
                             isBookDateEdited={isBookDateEdited}
                             setIsBookDateEdited={setIsBookDateEdited}
-                            refetch={refetch}
-                            books={books}
+                            refetch={booksQuery.refetch}
+                            books={booksQuery?.data?.books}
                             isEditingBooks={isEditingBooks}
                             editingRowId={editingRowId}
                             editingRowData={editingRowData}
@@ -403,7 +344,7 @@ const GetBooks = () => {
                     <Pagination
                         current={currentPage}
                         pageSize={booksPerPage}
-                        total={books?.length || 0}
+                        total={booksQuery?.data?.books?.length || 0}
                         onChange={(page) => setCurrentPage(page)}
                         style={{
                             marginTop: '10px',

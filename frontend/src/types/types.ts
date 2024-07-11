@@ -1,5 +1,6 @@
-import { Dayjs } from "dayjs";
+import { AxiosResponse } from "axios";
 import { Dispatch, SetStateAction } from "react";
+import { UseMutationResult, UseQueryResult } from "react-query";
 /** Misc */
 export interface RefetchTriggerProps {
     refetchTrigger: boolean;
@@ -7,6 +8,16 @@ export interface RefetchTriggerProps {
     handleCancelation?: (() => void | undefined) | undefined;
 }
 
+export interface MutationConfig<TData, TError, TVariables, TContext> {
+        method: HandleApiCall<TData, TError, TVariables, TContext>;
+        url: string;
+        successMessage: string;
+        errorMessage: string;
+    }
+export interface HandleApiCall<TData, TError, TVariables, TContext> {
+    (url: string, data: TVariables, config?: TVariables): Promise<AxiosResponse<TData> | undefined>;
+}
+export type ApiDataResponse = Book | Publication | Publisher | Images | Theme;
 export type CapitalizeLetterTypes = string | string[];
 
 /** Author */
@@ -39,6 +50,13 @@ export interface AuthContextType {
     ) => Promise<void>;
     getConfig: () => Record<string, unknown>;
 }
+export interface ApiContextType {
+    publicationsQuery: UseQueryResult<PublicationQueryResponse, Error>,
+    booksQuery: UseQueryResult<BooksQueryResponse, Error>
+    publishersQuery: UseQueryResult<PublisherQueryResponse, Error>,
+    imagesQuery: UseQueryResult<ImagesQueryResponse, Error>,
+    createBookMutation: UseMutationResult<any, unknown, void, unknown>,
+}
 
 export type LoginResponse = {
     token: string;
@@ -47,7 +65,7 @@ export type LoginResponse = {
 
 /** Publisher */
 
-export interface PublisherApiResponse {
+export interface PublisherQueryResponse {
     found: boolean;
     publisher?: Publisher[];
 }
@@ -65,11 +83,11 @@ export interface Publisher {
 
 /** Themes */
 
-export interface ThemeApiResponse {
+export interface ThemeQueryResponse {
     found: boolean;
     theme?: Theme[];
 }
-export interface PublicationApiResponse {
+export interface PublicationQueryResponse {
     found: boolean;
     publications?: Publication[];
 }
@@ -138,19 +156,19 @@ export interface Images {
     title: string,
     image: string
 }
-export interface ImagesApiResponse {
+export interface ImagesQueryResponse {
     found: boolean;
     images?: Images[];
 }
 
 /** Books */
 
-export interface BooksApiResponse {
+export interface BooksQueryResponse {
     found: boolean;
     books?: Book[];
 }
 export interface Book {
-    _id: string;
+    _id?: string;
     title: string;
     description: string;
     link: string;
