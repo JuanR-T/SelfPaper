@@ -40,7 +40,10 @@ const App = () => {
                                 element={<Publications />}
                             ></Route>
                             <Route path="books" element={<Books />}></Route>
-                            <Route path="publisher" element={<Publisher />}></Route>
+                            <Route
+                                path="publisher"
+                                element={<Publisher />}
+                            ></Route>
                             <Route path="themes" element={<Themes />}></Route>
                             <Route path="account" element={<Account />}></Route>
                         </Route>

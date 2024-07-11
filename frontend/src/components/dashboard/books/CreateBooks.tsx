@@ -112,7 +112,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                 title: selectThemeValue,
                 _id: '',
                 description: '',
-                image: ''
+                image: '',
             },
         };
         try {
@@ -126,7 +126,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                 'light',
             );
         } catch (error) {
-            console.log("create_book_error : ", error)
+            console.log('create_book_error : ', error);
             toastProvider(
                 'error',
                 'Le livre n`a pas pu être ajouté.',
