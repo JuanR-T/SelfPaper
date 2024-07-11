@@ -12,10 +12,10 @@ import {
 } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
-import { handleGet, handlePost } from '../../../api/handleCall';
+import { handlePost } from '../../../api/handleCall';
 import { useApiContext } from '../../../context/ApiContext';
 import { useAuth } from '../../../context/AuthContext';
+import useCreateMutation from '../../../hooks/useCreateMutation';
 import Capitalize from '../../../lib/capitalizeLetter';
 import toastProvider from '../../../lib/toastProvider';
 import { Book, Publisher, RefetchTriggerProps } from '../../../types/types';
@@ -25,49 +25,14 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
     refetchTrigger,
     handleCancelation,
 }) => {
-    const { createBookMutation } = useApiContext();
+    const { themesQuery, publishersQuery } = useApiContext();
     const BASE_URL = import.meta.env.VITE_BASE_URL;
-    const { getConfig, author } = useAuth();
+    const { author } = useAuth();
     const [selectThemeValue, setSelectThemeValue] = useState('');
     const [bookPublicationDateValue, setBookPublicationDateValue] =
         useState('');
     const [selectPublisherValue, setSelectPublisherValue] = useState<any>({});
 
-    const { data: useQueryThemes }: any = useQuery('get_themes', async () => {
-        const useQueryThemes = await handleGet(
-            `${BASE_URL}/api/theme`,
-            getConfig(),
-        );
-        if (!useQueryThemes || !useQueryThemes.data) {
-            toastProvider(
-                'error',
-                'Une erreur est survenue pendant la récupération des thèmes. Veuillez réessayer.',
-                'bottom-left',
-                'colored',
-            );
-            return undefined;
-        }
-        return useQueryThemes;
-    });
-    const { data: useQueryPublishers }: any = useQuery(
-        'get_publishers',
-        async () => {
-            const useQueryPublishers = await handleGet(
-                `${BASE_URL}/api/publisher`,
-                getConfig(),
-            );
-            if (!useQueryPublishers || !useQueryPublishers.data) {
-                toastProvider(
-                    'error',
-                    'Une erreur est survenue pendant la récupération des éditeurs. Veuillez réessayer.',
-                    'bottom-left',
-                    'colored',
-                );
-                return undefined;
-            }
-            return useQueryPublishers;
-        },
-    );
     const convertToBase64 = (file: File) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -98,7 +63,11 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
             'light',
         );
     };
-    const onSubmit = async (values: any) => {
+    const createBookMutation = useCreateMutation({
+        dataUrl: 'books',
+        dataType: 'book',
+    });
+    const onSubmit = async (values: Book) => {
         const newBook: Book = {
             title: values.title,
             description: values.description,
@@ -106,34 +75,21 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
             bookPublicationDate: bookPublicationDateValue,
             bookAuthor: author?.id,
             bookPublisher: selectPublisherValue,
-            bookImage: values.postImage,
+            bookImage: values.bookImage,
             thumbnail: values.thumbnail,
             theme: {
-                title: selectThemeValue,
-                _id: '',
+                title: '',
+                _id: selectThemeValue,
                 description: '',
                 image: '',
             },
         };
-        try {
-            await createBookMutation.mutateAsync(newBook as unknown as any);
-            setRefetchTrigger(true);
-            handleCancelation?.();
-            toastProvider(
-                'success',
-                'Le livre a été ajouté avec succès.',
-                'bottom-left',
-                'light',
-            );
-        } catch (error) {
-            console.log('create_book_error : ', error);
-            toastProvider(
-                'error',
-                'Le livre n`a pas pu être ajouté.',
-                'bottom-left',
-                'light',
-            );
-        }
+
+        /**Here I'm using a custom hook to trigger react-query's useMutation */
+
+        await createBookMutation.mutateAsync(newBook);
+        setRefetchTrigger(true);
+        handleCancelation?.();
     };
     return (
         <Row className="creation-form">
@@ -206,7 +162,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                 >
                     <Cascader
                         placeholder="Editeur / Service"
-                        options={useQueryPublishers?.data.publisher.map(
+                        options={publishersQuery?.data?.publisher?.map(
                             (publisher: Publisher) => ({
                                 value: publisher._id,
                                 label: publisher.title,
@@ -305,7 +261,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                 >
                     <Select
                         placeholder="Choisir un Thème"
-                        options={useQueryThemes?.data.theme.map(
+                        options={themesQuery?.data?.theme?.map(
                             (item: any) => ({
                                 value: item._id,
                                 label: item.title,
