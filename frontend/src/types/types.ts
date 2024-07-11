@@ -7,12 +7,19 @@ export interface RefetchTriggerProps {
     setRefetchTrigger: React.Dispatch<React.SetStateAction<boolean>>;
     handleCancelation?: (() => void | undefined) | undefined;
 }
+export type DataRefetchProps =
+    | UseQueryResult<BooksQueryResponse, Error>
+    | UseQueryResult<PublicationQueryResponse, Error>
+    | UseQueryResult<PublisherQueryResponse, Error>
+    | UseQueryResult<ThemeQueryResponse, Error>
+    | null;
 
-export interface MutationConfig<TData extends ApiDataResponse, TError> {
+export interface MutationConfig<TData, TError> {
         method: HandleApiCall<TData>;
         url: string;
         successMessage: string;
         errorMessage: string;
+        dataType: string;
     }
 
     export type TVariables<TData> = {
@@ -23,7 +30,7 @@ export interface MutationConfig<TData extends ApiDataResponse, TError> {
 export interface HandleApiCall<TData> {(
     url: string, 
     data: TData, 
-    config?: object
+    config?: object,
 ): Promise<AxiosResponse<TData> | undefined>;
 }
 export type ApiDataResponse = Book | Publication | Publisher | Images | Theme;
@@ -61,15 +68,16 @@ export interface AuthContextType {
     getConfig: () => Record<string, unknown>;
 }
 export interface MutationProps {
-    dataUrl: String;
-    dataType: String;
+    dataUrl: string;
+    dataType: string;
+    dataId?: string;
 }
 export interface ApiContextType {
-    publicationsQuery: UseQueryResult<PublicationQueryResponse, Error>,
-    booksQuery: UseQueryResult<BooksQueryResponse, Error>
-    publishersQuery: UseQueryResult<PublisherQueryResponse, Error>,
-    themesQuery: UseQueryResult<ThemeQueryResponse, Error>,
-    imagesQuery: UseQueryResult<ImagesQueryResponse, Error>,
+    publicationQuery: UseQueryResult<PublicationQueryResponse, Error>,
+    bookQuery: UseQueryResult<BooksQueryResponse, Error>
+    publisherQuery: UseQueryResult<PublisherQueryResponse, Error>,
+    themeQuery: UseQueryResult<ThemeQueryResponse, Error>,
+    imageQuery: UseQueryResult<ImagesQueryResponse, Error>,
 }
 //createMutation: (props: MutationProps) => UseMutationResult<ApiDataResponse, Error>,
 
@@ -154,7 +162,7 @@ export interface UpdatePublicationsProps {
     isEditingPublication: boolean;
     editingRowData: Publication;
     setIsEditingPublication: Dispatch<SetStateAction<boolean>>;
-    setEditingRowId: Dispatch<SetStateAction<string | null>>;
+    setEditingRowId: Dispatch<SetStateAction<string | null | undefined>>;
     setEditingRowData: Dispatch<SetStateAction<Publication>>;
 }
 
@@ -162,7 +170,7 @@ export interface DeletePublicationsProps {
     record: Publication;
     setIsDeletingPublication: Dispatch<SetStateAction<boolean>>;
     editingRowId: string | null;
-    setEditingRowId: Dispatch<SetStateAction<string | null>>;
+    setEditingRowId: Dispatch<SetStateAction<string | null | undefined>>;
 }
 
 /** Images */
@@ -206,7 +214,7 @@ export interface UpdateBooksProps{
     isEditingBooks: boolean;
     editingRowData: Book;
     setIsEditingBooks: Dispatch<SetStateAction<boolean>>;
-    setEditingRowId: Dispatch<SetStateAction<string | null>>;
+    setEditingRowId: Dispatch<SetStateAction<string | null | undefined>>;
     setEditingRowData: Dispatch<SetStateAction<Book>>;
 }
 
@@ -214,5 +222,5 @@ export interface DeleteBooksProps {
     record: Book;
     setIsDeletingBooks: Dispatch<SetStateAction<boolean>>;
     editingRowId: string | null;
-    setEditingRowId: Dispatch<SetStateAction<string | null>>;
+    setEditingRowId: Dispatch<SetStateAction<string | null | undefined>>;
 }

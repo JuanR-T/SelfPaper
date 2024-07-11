@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ApiDataResponse, HandleApiCall } from "../types/types";
+import { HandleApiCall } from "../types/types";
 
 const defaultConfig = {
     headers: {
@@ -7,7 +7,7 @@ const defaultConfig = {
     },
 };
 
-export const handleGet: HandleApiCall<ApiDataResponse>= async (
+export const handleGet: HandleApiCall<any>= async (
     url,
     data,
     config,
@@ -20,7 +20,7 @@ export const handleGet: HandleApiCall<ApiDataResponse>= async (
     return res.data;
 };
 
-export const handlePost: HandleApiCall<ApiDataResponse> = async (
+export const handlePost: HandleApiCall<any> = async (
     url,
     data,
     config,
@@ -34,7 +34,7 @@ export const handlePost: HandleApiCall<ApiDataResponse> = async (
     return res.data;
 };
 
-export const handlePut: HandleApiCall<ApiDataResponse> = async (
+export const handlePut: HandleApiCall<any> = async (
     url,
     data,
     config,
@@ -47,7 +47,7 @@ export const handlePut: HandleApiCall<ApiDataResponse> = async (
     return res.data;
 };
 
-export const handleDelete: HandleApiCall<ApiDataResponse> = async (
+export const handleDelete: HandleApiCall<any> = async (
     url,
     data,
     config,

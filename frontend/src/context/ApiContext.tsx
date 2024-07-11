@@ -24,7 +24,7 @@ export const ApiContextProvider = ({ children }: PropsWithChildren) => {
 
     /** Here data queries are handled */
 
-    const publicationsQuery: UseQueryResult<PublicationQueryResponse, Error> =
+    const publicationQuery: UseQueryResult<PublicationQueryResponse, Error> =
         useQuery('get_publications', async () => {
             const response = await handleGet(
                 `${BASE_URL}/api/publication`,
@@ -42,7 +42,7 @@ export const ApiContextProvider = ({ children }: PropsWithChildren) => {
             return response.data;
         });
 
-    const booksQuery: UseQueryResult<PublicationQueryResponse, Error> =
+    const bookQuery: UseQueryResult<PublicationQueryResponse, Error> =
         useQuery('get_books', async () => {
             const response = await handleGet(
                 `${BASE_URL}/api/books`,
@@ -60,7 +60,7 @@ export const ApiContextProvider = ({ children }: PropsWithChildren) => {
             return response.data;
         });
 
-    const publishersQuery: UseQueryResult<PublisherQueryResponse, Error> =
+    const publisherQuery: UseQueryResult<PublisherQueryResponse, Error> =
         useQuery('get_publishers', async () => {
             const response = await handleGet(
                 `${BASE_URL}/api/publisher`,
@@ -78,7 +78,7 @@ export const ApiContextProvider = ({ children }: PropsWithChildren) => {
             return response.data;
         });
 
-    const themesQuery: UseQueryResult<ThemeQueryResponse, Error> =
+    const themeQuery: UseQueryResult<ThemeQueryResponse, Error> =
         useQuery('get_themes', async () => {
             const response = await handleGet(
                 `${BASE_URL}/api/theme`,
@@ -97,7 +97,7 @@ export const ApiContextProvider = ({ children }: PropsWithChildren) => {
             return response.data;
         });
 
-    const imagesQuery: UseQueryResult<ImagesQueryResponse, Error> = useQuery(
+    const imageQuery: UseQueryResult<ImagesQueryResponse, Error> = useQuery(
         'get_images',
         async () => {
             const response = await handleGet(
@@ -172,11 +172,11 @@ export const ApiContextProvider = ({ children }: PropsWithChildren) => {
     return (
         <ApiContext.Provider
             value={{
-                publicationsQuery,
-                booksQuery,
-                publishersQuery,
-                imagesQuery,
-                themesQuery
+                publicationQuery,
+                bookQuery,
+                publisherQuery,
+                imageQuery,
+                themeQuery
             }}
         >
             {children}

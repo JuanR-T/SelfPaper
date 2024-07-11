@@ -1,10 +1,9 @@
 import { Button } from 'antd';
-import { handlePut } from '../../../api/handleCall';
-import toastProvider from '../../../lib/toastProvider';
-import { UpdateBooksProps, Book } from '../../../types/types';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import useUpdateMutation from '../../../hooks/useUpdateMutation';
+import { Book, UpdateBooksProps } from '../../../types/types';
 
 const UpdateBooks = ({
     refetch,
@@ -19,46 +18,37 @@ const UpdateBooks = ({
     setIsEditingBooks,
     setEditingRowData,
 }: UpdateBooksProps) => {
+
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     dayjs.extend(customParseFormat);
     dayjs.locale('fr');
 
     const handleEditBookRow = (record: Book) => {
         setIsEditingBooks(true);
-        console.log('record', record);
-        console.log('editingrowdata', editingRowData);
         setEditingRowData({ ...record });
         setEditingRowId(record._id);
     };
+    const updateBookMutation = useUpdateMutation({
+        dataUrl: 'books',
+        dataType: 'book',
+        dataId: editingRowData._id
+    });
+
     const updatePublication = async () => {
         const formattedDate = dayjs(
             editingRowData.bookPublicationDate,
             'DD MMMM YYYY',
         ).toISOString();
-        console.log('formattedDate', formattedDate);
         const editedBook = {
             ...editingRowData,
             bookPublicationDate: formattedDate,
         };
-        console.log('editedBook', editedBook);
-        const updatedBook = await handlePut(
-            `${BASE_URL}/api/books/update/${editingRowData._id}`,
-            { ...editedBook },
-        );
-        if (!updatedBook || !updatedBook.data) {
-            toastProvider(
-                'error',
-                'Une erreur est survenue pendant la mise à jour du livre. Veuillez réessayer.',
-                'bottom-left',
-                'colored',
-            );
-            return undefined;
-        }
+        await updateBookMutation.mutateAsync({ data: { ...editedBook } });
+
         setIsEditingBooks(false);
         setEditingRowId(null);
         setEditingRowData(bookInitialState);
         setIsBookDateEdited(false);
-        return updatedBook;
     };
     return isEditingBooks && editingRowId ? (
         <Button onClick={() => updatePublication()}>Sauvegarder</Button>

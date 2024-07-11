@@ -1,5 +1,5 @@
 import { UseMutationResult, useMutation } from "react-query";
-import { useApiContext } from "../context/ApiContext";
+import dataRefetch from "../lib/dataRefetch";
 import toastProvider from "../lib/toastProvider";
 import { ApiDataResponse, MutationConfig, TVariables } from "../types/types";
 
@@ -8,13 +8,14 @@ const mutationController = <TData extends ApiDataResponse, TError>({
     url,
     successMessage,
     errorMessage,
+    dataType
 }: MutationConfig<TData, TError>): UseMutationResult<TData, TError, TVariables<TData>, unknown> => {
-    const { booksQuery } = useApiContext();
 
     return useMutation<TData, TError, TVariables<TData>, unknown>(
         async (variables: TVariables<TData>) => {
+            console.log("variables", variables);
             const response = await method(url, variables.data, variables.config);
-
+            console.log("this is response", response)
             if (!response || !response.data) {
                 toastProvider(
                     'error',
@@ -29,7 +30,7 @@ const mutationController = <TData extends ApiDataResponse, TError>({
         },
         {
             onSuccess: () => {
-                booksQuery.refetch(); // Ensure this is correctly typed in your context
+                dataRefetch(dataType)?.refetch(); // Ensure this is correctly typed in your context
                 toastProvider(
                     'success',
                     successMessage,
