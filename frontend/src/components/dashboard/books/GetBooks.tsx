@@ -23,7 +23,7 @@ import UpdateBooks from './UpdateBooks';
 const GetBooks = () => {
     dayjs.extend(customParseFormat);
     dayjs.locale('fr');
-    const { booksQuery, publishersQuery, imagesQuery } = useApiContext();
+    const { bookQuery, publisherQuery, imageQuery } = useApiContext();
     const { author } = useAuth();
 
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -38,7 +38,7 @@ const GetBooks = () => {
     const [isEditingBooks, setIsEditingBooks] = useState<boolean>(false);
     const [isBookDateEdited, setIsBookDateEdited] = useState<boolean>(false);
 
-    const currentBooksDisplayed = booksQuery?.data?.books?.slice(
+    const currentBooksDisplayed = bookQuery?.data?.books?.slice(
         startIndex,
         endIndex,
     );
@@ -80,7 +80,7 @@ const GetBooks = () => {
     };
     useEffect(() => {
         const fetchData = async () => {
-            await booksQuery.refetch();
+            await bookQuery.refetch();
         };
         setIsDeletingBooks(false);
         fetchData();
@@ -194,7 +194,7 @@ const GetBooks = () => {
                         placeholder="Choisir un éditeur"
                         onSelect={(value) => setSelectPublisherValue(value)}
                     >
-                        {publishersQuery?.data?.publisher?.map(
+                        {publisherQuery?.data?.publisher?.map(
                             (publisher: any) => (
                                 <Select.Option
                                     key={publisher._id}
@@ -307,8 +307,8 @@ const GetBooks = () => {
                             bookInitialState={bookInitialState}
                             isBookDateEdited={isBookDateEdited}
                             setIsBookDateEdited={setIsBookDateEdited}
-                            refetch={booksQuery.refetch}
-                            books={booksQuery?.data?.books}
+                            refetch={bookQuery.refetch}
+                            books={bookQuery?.data?.books}
                             isEditingBooks={isEditingBooks}
                             editingRowId={editingRowId}
                             editingRowData={editingRowData}
@@ -354,7 +354,7 @@ const GetBooks = () => {
                     <Pagination
                         current={currentPage}
                         pageSize={booksPerPage}
-                        total={booksQuery?.data?.books?.length || 0}
+                        total={bookQuery?.data?.books?.length || 0}
                         onChange={(page) => setCurrentPage(page)}
                         style={{
                             marginTop: '10px',

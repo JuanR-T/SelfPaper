@@ -20,12 +20,12 @@ import Capitalize from '../../../lib/capitalizeLetter';
 import toastProvider from '../../../lib/toastProvider';
 import { Book, Publisher, RefetchTriggerProps } from '../../../types/types';
 
-const CreatePublication: React.FC<RefetchTriggerProps> = ({
+const CreateBooks: React.FC<RefetchTriggerProps> = ({
     setRefetchTrigger,
     refetchTrigger,
     handleCancelation,
 }) => {
-    const { themesQuery, publishersQuery } = useApiContext();
+    const { themeQuery, publisherQuery } = useApiContext();
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { author } = useAuth();
     const [selectThemeValue, setSelectThemeValue] = useState('');
@@ -49,7 +49,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
         });
     };
     const uploadImage = async (file: any) => {
-        const convertedFile = await convertToBase64(file);
+        const convertedFile: any = await convertToBase64(file);
         console.log('convertedFile', convertedFile);
         console.log('file', file);
         await handlePost(`${BASE_URL}/api/image/upload`, {
@@ -87,10 +87,11 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
 
         /**Here I'm using a custom hook to trigger react-query's useMutation */
 
-        await createBookMutation.mutateAsync(newBook);
+        await createBookMutation.mutateAsync(newBook as any);
         setRefetchTrigger(true);
         handleCancelation?.();
     };
+
     return (
         <Row className="creation-form">
             <h2>{Capitalize('Ajouter un Livre')}</h2>
@@ -162,7 +163,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                 >
                     <Cascader
                         placeholder="Editeur / Service"
-                        options={publishersQuery?.data?.publisher?.map(
+                        options={publisherQuery?.data?.publisher?.map(
                             (publisher: Publisher) => ({
                                 value: publisher._id,
                                 label: publisher.title,
@@ -261,7 +262,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                 >
                     <Select
                         placeholder="Choisir un Thème"
-                        options={themesQuery?.data?.theme?.map(
+                        options={themeQuery?.data?.theme?.map(
                             (item: any) => ({
                                 value: item._id,
                                 label: item.title,
@@ -280,4 +281,4 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
     );
 };
 
-export default CreatePublication;
+export default CreateBooks;
