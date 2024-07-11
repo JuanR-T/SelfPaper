@@ -1,5 +1,6 @@
+import { AxiosResponse } from "axios";
 import { Dispatch, SetStateAction } from "react";
-import { UseQueryResult } from "react-query";
+import { UseMutationResult, UseQueryResult } from "react-query";
 /** Misc */
 export interface RefetchTriggerProps {
     refetchTrigger: boolean;
@@ -7,6 +8,16 @@ export interface RefetchTriggerProps {
     handleCancelation?: (() => void | undefined) | undefined;
 }
 
+export interface MutationConfig<TData, TError, TVariables, TContext> {
+        method: HandleApiCall<TData, TError, TVariables, TContext>;
+        url: string;
+        successMessage: string;
+        errorMessage: string;
+    }
+export interface HandleApiCall<TData, TError, TVariables, TContext> {
+    (url: string, data: TVariables, config?: TVariables): Promise<AxiosResponse<TData> | undefined>;
+}
+export type ApiDataResponse = Book | Publication | Publisher | Images | Theme;
 export type CapitalizeLetterTypes = string | string[];
 
 /** Author */
@@ -44,6 +55,7 @@ export interface ApiContextType {
     booksQuery: UseQueryResult<BooksQueryResponse, Error>
     publishersQuery: UseQueryResult<PublisherQueryResponse, Error>,
     imagesQuery: UseQueryResult<ImagesQueryResponse, Error>,
+    createBookMutation: UseMutationResult<any, unknown, void, unknown>,
 }
 
 export type LoginResponse = {
@@ -71,7 +83,7 @@ export interface Publisher {
 
 /** Themes */
 
-export interface ThemeApiResponse {
+export interface ThemeQueryResponse {
     found: boolean;
     theme?: Theme[];
 }
@@ -156,7 +168,7 @@ export interface BooksQueryResponse {
     books?: Book[];
 }
 export interface Book {
-    _id: string;
+    _id?: string;
     title: string;
     description: string;
     link: string;

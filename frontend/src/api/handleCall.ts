@@ -1,9 +1,5 @@
 import axios from "axios";
-
-export type AxiosResponse<T> = {
-    data?: T;
-    error?: string;
-};
+import { ApiDataResponse, HandleApiCall } from "../types/types";
 
 const defaultConfig = {
     headers: {
@@ -11,10 +7,11 @@ const defaultConfig = {
     },
 };
 
-export const handleGet = async <T>(
-    url: string,
-    config?: Record<string, unknown>
-): Promise<AxiosResponse<T> | undefined> => {
+export const handleGet: HandleApiCall<ApiDataResponse>= async (
+    url,
+    data,
+    config,
+) => {
     const res = await axios
         .get(url, config ?? defaultConfig)
         .catch((err) => err.response);
@@ -23,11 +20,11 @@ export const handleGet = async <T>(
     return res.data;
 };
 
-export const handlePost = async <T>(
-    url: string,
-    data: Record<string, unknown>,
-    config?: Record<string, unknown>
-): Promise<AxiosResponse<T> | undefined> => {
+export const handlePost: HandleApiCall<ApiDataResponse> = async (
+    url,
+    data,
+    config,
+) => {
     const res = await axios
         .post(url, data, config ?? defaultConfig)
         .catch((err) => err.response);
@@ -36,11 +33,11 @@ export const handlePost = async <T>(
     return res.data;
 };
 
-export const handlePut = async <T>(
-    url: string,
-    data: Record<string, unknown>,
-    config?: Record<string, unknown>
-): Promise<AxiosResponse<T> | undefined> => {
+export const handlePut: HandleApiCall<ApiDataResponse> = async (
+    url,
+    data,
+    config,
+) => {
     const res = await axios
         .put(url, data, config ?? defaultConfig)
         .catch((err) => err.response);
@@ -49,10 +46,11 @@ export const handlePut = async <T>(
     return res.data;
 };
 
-export const handleDelete = async <T>(
-    url: string,
-    config?: Record<string, unknown>
-): Promise<AxiosResponse<T> | undefined> => {
+export const handleDelete: HandleApiCall<ApiDataResponse> = async (
+    url,
+    data,
+    config,
+) => {
     const res = await axios
         .delete(url, config ?? defaultConfig)
         .catch((err) => err.response);

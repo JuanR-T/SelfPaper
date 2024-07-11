@@ -1,29 +1,31 @@
-import React, { useState } from 'react';
-import BookOutlined, { UploadOutlined } from '@ant-design/icons';
-import { handleGet, handlePost } from '../../../api/handleCall';
+import { UploadOutlined } from '@ant-design/icons';
 import {
-    Input,
-    Form,
-    Row,
     Button,
-    Upload,
-    message,
-    Select,
-    DatePicker,
     Cascader,
+    DatePicker,
+    Form,
+    Input,
+    message,
+    Row,
+    Select,
+    Upload,
 } from 'antd';
-import toastProvider from '../../../lib/toastProvider';
-import { Publisher, RefetchTriggerProps } from '../../../types/types';
-import { useQuery } from 'react-query';
-import { useAuth } from '../../../context/AuthContext';
 import dayjs, { Dayjs } from 'dayjs';
+import React, { useState } from 'react';
+import { useQuery } from 'react-query';
+import { handleGet, handlePost } from '../../../api/handleCall';
+import { useApiContext } from '../../../context/ApiContext';
+import { useAuth } from '../../../context/AuthContext';
 import Capitalize from '../../../lib/capitalizeLetter';
+import toastProvider from '../../../lib/toastProvider';
+import { Book, Publisher, RefetchTriggerProps } from '../../../types/types';
 
 const CreatePublication: React.FC<RefetchTriggerProps> = ({
     setRefetchTrigger,
     refetchTrigger,
     handleCancelation,
 }) => {
+    const { createBookMutation } = useApiContext();
     const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { getConfig, author } = useAuth();
     const [selectThemeValue, setSelectThemeValue] = useState('');
@@ -97,7 +99,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
         );
     };
     const onSubmit = async (values: any) => {
-        await handlePost(`${BASE_URL}/api/books/create`, {
+        const newBook: Book = {
             title: values.title,
             description: values.description,
             link: values.link,
@@ -106,17 +108,32 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
             bookPublisher: selectPublisherValue,
             bookImage: values.postImage,
             thumbnail: values.thumbnail,
-            theme: selectThemeValue,
-        });
-        setRefetchTrigger(true);
-        toastProvider(
-            'success',
-            'Le livre a été ajouté avec succès.',
-            'bottom-left',
-            'light',
-        );
-        //Checking if handleCancelation undefined or not.
-        handleCancelation?.();
+            theme: {
+                title: selectThemeValue,
+                _id: '',
+                description: '',
+                image: ''
+            },
+        };
+        try {
+            await createBookMutation.mutateAsync(newBook as unknown as any);
+            setRefetchTrigger(true);
+            handleCancelation?.();
+            toastProvider(
+                'success',
+                'Le livre a été ajouté avec succès.',
+                'bottom-left',
+                'light',
+            );
+        } catch (error) {
+            console.log("create_book_error : ", error)
+            toastProvider(
+                'error',
+                'Le livre n`a pas pu être ajouté.',
+                'bottom-left',
+                'light',
+            );
+        }
     };
     return (
         <Row className="creation-form">
