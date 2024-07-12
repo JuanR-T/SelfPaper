@@ -14,7 +14,6 @@ const useCreateMutation = ({
         `${BASE_URL}/api/${dataUrl}/create`,
         `${dataType} ajouté avec succès`,
         `Erreur lors de la création de/du : ${dataType}`,
-        dataType
     );
 }
 

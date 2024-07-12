@@ -36,7 +36,6 @@ const GetBooks = () => {
     const [selectThemeValue, setSelectThemeValue] = useState('');
     const [selectPublisherValue, setSelectPublisherValue] = useState('');
     const [editingRowId, setEditingRowId] = useState<string | null>(null);
-    const [isDeletingBooks, setIsDeletingBooks] = useState<boolean>(false);
     const [isEditingBooks, setIsEditingBooks] = useState<boolean>(false);
     const [isBookDateEdited, setIsBookDateEdited] = useState<boolean>(false);
 
@@ -82,12 +81,8 @@ const GetBooks = () => {
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            await bookQuery.refetch();
-        };
-        setIsDeletingBooks(false);
-        fetchData();
-    }, [isDeletingBooks, editingRowId, refetchTrigger]);
+        bookQuery.refetch();
+    }, [editingRowId]);
 
     const columns: any = [
         {
@@ -322,7 +317,7 @@ const GetBooks = () => {
 
                         <DeleteBooks
                             record={record}
-                            setIsDeletingBooks={setIsDeletingBooks}
+                            refetch={bookQuery.refetch()}
                             editingRowId={editingRowId}
                             setEditingRowId={setEditingRowId}
                         />
@@ -339,8 +334,7 @@ const GetBooks = () => {
                 modalContent={({ handleCancelation }) => (
                     <CreateBooks
                         handleCancelation={handleCancelation}
-                        refetchTrigger={refetchTrigger}
-                        setRefetchTrigger={setRefetchTrigger}
+                        refetch={bookQuery.refetch()}
                     />
                 )}
                 contentContext="Ajouter un Livre"

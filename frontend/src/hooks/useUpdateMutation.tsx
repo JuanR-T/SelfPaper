@@ -15,7 +15,6 @@ const useUpdateMutation = ({
         `${BASE_URL}/api/${dataUrl}/update/${dataId}`,
         `${dataType} mis à jour avec succès`,
         `Erreur lors de la mise à jour de/du : ${dataType}`,
-        dataType
     );
 }
 

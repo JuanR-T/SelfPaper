@@ -6,12 +6,11 @@ import { Book, DeleteBooksProps } from '../../../types/types';
 
 const DeleteBooks = ({
     record,
-    setIsDeletingBooks,
+    refetch,
     setEditingRowId,
     editingRowId,
 }: DeleteBooksProps) => {
     const [open, setOpen] = useState<boolean>(false);
-
     const handlePopoverRow = (record: Book) => {
         setEditingRowId(record._id || '');
     };
@@ -19,19 +18,18 @@ const DeleteBooks = ({
         setEditingRowId(null);
         setOpen(false);
     };
-
     const handleOpenChange = (newOpen: boolean) => {
         setOpen(newOpen);
     };
-    const deleteBookMutation = useDeleteMutation({
+    const { mutateAsync } = useDeleteMutation({
         dataUrl: 'books',
         dataType: 'book',
         dataId: record._id
     })
     const deleteBook = async (record: Book) => {
-        deleteBookMutation.mutateAsync({ data: { ...record } })
-
-        setIsDeletingBooks(true);
+        await mutateAsync({ data: { ...record } })
+        hide();
+        refetch;
     };
 
     const deleteContent = (record: Book) => {

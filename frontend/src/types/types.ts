@@ -3,11 +3,7 @@ import { Dayjs } from "dayjs";
 import { Dispatch, SetStateAction } from "react";
 import { QueryObserverResult, UseMutationResult, UseQueryResult } from "react-query";
 /** Misc */
-export interface RefetchTriggerProps {
-    refetchTrigger: boolean;
-    setRefetchTrigger: React.Dispatch<React.SetStateAction<boolean>>;
-    handleCancelation?: (() => void | undefined) | undefined;
-}
+
 export type DataRefetchProps =
     | UseQueryResult<BooksQueryResponse, Error>
     | UseQueryResult<PublicationQueryResponse, Error>
@@ -20,13 +16,6 @@ export type MutationConfig = <TVariables extends MutationPayload>(
     url: string,
     successMessage: string,
     errorMessage: string,
-    dataType: string
-) => UseMutationResult<TData, Error, TVariables>;
-
-export type UseUpdateMutationProps = <TVariables extends MutationPayload>(
-    dataUrl: string,
-    dataType: string,
-    dataId?: string,
 ) => UseMutationResult<TData, Error, TVariables>;
 
 export type TData = {
@@ -260,7 +249,12 @@ export interface UpdateBooksProps{
 
 export interface DeleteBooksProps {
     record: Book;
-    setIsDeletingBooks: Dispatch<SetStateAction<boolean>>;
+    refetch: Promise<QueryObserverResult<BooksQueryResponse, Error>>;
     editingRowId: string | null;
     setEditingRowId: Dispatch<SetStateAction<string | null>>;
+}
+
+export interface CreateBooksProps {
+    refetch: Promise<QueryObserverResult<BooksQueryResponse, Error>>;
+    handleCancelation?: (() => void | undefined) | undefined;
 }
