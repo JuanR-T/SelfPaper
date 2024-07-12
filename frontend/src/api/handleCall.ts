@@ -28,6 +28,7 @@ export const handlePost: MutateApi = async (
 ) => {
     try {
         const res = await axios.post<TData>(url, data, config ?? defaultConfig)
+        console.log("this is res publication", res)
         return res;
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {

@@ -32,7 +32,6 @@ const GetBooks = () => {
     const booksPerPage = 10;
     const startIndex = (currentPage - 1) * booksPerPage;
     const endIndex = startIndex + booksPerPage;
-    const [refetchTrigger, setRefetchTrigger] = useState(false);
     const [selectThemeValue, setSelectThemeValue] = useState('');
     const [selectPublisherValue, setSelectPublisherValue] = useState('');
     const [editingRowId, setEditingRowId] = useState<string | null>(null);

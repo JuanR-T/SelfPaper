@@ -115,8 +115,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
         const decodedToken: { author: Author } | null = decodeToken(token);
         if (!decodedToken?.author) return logOut();
-
-        setAuthor(decodedToken?.author);
+        setAuthor({ ...decodedToken?.author, _id: decodedToken?.author._id });
     };
 
     useEffect(() => {

@@ -24,7 +24,6 @@ import DeletePublications from './DeletePublications';
 import UpdatePublications from './UpdatePublications';
 
 const GetPublications: React.FC = () => {
-    const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { getConfig, author } = useAuth();
     const { publicationQuery, imageQuery, publisherQuery, themeQuery } = useApiContext();
 
@@ -64,7 +63,7 @@ const GetPublications: React.FC = () => {
             service: '',
         },
         author: {
-            id: author?.id || '',
+            _id: author?._id || '',
             firstName: '',
             lastName: '',
             email: '',
@@ -387,19 +386,18 @@ const GetPublications: React.FC = () => {
                 modalContent={({ handleCancelation }) => (
                     <CreatePublication
                         handleCancelation={handleCancelation}
-                        refetchTrigger={refetchTrigger}
-                        setRefetchTrigger={setRefetchTrigger}
+                        refetch={publicationQuery.refetch}
                     />
                 )}
                 contentContext="Ajouter une publication"
             />
-            {currentPublications ? (
+            {currentPublications && !publicationQuery.isRefetching ? (
                 <>
                     <Table
                         dataSource={currentPublications}
                         columns={columns}
                         pagination={false}
-                        rowKey={(publication) => publication._id}
+                        rowKey={(publication) => publication._id || ''}
                         style={{ marginTop: '10px', width: '100%' }}
                     />
                     <Pagination

@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import { Dayjs } from "dayjs";
 import { Dispatch, SetStateAction } from "react";
-import { QueryObserverResult, UseMutationResult, UseQueryResult } from "react-query";
+import { QueryObserverResult, RefetchOptions, RefetchQueryFilters, UseMutationResult, UseQueryResult } from "react-query";
 /** Misc */
 
 export type DataRefetchProps =
@@ -49,7 +49,7 @@ export type CapitalizeLetterTypes = string | string[];
 
 /** Author */
 export interface Author {
-    id: string;
+    _id: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -165,7 +165,7 @@ export interface UpdateThemeProps {
 /** Publications */
 
 export interface Publication {
-    _id: string;
+    _id?: string;
     title: string,
     description: string,
     link?: string,
@@ -179,7 +179,10 @@ export interface Publication {
     author: Author,
     position?: string
 }
-
+export interface CreatePublicationProps {
+    refetch: <TPageData>(options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined) => Promise<QueryObserverResult<PublicationQueryResponse>>;
+    handleCancelation?: (() => void | undefined) | undefined;
+}
 export interface UpdatePublicationsProps {
     record: Publication;
     editingRowId: string | null;
