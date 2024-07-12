@@ -47,9 +47,7 @@ export const createBook = async (
     res: Response,
 ): Promise<Response> => {
     try {
-        console.log('reqBody', req.body);
         const newBook = await Books.create(req.body);
-        console.log('newbook', newBook);
         if (!newBook)
             throw new Error('Book could not be created. Wrong params.');
         return res.status(200).json({ data: { created: true } });

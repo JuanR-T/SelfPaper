@@ -32,7 +32,7 @@ export const checkPublisherService = async (req: Request): Promise<boolean> => {
                 )
             );
         });
-
+        console.log("hasSameService", hasSameService);
         return hasSameService;
     } catch (error) {
         console.error(error);
