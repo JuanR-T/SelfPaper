@@ -20,6 +20,8 @@ export const checkPublisherService = async (req: Request): Promise<boolean> => {
 
         const requestPublishers: PublisherRequestBody =
             req.body.publisher || [];
+        console.log("requestPublishers", requestPublishers)
+        console.log("publishers", publishers)
         const hasSameService = publishers.some((publisher) => {
             return (
                 publisher._id.equals(requestPublishers._id) &&
