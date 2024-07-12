@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import { Dayjs } from "dayjs";
 import { Dispatch, SetStateAction } from "react";
-import { UseMutationResult, UseQueryResult } from "react-query";
+import { QueryObserverResult, UseMutationResult, UseQueryResult } from "react-query";
 /** Misc */
 export interface RefetchTriggerProps {
     refetchTrigger: boolean;
@@ -23,6 +23,12 @@ export type MutationConfig = <TVariables extends MutationPayload>(
     dataType: string
 ) => UseMutationResult<TData, Error, TVariables>;
 
+export type UseUpdateMutationProps = <TVariables extends MutationPayload>(
+    dataUrl: string,
+    dataType: string,
+    dataId?: string,
+) => UseMutationResult<TData, Error, TVariables>;
+
 export type TData = {
     found: boolean;
     object: ApiDataResponse;
@@ -36,6 +42,11 @@ export interface MutateApi {(
     url: string, 
     payload: MutationPayload
     ): Promise<AxiosResponse<TData>>;
+}
+export interface MutationProps {
+    dataUrl: string;
+    dataType: string;
+    dataId?: string;
 }
 export interface QueryApi {(
     url: string, 
@@ -89,11 +100,6 @@ export type SignUpData = {
 }
 export type SignUpType = (userInfo: SignUpData) => Promise<void>;
 
-export interface MutationProps {
-    dataUrl: string;
-    dataType: string;
-    dataId?: string;
-}
 export interface ApiContextType {
     publicationQuery: UseQueryResult<PublicationQueryResponse, Error>,
     bookQuery: UseQueryResult<BooksQueryResponse, Error>
@@ -239,7 +245,7 @@ export interface Book {
 
 export interface UpdateBooksProps{
     record: Book;
-    refetch: Function;
+    refetch: Promise<QueryObserverResult<BooksQueryResponse, Error>>;
     bookInitialState: SetStateAction<Book>;
     isBookDateEdited: boolean;
     setIsBookDateEdited: Dispatch<SetStateAction<boolean>>

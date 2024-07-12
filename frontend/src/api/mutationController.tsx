@@ -1,5 +1,4 @@
 import { useMutation } from "react-query";
-import dataRefetch from "../lib/dataRefetch";
 import toastProvider from "../lib/toastProvider";
 import { MutationConfig } from "../types/types";
 
@@ -30,7 +29,7 @@ const mutationController: MutationConfig =
             },
             {
                 onSuccess: () => {
-                    dataRefetch(dataType)?.refetch(); // Ensure this is correctly typed in your context
+                    //dataRefetch(dataType)?.refetch(); // Ensure this is correctly typed in your context
                     toastProvider(
                         'success',
                         successMessage,

@@ -21,17 +21,18 @@ const UpdateBooks = ({
     dayjs.extend(customParseFormat);
     dayjs.locale('fr');
 
+    const { mutateAsync } = useUpdateMutation(
+        {
+            dataUrl: 'books',
+            dataType: 'book',
+            dataId: editingRowData._id
+        }
+    );
     const handleEditBookRow = (record: Book) => {
         setIsEditingBooks(true);
         setEditingRowData({ ...record });
         setEditingRowId(record._id || '');
     };
-    const updateBookMutation = useUpdateMutation({
-        dataUrl: 'books',
-        dataType: 'book',
-        dataId: editingRowData._id
-    });
-
     const updatePublication = async () => {
         const formattedDate = dayjs(
             editingRowData.bookPublicationDate,
@@ -41,13 +42,15 @@ const UpdateBooks = ({
             ...editingRowData,
             bookPublicationDate: formattedDate,
         };
-        await updateBookMutation.mutateAsync({ data: { ...editedBook } });
+        await mutateAsync({ data: { ...editedBook } });
 
+        refetch;
         setIsEditingBooks(false);
         setEditingRowId(null);
         setEditingRowData(bookInitialState);
         setIsBookDateEdited(false);
     };
+
     return isEditingBooks && editingRowId ? (
         <Button onClick={() => updatePublication()}>Sauvegarder</Button>
     ) : (

@@ -20,7 +20,9 @@ import ModalProvider from '../../utils/ModalProvider';
 import CreateBooks from './CreateBooks';
 import DeleteBooks from './DeleteBooks';
 import UpdateBooks from './UpdateBooks';
+
 const GetBooks = () => {
+
     dayjs.extend(customParseFormat);
     dayjs.locale('fr');
     const { bookQuery, publisherQuery, imageQuery } = useApiContext();
@@ -78,6 +80,7 @@ const GetBooks = () => {
             bookPublicationDate: dayjs(date, 'DD MMMM YYYY'),
         });
     };
+
     useEffect(() => {
         const fetchData = async () => {
             await bookQuery.refetch();
@@ -307,7 +310,7 @@ const GetBooks = () => {
                             bookInitialState={bookInitialState}
                             isBookDateEdited={isBookDateEdited}
                             setIsBookDateEdited={setIsBookDateEdited}
-                            refetch={bookQuery.refetch}
+                            refetch={bookQuery.refetch()}
                             books={booksQueryResult}
                             isEditingBooks={isEditingBooks}
                             editingRowId={editingRowId}
