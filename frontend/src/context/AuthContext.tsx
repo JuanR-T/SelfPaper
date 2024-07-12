@@ -5,12 +5,12 @@ import {
     useEffect,
     useState,
 } from 'react';
-import { Author, AuthContextType, LoginResponse } from '../types/types';
-import { useLocalStorage } from '../lib/useLocalStorage';
 import { decodeToken } from 'react-jwt';
-import { handlePost } from '../api/handleCall';
 import { useNavigate } from 'react-router-dom';
+import { handlePost } from '../api/handleCall';
 import toastProvider from '../lib/toastProvider';
+import { useLocalStorage } from '../lib/useLocalStorage';
+import { AuthContextType, Author, LogInType, SignUpType } from '../types/types';
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 export const useAuth = () => useContext(AuthContext);
@@ -29,16 +29,14 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         },
     });
 
-    const logIn = async (email: string, password: string) => {
+    const logIn: LogInType = async (credentials) => {
+        const { email, password } = credentials
         try {
-            const authResult = await handlePost<LoginResponse>(
-                `${BASE_URL}/api/author/login`,
-                {
-                    email,
-                    password,
-                },
+            const authResult = await handlePost(`${BASE_URL}/api/author/login`,
+                { data: { email, password } },
             );
-            if (!authResult || !authResult.data?.token)
+            console.log("authResult", authResult)
+            if (!authResult || !authResult.data)
                 throw new Error(authResult?.error);
 
             getAuthorFromToken(authResult.data?.token);
@@ -59,22 +57,24 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
             );
         }
     };
-    const signUp = async (
-        firstName: string,
-        lastName: string,
-        email: string,
-        phoneNumber: string,
-        password: string,
-    ) => {
+    const signUp: SignUpType = async (userInfo) => {
+        const { firstName,
+            lastName,
+            email,
+            phoneNumber,
+            password } = userInfo
+
         try {
-            const authresult = await handlePost<LoginResponse>(
+            const authresult = await handlePost(
                 `${BASE_URL}/api/author/create`,
                 {
-                    firstName,
-                    lastName,
-                    email,
-                    phoneNumber,
-                    password,
+                    data: {
+                        firstName,
+                        lastName,
+                        email,
+                        phoneNumber,
+                        password,
+                    }
                 },
             );
             console.log('test', authresult);

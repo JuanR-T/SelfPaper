@@ -1,35 +1,33 @@
-import { useEffect, useState } from 'react';
-import { handleGet } from '../../../api/handleCall';
-import {
-    Button,
-    Upload,
-    Input,
-    Pagination,
-    Table,
-    message,
-    Select,
-    DatePicker,
-} from 'antd';
-import { useQuery } from 'react-query';
-import toastProvider from '../../../lib/toastProvider';
-import { useAuth } from '../../../context/AuthContext';
 import { UploadOutlined } from '@ant-design/icons';
 import {
-    Publication,
-    PublicationApiResponse,
-    Author,
-    ImagesApiResponse,
-} from '../../../types/types';
+    Button,
+    DatePicker,
+    Input,
+    message,
+    Pagination,
+    Select,
+    Table,
+    Upload,
+} from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
-import UpdatePublications from './UpdatePublications';
-import DeletePublications from './DeletePublications';
+import { useEffect, useState } from 'react';
+import { useApiContext } from '../../../context/ApiContext';
+import { useAuth } from '../../../context/AuthContext';
+import {
+    Author,
+    Publication,
+    Publisher
+} from '../../../types/types';
 import ModalProvider from '../../utils/ModalProvider';
 import CreatePublication from './CreatePublications';
+import DeletePublications from './DeletePublications';
+import UpdatePublications from './UpdatePublications';
 
 const GetPublications: React.FC = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
-    //TODO check if middleware fetching and caching data calls is a good idea or not (avoid doing X calls on X pages, just do it once)
     const { getConfig, author } = useAuth();
+    const { publicationQuery, imageQuery, publisherQuery, themeQuery } = useApiContext();
+
     const [refetchTrigger, setRefetchTrigger] = useState(false);
     const [selectThemeValue, setSelectThemeValue] = useState('');
     const [selectPublisherValue, setSelectPublisherValue] = useState('');
@@ -39,7 +37,6 @@ const GetPublications: React.FC = () => {
         useState<boolean>(false);
     const [isEditingPublication, setIsEditingPublication] =
         useState<boolean>(false);
-
     const [editingRowData, setEditingRowData] = useState<Publication>({
         _id: '',
         title: '',
@@ -66,76 +63,30 @@ const GetPublications: React.FC = () => {
             services: [''],
             service: '',
         },
-        author: author?.id,
-    });
-    const { data: useQueryPublishers }: any = useQuery(
-        'get_publishers',
-        async () => {
-            const useQueryPublishers = await handleGet(
-                `${BASE_URL}/api/publisher`,
-                getConfig(),
-            );
-            if (!useQueryPublishers || !useQueryPublishers.data) {
-                toastProvider(
-                    'error',
-                    'Une erreur est survenue pendant la récupération des éditeurs. Veuillez réessayer.',
-                    'bottom-left',
-                    'colored',
-                );
-                return undefined;
-            }
-            return useQueryPublishers;
-        },
-    );
-    const { data: useQueryPublications, refetch } = useQuery(
-        'get_publications',
-        async () => {
-            const useQueryPublications = await handleGet(
-                `${BASE_URL}/api/publication`,
-                getConfig(),
-            );
-            if (!useQueryPublications || !useQueryPublications.data) {
-                toastProvider(
-                    'error',
-                    'Une erreur est survenue pendant la récupération des publications. Veuillez réessayer.',
-                    'bottom-left',
-                    'colored',
-                );
-                return undefined;
-            }
-            return useQueryPublications;
-        },
-    );
-    const { data: useQueryImages } = useQuery('get_images', async () => {
-        const useQueryImages = await handleGet(
-            `${BASE_URL}/api/image`,
-            getConfig(),
-        );
-        if (!useQueryImages) {
-            toastProvider(
-                'error',
-                'Une erreur est survenue pendant la récupération des images. Veuillez réessayer.',
-                'bottom-left',
-                'colored',
-            );
-            return undefined;
+        author: {
+            id: author?.id || '',
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            phoneNumber: ''
         }
-        return useQueryImages;
     });
-    const publications = (useQueryPublications?.data as PublicationApiResponse)
-        ?.publications;
+
+    const publications = publicationQuery?.data?.data?.publications;
     const publicationsPerPage = 10;
     const startIndex = (currentPage - 1) * publicationsPerPage;
     const endIndex = startIndex + publicationsPerPage;
     const currentPublications = publications?.slice(startIndex, endIndex);
-    const publishers = useQueryPublishers?.data.publisher;
+    const publishers = publisherQuery?.data?.data?.publisher;
+
     useEffect(() => {
         const fetchData = async () => {
-            await refetch();
+            await publicationQuery.refetch();
         };
         setIsDeletingPublication(false);
         fetchData();
-    }, [isDeletingPublication, editingRowId, refetchTrigger, refetch]);
+    }, [isDeletingPublication, editingRowId, refetchTrigger]);
 
     const columns: any = [
         {
@@ -292,7 +243,7 @@ const GetPublications: React.FC = () => {
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Select
-                        placeholder="Choisir un type"
+                        placeholder="Choisir un theme"
                         onSelect={(value) => setSelectThemeValue(value)}
                     >
                         <Select.Option
@@ -366,7 +317,7 @@ const GetPublications: React.FC = () => {
                         placeholder="Choisir un éditeur"
                         onSelect={(value) => setSelectPublisherValue(value)}
                     >
-                        {publishers?.map((publisher: any) => (
+                        {publishers?.map((publisher: Publisher) => (
                             <Select.Option
                                 key={publisher._id}
                                 value={publisher._id}
@@ -376,9 +327,9 @@ const GetPublications: React.FC = () => {
                         ))}
                     </Select>
                 ) : (
-                    record.publisher[0].title +
-                        ' / ' +
-                        record.publisher[1].service
+                    record.publisher.title +
+                    ' / ' +
+                    record.publisher.service
                 );
             },
         },
@@ -423,7 +374,7 @@ const GetPublications: React.FC = () => {
         <div style={{ width: '100%' }}>
             <h2>Mes Publications</h2>
             <div>
-                {(useQueryImages?.data as ImagesApiResponse).images?.map(
+                {imageQuery?.data?.data?.images?.map(
                     (item) => (
                         <>
                             <span>{item.title}</span>

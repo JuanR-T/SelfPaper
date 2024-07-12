@@ -1,5 +1,5 @@
-import axios from "axios";
-import { HandleApiCall } from "../types/types";
+import axios, { AxiosResponse } from "axios";
+import { MutateApi, QueryApi, TData } from "../types/types";
 
 const defaultConfig = {
     headers: {
@@ -7,55 +7,62 @@ const defaultConfig = {
     },
 };
 
-export const handleGet: HandleApiCall<any>= async (
+export const handleGet: QueryApi = async (
     url,
-    data,
-    config,
+    config
 ) => {
-    const res = await axios
-        .get(url, config ?? defaultConfig)
-        .catch((err) => err.response);
-    if (!res) return undefined;
-
-    return res.data;
+    try {
+        const res = await axios.get<TData>(url, config ?? defaultConfig)
+        return res;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            return error.response as AxiosResponse<TData>;
+        }
+        throw error;
+    }
 };
 
-export const handlePost: HandleApiCall<any> = async (
+export const handlePost: MutateApi = async (
     url,
-    data,
-    config,
+    {data, config,}
 ) => {
-    const res = await axios
-        .post(url, data, config ?? defaultConfig)
-        .catch((err) => err.response);
-    console.log("this is the response", res)
-    if (!res) return undefined;
-
-    return res.data;
+    try {
+        const res = await axios.post<TData>(url, data, config ?? defaultConfig)
+        return res;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            return error.response as AxiosResponse<TData>;
+        }
+        throw error;
+    }
 };
 
-export const handlePut: HandleApiCall<any> = async (
+export const handlePut: MutateApi  = async (
     url,
-    data,
-    config,
+    {data, config,}
 ) => {
-    const res = await axios
-        .put(url, data, config ?? defaultConfig)
-        .catch((err) => err.response);
-    if (!res) return undefined;
-
-    return res.data;
+    try {
+        const res = await axios.put<TData>(url, data, config ?? defaultConfig)
+        return res;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            return error.response as AxiosResponse<TData>
+        }
+        throw error
+    }
 };
 
-export const handleDelete: HandleApiCall<any> = async (
+export const handleDelete: MutateApi  = async (
     url,
-    data,
-    config,
+    {data, config,}
 ) => {
-    const res = await axios
-        .delete(url, config ?? defaultConfig)
-        .catch((err) => err.response);
-    if (!res) return undefined;
-
-    return res.data;
+    try {
+        const res = await axios.delete<TData>(url, config ?? defaultConfig);
+        return res; 
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            return error.response as AxiosResponse<TData>;
+        }
+        throw error
+    }
 };
