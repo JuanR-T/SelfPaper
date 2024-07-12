@@ -38,7 +38,8 @@ const GetBooks = () => {
     const [isEditingBooks, setIsEditingBooks] = useState<boolean>(false);
     const [isBookDateEdited, setIsBookDateEdited] = useState<boolean>(false);
 
-    const currentBooksDisplayed = bookQuery?.data?.books?.slice(
+    const booksQueryResult = bookQuery?.data?.data?.books;
+    const currentBooksDisplayed = booksQueryResult?.slice(
         startIndex,
         endIndex,
     );
@@ -70,7 +71,6 @@ const GetBooks = () => {
     };
     const [editingRowData, setEditingRowData] =
         useState<Book>(bookInitialState);
-
     const editingBookPublicationDate = (date: any | null) => {
         setIsBookDateEdited(true);
         setEditingRowData({
@@ -164,7 +164,7 @@ const GetBooks = () => {
                         onChange={editingBookPublicationDate}
                         value={
                             isBookDateEdited
-                                ? editingRowData.bookPublicationDate
+                                ? dayjs(editingRowData.bookPublicationDate)
                                 : formattedBookPublicationDate
                         }
                     />
@@ -194,7 +194,7 @@ const GetBooks = () => {
                         placeholder="Choisir un éditeur"
                         onSelect={(value) => setSelectPublisherValue(value)}
                     >
-                        {publisherQuery?.data?.publisher?.map(
+                        {publisherQuery?.data?.data?.publisher?.map(
                             (publisher: any) => (
                                 <Select.Option
                                     key={publisher._id}
@@ -206,7 +206,7 @@ const GetBooks = () => {
                         )}
                     </Select>
                 ) : (
-                    record.bookPublisher[0].title
+                    record.bookPublisher.title
                 );
             },
         },
@@ -308,7 +308,7 @@ const GetBooks = () => {
                             isBookDateEdited={isBookDateEdited}
                             setIsBookDateEdited={setIsBookDateEdited}
                             refetch={bookQuery.refetch}
-                            books={bookQuery?.data?.books}
+                            books={booksQueryResult}
                             isEditingBooks={isEditingBooks}
                             editingRowId={editingRowId}
                             editingRowData={editingRowData}
@@ -348,13 +348,13 @@ const GetBooks = () => {
                         dataSource={currentBooksDisplayed}
                         columns={columns}
                         pagination={false}
-                        rowKey={(publication) => publication._id}
+                        rowKey={(book: Book) => book._id || ''}
                         style={{ marginTop: '10px', width: '100%' }}
                     />
                     <Pagination
                         current={currentPage}
                         pageSize={booksPerPage}
-                        total={bookQuery?.data?.books?.length || 0}
+                        total={booksQueryResult?.length || 0}
                         onChange={(page) => setCurrentPage(page)}
                         style={{
                             marginTop: '10px',

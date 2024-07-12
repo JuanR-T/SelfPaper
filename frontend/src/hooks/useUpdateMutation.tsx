@@ -1,21 +1,22 @@
-import { UseMutationResult } from "react-query";
 import { handlePut } from "../api/handleCall";
 import mutationController from "../api/mutationController";
-import { MutationProps, TVariables } from "../types/types";
+import { MutationProps } from "../types/types";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-const useUpdateMutation = <TData, TError>({
+/**Custom hook to trigger react-query update mutation */
+
+const useUpdateMutation = ({
     dataUrl,
     dataType,
     dataId,
-}: MutationProps): UseMutationResult<TData, TError, TVariables<TData>, unknown> => {
-    return mutationController<any, TError>({
-        method: handlePut,
-        url: `${BASE_URL}/api/${dataUrl}/update/${dataId}`,
-        successMessage: `${dataType} mis à jour avec succès`,
-        errorMessage: `Erreur lors de la mise à jour de/du : ${dataType}`,
-        dataType: dataType
-    });
+}: MutationProps) => {
+    return mutationController(
+        handlePut,
+        `${BASE_URL}/api/${dataUrl}/update/${dataId}`,
+        `${dataType} mis à jour avec succès`,
+        `Erreur lors de la mise à jour de/du : ${dataType}`,
+        dataType
+    );
 }
 
 export default useUpdateMutation;

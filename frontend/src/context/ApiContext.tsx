@@ -9,6 +9,7 @@ import {
 import toastProvider from '../lib/toastProvider';
 import {
     ApiContextType,
+    BooksQueryResponse,
     ImagesQueryResponse,
     PublicationQueryResponse,
     PublisherQueryResponse,
@@ -42,7 +43,7 @@ export const ApiContextProvider = ({ children }: PropsWithChildren) => {
             return response.data;
         });
 
-    const bookQuery: UseQueryResult<PublicationQueryResponse, Error> =
+    const bookQuery: UseQueryResult<BooksQueryResponse, Error> =
         useQuery('get_books', async () => {
             const response = await handleGet(
                 `${BASE_URL}/api/books`,
@@ -84,7 +85,6 @@ export const ApiContextProvider = ({ children }: PropsWithChildren) => {
                 `${BASE_URL}/api/theme`,
                 getConfig(),
             );
-            console.log("theme response :", response)
             if (!response || !response.data) {
                 toastProvider(
                     'error',
@@ -117,58 +117,6 @@ export const ApiContextProvider = ({ children }: PropsWithChildren) => {
         },
     );
 
-    /** Here data mutations are handled */
-    /** TData and TVariables are generic types
-     *  TData represents the type of data that my API call will fetch or mutate.
-     *  TVariables represents the type of variables or parameters I might pass to the API call.
-     */
-
-    // const deleteMutation = ({
-    //     dataUrl,
-    //     dataType
-    // }: MutationProps) => {
-    //     createMutationController({
-    //         method: handleDelete,
-    //         url: `${BASE_URL}/api/${dataUrl}`,
-    //         successMessage: `${dataType} supprimé avec succès`,
-    //         errorMessage: `Erreur lors de la suppression de/du : ${dataType}`,
-    //     })
-    // }
-
-    // const createMutation: UseMutationResult<Error, ApiDataResponse, unknown> = createMutationController<
-    //     ApiDataResponse,
-    //     Error,
-    //     Book
-    // >({
-    //     method: handlePost,
-    //     url: `${BASE_URL}/api/books`,
-    //     successMessage: 'Livre ajouté avec succès',
-    //     errorMessage: "Erreur lors de l'ajout du livre.",
-    // });
-
-    // const updateBookMutation = createMutationController<
-    //     ApiDataResponse,
-    //     Error,
-    //     void,
-    //     unknown
-    // >({
-    //     method: handlePut,
-    //     url: `${BASE_URL}/api/books`,
-    //     successMessage: 'Livre mis à jour avec succès',
-    //     errorMessage: 'Erreur lors de la mise à jour du livre.',
-    // });
-
-    // const deleteBookMutation = createMutationController<
-    //     ApiDataResponse,
-    //     Error,
-    //     void,
-    //     unknown
-    // >({
-    //     method: handleDelete,
-    //     url: `${BASE_URL}/api/books`,
-    //     successMessage: 'Livre supprimé avec succès',
-    //     errorMessage: 'Erreur lors de la suppression du livre.',
-    // });
     return (
         <ApiContext.Provider
             value={{

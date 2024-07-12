@@ -18,15 +18,13 @@ const UpdateBooks = ({
     setIsEditingBooks,
     setEditingRowData,
 }: UpdateBooksProps) => {
-
-    const BASE_URL = import.meta.env.VITE_BASE_URL;
     dayjs.extend(customParseFormat);
     dayjs.locale('fr');
 
     const handleEditBookRow = (record: Book) => {
         setIsEditingBooks(true);
         setEditingRowData({ ...record });
-        setEditingRowId(record._id);
+        setEditingRowId(record._id || '');
     };
     const updateBookMutation = useUpdateMutation({
         dataUrl: 'books',

@@ -1,11 +1,11 @@
-import { Request, Response, response } from 'express';
-import Publication from '../models/Publication';
-import { handleControllerErrors } from '../utils/handleControllerErrors';
-import { checkPublisherService } from '../utils/publisherHasSameService';
+import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Author from '../models/Author';
-import Theme from '../models/Theme';
+import Publication from '../models/Publication';
 import Publisher from '../models/Publisher';
+import Theme from '../models/Theme';
+import { handleControllerErrors } from '../utils/handleControllerErrors';
+import { checkPublisherService } from '../utils/publisherHasSameService';
 
 export const getPublication = async (
     req: Request,
@@ -20,10 +20,10 @@ export const getPublication = async (
             publication.map(async (publication) => {
                 const author = await Author.findById(publication.author);
                 const theme = await Theme.findById(publication.theme);
-                const publisher = [
-                    await Publisher.findById(publication.publisher?._id),
-                    { service: publication.publisher?.service },
-                ];
+                const publisher = await Publisher.findById(publication.publisher?._id);
+                if (publisher) {
+                    publisher.service = publication.publisher?.service;
+                }
                 //TODO make it generic for other models
                 const formattedPublicationDate = new Date(
                     publication.publicationDate,

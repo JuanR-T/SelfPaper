@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
+import { Dayjs } from "dayjs";
 import { Dispatch, SetStateAction } from "react";
-import { UseQueryResult } from "react-query";
+import { UseMutationResult, UseQueryResult } from "react-query";
 /** Misc */
 export interface RefetchTriggerProps {
     refetchTrigger: boolean;
@@ -14,26 +15,35 @@ export type DataRefetchProps =
     | UseQueryResult<ThemeQueryResponse, Error>
     | null;
 
-export interface MutationConfig<TData, TError> {
-        method: HandleApiCall<TData>;
-        url: string;
-        successMessage: string;
-        errorMessage: string;
-        dataType: string;
-    }
+export type MutationConfig = <TVariables extends MutationPayload>(
+    method: MutateApi,
+    url: string,
+    successMessage: string,
+    errorMessage: string,
+    dataType: string
+) => UseMutationResult<TData, Error, TVariables>;
 
-    export type TVariables<TData> = {
-    data: TData; // Adjust as per your API payload structure
-    config?: object; // Optional config
+export type TData = {
+    found: boolean;
+    object: ApiDataResponse;
 };
-    
-export interface HandleApiCall<TData> {(
+
+export type MutationPayload = {
+    data: ApiDataResponse;
+    config?: Record<string, unknown>;
+};
+export interface MutateApi {(
     url: string, 
-    data: TData, 
-    config?: object,
-): Promise<AxiosResponse<TData> | undefined>;
+    payload: MutationPayload
+    ): Promise<AxiosResponse<TData>>;
 }
-export type ApiDataResponse = Book | Publication | Publisher | Images | Theme;
+export interface QueryApi {(
+    url: string, 
+    config: Record<string, unknown>
+    ): Promise<AxiosResponse<TData>>;
+}
+
+export type ApiDataResponse = Book | Publication | Publisher | Images | Theme | LogInData | SignUpData;
 
 export type CapitalizeLetterTypes = string | string[];
 
@@ -59,7 +69,7 @@ export interface AuthContextType {
     ) => Promise<void>;
     autoLogIn?: (token: string) => Promise<void>;
     changeOtherInfo?: (email: string, name: string) => Promise<void>;
-    logIn?: (email: string, password: string) => Promise<void>;
+    logIn?: LogInType;
     logOut: () => void;
     changePassword?: (
         newPassword: string,
@@ -67,6 +77,18 @@ export interface AuthContextType {
     ) => Promise<void>;
     getConfig: () => Record<string, unknown>;
 }
+
+export type LogInData = {email: string, password: string};
+export type LogInType = (credentials: LogInData) => Promise<void>;
+export type SignUpData = {
+    firstName : string,
+    lastName : string,
+    email : string,
+    phoneNumber : string,
+    password : string,
+}
+export type SignUpType = (userInfo: SignUpData) => Promise<void>;
+
 export interface MutationProps {
     dataUrl: string;
     dataType: string;
@@ -79,7 +101,6 @@ export interface ApiContextType {
     themeQuery: UseQueryResult<ThemeQueryResponse, Error>,
     imageQuery: UseQueryResult<ImagesQueryResponse, Error>,
 }
-//createMutation: (props: MutationProps) => UseMutationResult<ApiDataResponse, Error>,
 
 export type LoginResponse = {
     token: string;
@@ -89,11 +110,13 @@ export type LoginResponse = {
 /** Publisher */
 
 export interface PublisherQueryResponse {
-    found: boolean;
-    publisher?: Publisher[];
+    data : 
+    {
+        found: boolean;
+        publisher: Publisher[];
+    }
 }
 export interface Publisher {
-    [x: string]: any;
     _id: string;
     title: string;
     description: string;
@@ -107,12 +130,18 @@ export interface Publisher {
 /** Themes */
 
 export interface ThemeQueryResponse {
-    found: boolean;
-    theme?: Theme[];
+    data : 
+    {
+        found: boolean;
+        theme: Theme[];
+    }
 }
 export interface PublicationQueryResponse {
-    found: boolean;
-    publications?: Publication[];
+    data : 
+    {
+        found: boolean;
+        publications: Publication[];
+    }
 }
 
 export interface Theme {
@@ -152,7 +181,7 @@ export interface Publication {
     excerpt: string,
     publicationDate: string,
     publisher: Publisher,
-    author: any,
+    author: Author,
     position?: string
 }
 
@@ -162,7 +191,7 @@ export interface UpdatePublicationsProps {
     isEditingPublication: boolean;
     editingRowData: Publication;
     setIsEditingPublication: Dispatch<SetStateAction<boolean>>;
-    setEditingRowId: Dispatch<SetStateAction<string | null | undefined>>;
+    setEditingRowId: Dispatch<SetStateAction<string | null>>;
     setEditingRowData: Dispatch<SetStateAction<Publication>>;
 }
 
@@ -170,7 +199,7 @@ export interface DeletePublicationsProps {
     record: Publication;
     setIsDeletingPublication: Dispatch<SetStateAction<boolean>>;
     editingRowId: string | null;
-    setEditingRowId: Dispatch<SetStateAction<string | null | undefined>>;
+    setEditingRowId: Dispatch<SetStateAction<string | null>>;
 }
 
 /** Images */
@@ -180,22 +209,27 @@ export interface Images {
     image: string
 }
 export interface ImagesQueryResponse {
-    found: boolean;
-    images?: Images[];
+    data : 
+    {
+        found: boolean;
+        images?: Images[];
+    }
 }
 
 /** Books */
 
 export interface BooksQueryResponse {
-    found: boolean;
-    books?: Book[];
+    data : {
+        found: boolean;
+        books: Book[];
+    }
 }
 export interface Book {
     _id?: string;
     title: string;
     description: string;
     link: string;
-    bookPublicationDate:any;
+    bookPublicationDate: string | Dayjs;
     bookAuthor: string | undefined;
     bookPublisher: Publisher;
     bookImage: Buffer | string ;
@@ -214,7 +248,7 @@ export interface UpdateBooksProps{
     isEditingBooks: boolean;
     editingRowData: Book;
     setIsEditingBooks: Dispatch<SetStateAction<boolean>>;
-    setEditingRowId: Dispatch<SetStateAction<string | null | undefined>>;
+    setEditingRowId: Dispatch<SetStateAction<string | null>>;
     setEditingRowData: Dispatch<SetStateAction<Book>>;
 }
 
@@ -222,5 +256,5 @@ export interface DeleteBooksProps {
     record: Book;
     setIsDeletingBooks: Dispatch<SetStateAction<boolean>>;
     editingRowId: string | null;
-    setEditingRowId: Dispatch<SetStateAction<string | null | undefined>>;
+    setEditingRowId: Dispatch<SetStateAction<string | null>>;
 }

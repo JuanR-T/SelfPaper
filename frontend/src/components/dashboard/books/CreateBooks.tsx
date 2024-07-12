@@ -12,13 +12,12 @@ import {
 } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import React, { useState } from 'react';
-import { handlePost } from '../../../api/handleCall';
 import { useApiContext } from '../../../context/ApiContext';
 import { useAuth } from '../../../context/AuthContext';
 import useCreateMutation from '../../../hooks/useCreateMutation';
 import Capitalize from '../../../lib/capitalizeLetter';
 import toastProvider from '../../../lib/toastProvider';
-import { Book, Publisher, RefetchTriggerProps } from '../../../types/types';
+import { Book, MutationPayload, Publisher, RefetchTriggerProps } from '../../../types/types';
 
 const CreateBooks: React.FC<RefetchTriggerProps> = ({
     setRefetchTrigger,
@@ -27,7 +26,7 @@ const CreateBooks: React.FC<RefetchTriggerProps> = ({
 }) => {
     const { themeQuery, publisherQuery } = useApiContext();
     const BASE_URL = import.meta.env.VITE_BASE_URL;
-    const { author } = useAuth();
+    const { author, getConfig } = useAuth();
     const [selectThemeValue, setSelectThemeValue] = useState('');
     const [bookPublicationDateValue, setBookPublicationDateValue] =
         useState('');
@@ -52,10 +51,10 @@ const CreateBooks: React.FC<RefetchTriggerProps> = ({
         const convertedFile: any = await convertToBase64(file);
         console.log('convertedFile', convertedFile);
         console.log('file', file);
-        await handlePost(`${BASE_URL}/api/image/upload`, {
-            title: file.name,
-            image: convertedFile,
-        });
+        // await handlePost(`${BASE_URL}/api/image/upload`, {
+        //     title: file.name,
+        //     image: convertedFile,
+        // });
         toastProvider(
             'success',
             "L'image a été upload avec succès.",
@@ -68,26 +67,29 @@ const CreateBooks: React.FC<RefetchTriggerProps> = ({
         dataType: 'book',
     });
     const onSubmit = async (values: Book) => {
-        const newBook: Book = {
-            title: values.title,
-            description: values.description,
-            link: values.link,
-            bookPublicationDate: bookPublicationDateValue,
-            bookAuthor: author?.id,
-            bookPublisher: selectPublisherValue,
-            bookImage: values.bookImage,
-            thumbnail: values.thumbnail,
-            theme: {
-                title: '',
-                _id: selectThemeValue,
-                description: '',
-                image: '',
+        const mutationPayload: MutationPayload = {
+            data: {
+                title: values.title,
+                description: values.description,
+                link: values.link,
+                bookPublicationDate: bookPublicationDateValue,
+                bookAuthor: author?.id,
+                bookPublisher: selectPublisherValue,
+                bookImage: values.bookImage,
+                thumbnail: values.thumbnail,
+                theme: {
+                    title: '',
+                    _id: selectThemeValue,
+                    description: '',
+                    image: '',
+                },
             },
+            config: getConfig()
         };
 
         /**Here I'm using a custom hook to trigger react-query's useMutation */
+        await createBookMutation.mutateAsync(mutationPayload);
 
-        await createBookMutation.mutateAsync(newBook as any);
         setRefetchTrigger(true);
         handleCancelation?.();
     };
@@ -163,7 +165,7 @@ const CreateBooks: React.FC<RefetchTriggerProps> = ({
                 >
                     <Cascader
                         placeholder="Editeur / Service"
-                        options={publisherQuery?.data?.publisher?.map(
+                        options={publisherQuery?.data?.data?.publisher?.map(
                             (publisher: Publisher) => ({
                                 value: publisher._id,
                                 label: publisher.title,
@@ -262,7 +264,7 @@ const CreateBooks: React.FC<RefetchTriggerProps> = ({
                 >
                     <Select
                         placeholder="Choisir un Thème"
-                        options={themeQuery?.data?.theme?.map(
+                        options={themeQuery?.data?.data?.theme?.map(
                             (item: any) => ({
                                 value: item._id,
                                 label: item.title,

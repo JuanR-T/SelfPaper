@@ -13,7 +13,7 @@ const DeleteBooks = ({
     const [open, setOpen] = useState<boolean>(false);
 
     const handlePopoverRow = (record: Book) => {
-        setEditingRowId(record._id);
+        setEditingRowId(record._id || '');
     };
     const hide = () => {
         setEditingRowId(null);
@@ -29,9 +29,7 @@ const DeleteBooks = ({
         dataId: record._id
     })
     const deleteBook = async (record: Book) => {
-        deleteBookMutation.mutateAsync({
-            data: {}
-        })
+        deleteBookMutation.mutateAsync({ data: { ...record } })
 
         setIsDeletingBooks(true);
     };
