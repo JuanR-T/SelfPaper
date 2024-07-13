@@ -1,8 +1,8 @@
+import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 import Author from '../models/Author';
 import { handleControllerErrors } from '../utils/handleControllerErrors';
-import bcrypt, { hash, genSalt, compare } from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 
 export const getAuthors = async (
     req: Request,
@@ -57,7 +57,7 @@ export const createAuthor = async (
         const token = jwt.sign(
             {
                 author: {
-                    id: newAuthor._id,
+                    _id: newAuthor._id,
                     firstName: newAuthor.firstName,
                     lastName: newAuthor.lastName,
                     email: newAuthor.email,
@@ -99,11 +99,10 @@ export const loginAuthor = async (
             throw new Error('Invalid password. Please check your credentials.');
         }
 
-        // If the password is valid, you can generate a token for authentication
         const token = jwt.sign(
             {
                 author: {
-                    id: existingAuthor._id,
+                    _id: existingAuthor._id,
                     firstName: existingAuthor.firstName,
                     lastName: existingAuthor.lastName,
                     email: existingAuthor.email,
