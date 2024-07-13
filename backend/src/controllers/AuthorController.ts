@@ -1,27 +1,28 @@
 import bcrypt from 'bcryptjs';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import Author from '../models/Author';
-import { handleControllerErrors } from '../utils/handleControllerErrors';
 
 export const getAuthors = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const author = await Author.find({});
         if (!author) throw new Error('Could not find any authors');
 
         return res.status(200).json({ data: { found: true, author } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not find any authors.');
+        next(err);
     }
 };
 
 export const getAuthorById = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id) throw new Error('Could not get author by id. Wrong id.');
@@ -31,14 +32,15 @@ export const getAuthorById = async (
 
         return res.status(200).json({ data: { found: true, authorById } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not find this author');
+        next(err)
     }
 };
 
 export const createAuthor = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const existingAuthor = await Author.findOne({ email: req.body.email });
         if (existingAuthor) {
@@ -72,8 +74,7 @@ export const createAuthor = async (
             .status(200)
             .json({ data: { created: true, newAuthor, token } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not create Author.');
-    }
+        next(err)   }
 };
 
 //TODO make a middleware to check if there's doublons
@@ -81,7 +82,8 @@ export const createAuthor = async (
 export const loginAuthor = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const { email, password } = req.body;
         const existingAuthor = await Author.findOne({ email });
@@ -114,14 +116,14 @@ export const loginAuthor = async (
         );
         return res.status(200).json({ data: { authenticated: true, token } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not log in Author.');
-    }
+        next(err)   }
 };
 
 export const deleteAuthor = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id) throw new Error('Could not delete Author. Wrong id');
@@ -131,14 +133,14 @@ export const deleteAuthor = async (
 
         return res.status(200).json({ data: { deleted: true, deletedAuthor } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not delete Author.');
-    }
+        next(err)   }
 };
 
 export const updateAuthor = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id || typeof id !== 'string')
@@ -149,6 +151,5 @@ export const updateAuthor = async (
 
         return res.status(200).json({ data: { updated: true, updatedAuthor } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not update Author.');
-    }
+        next(err)   }
 };

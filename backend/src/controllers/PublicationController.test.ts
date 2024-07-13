@@ -3,12 +3,12 @@ jest.mock('../utils/publisherHasSameService', () => ({
     checkPublisherService: mCheckPublisherService,
 }));
 
+import { Request, Response } from 'express';
 import {
     mPublicationCreate,
     mPublicationFind,
     mPublicationFindByIdAndUpdate,
 } from '../tests/tests-utils';
-import { Request, Response } from 'express';
 import { checkPublisherService } from '../utils/publisherHasSameService';
 import {
     createPublication,

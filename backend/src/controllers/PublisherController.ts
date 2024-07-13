@@ -1,12 +1,12 @@
-import { Request, Response } from 'express';
-import Publisher from '../models/Publisher';
-import { handleControllerErrors } from '../utils/handleControllerErrors';
+import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
+import Publisher from '../models/Publisher';
 
 export const getPublisher = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const publisher = await Publisher.find({});
 
@@ -14,18 +14,15 @@ export const getPublisher = async (
 
         return res.status(200).json({ data: { found: true, publisher } });
     } catch (err) {
-        return handleControllerErrors(
-            err,
-            res,
-            'Could not find any publishers',
-        );
+        next(err);
     }
 };
 
 export const getPublisherById = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id || typeof id !== 'string')
@@ -42,18 +39,15 @@ export const getPublisherById = async (
 
         return res.status(200).json({ data: { found: true, publisherById } });
     } catch (err) {
-        return handleControllerErrors(
-            err,
-            res,
-            'Could not find this publisher',
-        );
+        next(err);
     }
 };
 //TODO check if the publisher already exists.
 export const createPublisher = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const newPublisher = await Publisher.create(req.body);
         if (!newPublisher)
@@ -61,14 +55,15 @@ export const createPublisher = async (
 
         return res.status(200).json({ data: { created: true, newPublisher } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not create publisher.');
+        next(err);
     }
 };
 
 export const deletePublisher = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id || typeof id !== 'string')
@@ -87,14 +82,15 @@ export const deletePublisher = async (
             .status(200)
             .json({ data: { deleted: true, deletedPublisher } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not delete publisher.');
+        next(err);
     }
 };
 
 export const updatePublisher = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id || typeof id !== 'string')
@@ -116,6 +112,6 @@ export const updatePublisher = async (
             .status(200)
             .json({ data: { updated: true, updatedPublisher } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not update publisher.');
+        next(err);
     }
 };

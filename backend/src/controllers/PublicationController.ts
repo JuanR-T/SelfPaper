@@ -1,16 +1,16 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Author from '../models/Author';
 import Publication from '../models/Publication';
 import Publisher from '../models/Publisher';
 import Theme from '../models/Theme';
-import { handleControllerErrors } from '../utils/handleControllerErrors';
 import { checkPublisherService } from '../utils/publisherHasSameService';
 
 export const getPublication = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     //TODO return the matching publisher services from the publication, it returns everything now
     try {
         const publication = await Publication.find({});
@@ -43,14 +43,15 @@ export const getPublication = async (
         );
         return res.status(200).json({ data: { found: true, publications } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Publications not found');
+        next(err);
     }
 };
 
 export const getPublicationById = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id || typeof id !== 'string')
@@ -67,18 +68,15 @@ export const getPublicationById = async (
 
         return res.status(200).json({ data: { found: true, publicationById } });
     } catch (err) {
-        return handleControllerErrors(
-            err,
-            res,
-            'Could not find this publication',
-        );
+        next(err);
     }
 };
 
 export const createPublication = async (
     req: any,
     res: any,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const hasSameService = await checkPublisherService(req);
         if (!hasSameService) {
@@ -95,18 +93,15 @@ export const createPublication = async (
             .status(200)
             .json({ data: { created: true, newPublication } });
     } catch (err) {
-        return handleControllerErrors(
-            err,
-            res,
-            'Publication could not be created',
-        );
+        next(err);
     }
 };
 
 export const updatePublication = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id || typeof id !== 'string')
@@ -137,14 +132,15 @@ export const updatePublication = async (
             .status(200)
             .json({ data: { updated: true, updatedPublication } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not update publication');
+        next(err);
     }
 };
 
 export const deletePublication = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id || typeof id !== 'string')
@@ -163,10 +159,6 @@ export const deletePublication = async (
             .status(200)
             .json({ data: { deleted: true, deletedPublication } });
     } catch (err) {
-        return handleControllerErrors(
-            err,
-            res,
-            'Could not delete publication.',
-        );
+        next(err);
     }
 };
