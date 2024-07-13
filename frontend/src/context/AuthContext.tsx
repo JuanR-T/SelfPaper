@@ -7,7 +7,8 @@ import {
 } from 'react';
 import { decodeToken } from 'react-jwt';
 import { useNavigate } from 'react-router-dom';
-import { handlePost } from '../api/handleCall';
+import useCreateMutation from '../hooks/useCreateMutation';
+import useLoginMutation from '../hooks/useLoginMutation';
 import toastProvider from '../lib/toastProvider';
 import { useLocalStorage } from '../lib/useLocalStorage';
 import { AuthContextType, Author, LogInType, SignUpType } from '../types/types';
@@ -18,7 +19,6 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     const [author, setAuthor] = useState<Author | undefined>();
     const [isLoading, setIsLoading] = useState(true);
-    const BASE_URL = import.meta.env.VITE_BASE_URL;
     const navigate = useNavigate();
     const { getItem, removeItem, setItem } = useLocalStorage();
 
@@ -28,35 +28,29 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
             Authorization: `Bearer ${getItem('token')}`,
         },
     });
+    const loginMutation = useLoginMutation({
+        dataUrl: 'author',
+        dataType: 'auteur'
+    })
+    const signUpMutation = useCreateMutation({
+        dataUrl: 'author',
+        dataType: 'Utilisateur'
+    })
 
     const logIn: LogInType = async (credentials) => {
         const { email, password } = credentials
         try {
-            const authResult = await handlePost(`${BASE_URL}/api/author/login`,
-                { data: { email, password } },
-            );
-            console.log("authResult", authResult)
-            if (!authResult || !authResult.data)
-                throw new Error(authResult?.error);
+            const author = await loginMutation.mutateAsync({ data: { email, password } });
+            console.log("this is author", author);
+            setItem('token', author?.data?.token || '');
+            getAuthorFromToken(author?.data?.token || '');
 
-            getAuthorFromToken(authResult.data?.token);
-            setItem('token', authResult.data?.token);
-            toastProvider(
-                'success',
-                'Connexion réussie !',
-                'bottom-left',
-                'light',
-            );
             navigate('/dashboard');
         } catch (err) {
-            toastProvider(
-                'error',
-                'Une erreur est survenue, réessaye de te connecter.',
-                'bottom-left',
-                'colored',
-            );
+            console.log(err)
         }
     };
+
     const signUp: SignUpType = async (userInfo) => {
         const { firstName,
             lastName,
@@ -65,8 +59,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
             password } = userInfo
 
         try {
-            const authresult = await handlePost(
-                `${BASE_URL}/api/author/create`,
+            const signUp = await signUpMutation.mutateAsync(
                 {
                     data: {
                         firstName,
@@ -76,13 +69,10 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
                         password,
                     }
                 },
-            );
-            console.log('test', authresult);
-            if (!authresult || !authresult.data?.token)
-                throw new Error(authresult?.error);
+            )
 
-            getAuthorFromToken(authresult.data?.token);
-            setItem('token', authresult.data?.token);
+            getAuthorFromToken(signUp?.data?.token || '');
+            setItem('token', signUp?.data?.token || '');
             navigate('/dashboard');
             toastProvider(
                 'success',
@@ -115,12 +105,12 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
         const decodedToken: { author: Author } | null = decodeToken(token);
         if (!decodedToken?.author) return logOut();
-        setAuthor({ ...decodedToken?.author, _id: decodedToken?.author._id });
+        setAuthor({ ...decodedToken?.author });
     };
 
     useEffect(() => {
         const authorToken = getItem('token');
-
+        console.log("this executes everywhere")
         if (authorToken) {
             getAuthorFromToken(authorToken);
         } else {
