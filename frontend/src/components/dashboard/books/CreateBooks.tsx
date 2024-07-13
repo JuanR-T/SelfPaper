@@ -71,7 +71,7 @@ const CreateBooks: React.FC<CreateBooksProps> = ({
                 description: values.description,
                 link: values.link,
                 bookPublicationDate: bookPublicationDateValue,
-                bookAuthor: author?.id,
+                bookAuthor: author?._id,
                 bookPublisher: selectPublisherValue,
                 bookImage: values.bookImage,
                 thumbnail: values.thumbnail,

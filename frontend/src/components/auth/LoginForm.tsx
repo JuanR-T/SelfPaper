@@ -1,8 +1,8 @@
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Input, Row } from 'antd';
 import React from 'react';
-import { Form, Input, Button, Row, Col } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const LoginForm: React.FC = () => {
     const navigate = useNavigate();
@@ -13,8 +13,9 @@ const LoginForm: React.FC = () => {
     }
 
     const onFinish = async (values: any) => {
+        console.log("these are values", values);
         if (!logIn) return null;
-        logIn(values.email, values.password);
+        logIn({ email: values.email, password: values.password });
     };
 
     return (
@@ -24,9 +25,9 @@ const LoginForm: React.FC = () => {
                     name="login-form"
                     initialValues={{ remember: true }}
                     onFinish={onFinish}
-                    labelCol={{ span: 8 }}
+                    labelCol={{ span: 10 }}
                     wrapperCol={{ span: 16 }}
-                    className="rounded-form"
+                    className="login-form"
                 >
                     <Form.Item
                         label="Email"
@@ -64,9 +65,8 @@ const LoginForm: React.FC = () => {
                         <Button
                             type="primary"
                             htmlType="submit"
-                            className="submit-button"
                         >
-                            Log In
+                            Connexion
                         </Button>
                     </Form.Item>
                 </Form>

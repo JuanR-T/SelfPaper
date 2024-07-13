@@ -12,6 +12,7 @@ const mutationController: MutationConfig =
         return useMutation(
             async (variables) => {
                 const response = await method(url, variables);
+                console.log("this is mutationController res : ", response)
                 if (!response || !response.data) {
                     throw new Error(errorMessage);
                 }

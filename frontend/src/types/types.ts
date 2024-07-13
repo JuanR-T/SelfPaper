@@ -16,13 +16,16 @@ export type MutationConfig = <TVariables extends MutationPayload>(
     url: string,
     successMessage: string,
     errorMessage: string,
-) => UseMutationResult<TData, Error, TVariables>;
+) => UseMutationResult<TData ,Error, TVariables>;
 
 export type TData = {
     found: boolean;
     object: ApiDataResponse;
+    data?: {
+        authenticated: boolean;
+        token: string;
+    }
 };
-
 export type MutationPayload = {
     data: ApiDataResponse;
     config?: Record<string, unknown>;
@@ -60,16 +63,10 @@ export interface Author {
 
 export interface AuthContextType {
     author?: Author | undefined;
-    signUp?: (
-        email: string,
-        password: string,
-        firstName: string,
-        lastName: string,
-        phoneNumber: string
-    ) => Promise<void>;
     autoLogIn?: (token: string) => Promise<void>;
     changeOtherInfo?: (email: string, name: string) => Promise<void>;
     logIn?: LogInType;
+    signUp?: SignUpType;
     logOut: () => void;
     changePassword?: (
         newPassword: string,
