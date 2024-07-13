@@ -1,26 +1,27 @@
-import { Request, Response } from 'express';
-import Theme from '../models/Theme';
-import { handleControllerErrors } from '../utils/handleControllerErrors';
+import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
+import Theme from '../models/Theme';
 
 export const getThemes = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const theme = await Theme.find({});
         if (!theme) throw new Error('Could not find any Themes');
 
         return res.status(200).json({ data: { found: true, theme } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not find any themes.');
+        next(err);
     }
 };
 
 export const getThemeById = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id || typeof id !== 'string')
@@ -37,28 +38,30 @@ export const getThemeById = async (
 
         return res.status(200).json({ data: { found: true, themeById } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not find this theme');
+        next(err);
     }
 };
 
 export const createTheme = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const newTheme = await Theme.create(req.body);
         if (!newTheme) throw new Error('Could not create theme. Wrong params.');
 
         return res.status(200).json({ data: { created: true, newTheme } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not create theme.');
+        next(err);
     }
 };
 
 export const deleteTheme = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id || typeof id !== 'string')
@@ -75,14 +78,15 @@ export const deleteTheme = async (
 
         return res.status(200).json({ data: { deleted: true, deletedTheme } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not delete theme.');
+        next(err);
     }
 };
 
 export const updateTheme = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id || typeof id !== 'string')
@@ -99,6 +103,6 @@ export const updateTheme = async (
 
         return res.status(200).json({ data: { updated: true, updatedTheme } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not update theme.');
+        next(err);
     }
 };

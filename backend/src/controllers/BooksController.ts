@@ -1,14 +1,14 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import Author from '../models/Author';
 import Books from '../models/Books';
 import Publisher from '../models/Publisher';
 import Theme from '../models/Theme';
-import { handleControllerErrors } from '../utils/handleControllerErrors';
 
 export const getBooks = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const book = await Books.find({});
         if (!book) throw new Error("Couldn't find any books");
@@ -38,28 +38,30 @@ export const getBooks = async (
         );
         return res.status(200).json({ data: { found: true, books } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Books not found');
+        next(err);
     }
 };
 
 export const createBook = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const newBook = await Books.create(req.body);
         if (!newBook)
             throw new Error('Book could not be created. Wrong params.');
         return res.status(200).json({ data: { created: true } });
     } catch (err) {
-        return handleControllerErrors(err, res, "Couldn't create a book");
+        next(err);
     }
 };
 
 export const updateBook = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id || typeof id !== 'string')
@@ -72,14 +74,15 @@ export const updateBook = async (
 
         return res.status(200).json({ data: { updated: true, updatedBook } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not update book');
+        next(err);
     }
 };
 
 export const deleteBook = async (
     req: Request,
     res: Response,
-): Promise<Response> => {
+    next: NextFunction
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id || typeof id !== 'string')
@@ -89,6 +92,6 @@ export const deleteBook = async (
 
         return res.status(200).json({ data: { deleted: true, deletedBook } });
     } catch (err) {
-        return handleControllerErrors(err, res, 'Could not delete the book');
+        next(err);
     }
 };

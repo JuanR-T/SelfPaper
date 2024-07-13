@@ -1,13 +1,14 @@
 require('dotenv').config();
 import express from 'express';
+import { authorRoutes } from './routes/AuthorRoutes';
+import { booksRoutes } from './routes/BooksRoutes';
+import { imagesRoutes } from './routes/ImagesRoutes';
 import { publicationRoutes } from './routes/PublicationRoutes';
 import { publisherRoutes } from './routes/PublisherRoutes';
-import { authorRoutes } from './routes/AuthorRoutes';
 import { themeRoutes } from './routes/ThemeRoutes';
-import { imagesRoutes } from './routes/ImagesRoutes';
-import { booksRoutes } from './routes/BooksRoutes';
 
 import cors from 'cors';
+import errorHandlingMiddleware from './middleware/errorHandlingMiddleware';
 const app = express();
 const PORT = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
@@ -37,6 +38,8 @@ app.use('/api/author', authorRoutes());
 app.use('/api/theme', themeRoutes());
 app.use('/api/image', imagesRoutes());
 app.use('/api/books', booksRoutes());
+
+app.use(errorHandlingMiddleware);
 
 mongoose
     .connect(MONGO_URL)
