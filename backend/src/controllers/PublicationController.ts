@@ -87,6 +87,7 @@ export const createPublication = async (
             );
         }
         const newPublication = await Publication.create(req.body);
+        console.log("newPublication", newPublication)
         if (!newPublication)
             throw new Error('Publication could not be created. Wrong params');
 

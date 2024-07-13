@@ -20,7 +20,9 @@ import ModalProvider from '../../utils/ModalProvider';
 import CreateBooks from './CreateBooks';
 import DeleteBooks from './DeleteBooks';
 import UpdateBooks from './UpdateBooks';
+
 const GetBooks = () => {
+
     dayjs.extend(customParseFormat);
     dayjs.locale('fr');
     const { bookQuery, publisherQuery, imageQuery } = useApiContext();
@@ -30,11 +32,9 @@ const GetBooks = () => {
     const booksPerPage = 10;
     const startIndex = (currentPage - 1) * booksPerPage;
     const endIndex = startIndex + booksPerPage;
-    const [refetchTrigger, setRefetchTrigger] = useState(false);
     const [selectThemeValue, setSelectThemeValue] = useState('');
     const [selectPublisherValue, setSelectPublisherValue] = useState('');
     const [editingRowId, setEditingRowId] = useState<string | null>(null);
-    const [isDeletingBooks, setIsDeletingBooks] = useState<boolean>(false);
     const [isEditingBooks, setIsEditingBooks] = useState<boolean>(false);
     const [isBookDateEdited, setIsBookDateEdited] = useState<boolean>(false);
 
@@ -78,13 +78,10 @@ const GetBooks = () => {
             bookPublicationDate: dayjs(date, 'DD MMMM YYYY'),
         });
     };
+
     useEffect(() => {
-        const fetchData = async () => {
-            await bookQuery.refetch();
-        };
-        setIsDeletingBooks(false);
-        fetchData();
-    }, [isDeletingBooks, editingRowId, refetchTrigger]);
+        bookQuery.refetch();
+    }, [editingRowId]);
 
     const columns: any = [
         {
@@ -307,7 +304,7 @@ const GetBooks = () => {
                             bookInitialState={bookInitialState}
                             isBookDateEdited={isBookDateEdited}
                             setIsBookDateEdited={setIsBookDateEdited}
-                            refetch={bookQuery.refetch}
+                            refetch={bookQuery.refetch()}
                             books={booksQueryResult}
                             isEditingBooks={isEditingBooks}
                             editingRowId={editingRowId}
@@ -319,7 +316,7 @@ const GetBooks = () => {
 
                         <DeleteBooks
                             record={record}
-                            setIsDeletingBooks={setIsDeletingBooks}
+                            refetch={bookQuery.refetch()}
                             editingRowId={editingRowId}
                             setEditingRowId={setEditingRowId}
                         />
@@ -336,8 +333,7 @@ const GetBooks = () => {
                 modalContent={({ handleCancelation }) => (
                     <CreateBooks
                         handleCancelation={handleCancelation}
-                        refetchTrigger={refetchTrigger}
-                        setRefetchTrigger={setRefetchTrigger}
+                        refetch={bookQuery.refetch()}
                     />
                 )}
                 contentContext="Ajouter un Livre"

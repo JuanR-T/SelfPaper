@@ -1,70 +1,34 @@
-import React, { useState } from 'react';
-import BookOutlined, { UploadOutlined } from '@ant-design/icons';
-import { handleGet, handlePost } from '../../../api/handleCall';
+import { UploadOutlined } from '@ant-design/icons';
 import {
-    Input,
-    Form,
-    Row,
     Button,
-    Upload,
-    message,
-    Select,
-    DatePicker,
     Cascader,
+    DatePicker,
+    Form,
+    Input,
+    message,
+    Row,
+    Select,
+    Upload,
 } from 'antd';
-import toastProvider from '../../../lib/toastProvider';
-import { Publisher, RefetchTriggerProps } from '../../../types/types';
-import { useQuery } from 'react-query';
-import { useAuth } from '../../../context/AuthContext';
 import dayjs, { Dayjs } from 'dayjs';
+import React, { useState } from 'react';
+import { useApiContext } from '../../../context/ApiContext';
+import { useAuth } from '../../../context/AuthContext';
+import useCreateMutation from '../../../hooks/useCreateMutation';
 import Capitalize from '../../../lib/capitalizeLetter';
+import toastProvider from '../../../lib/toastProvider';
+import { CreatePublicationProps, MutationPayload, Publication, Publisher } from '../../../types/types';
 
-const CreatePublication: React.FC<RefetchTriggerProps> = ({
-    setRefetchTrigger,
-    refetchTrigger,
+const CreatePublication: React.FC<CreatePublicationProps> = ({
+    refetch,
     handleCancelation,
 }) => {
-    const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { getConfig, author } = useAuth();
+    const { themeQuery, publisherQuery } = useApiContext();
     const [selectThemeValue, setSelectThemeValue] = useState('');
     const [publicationDateValue, setPublicationDateValue] = useState('');
     const [selectPublisherValue, setSelectPublisherValue] = useState<any>({});
 
-    const { data: useQueryThemes }: any = useQuery('get_themes', async () => {
-        const useQueryThemes = await handleGet(
-            `${BASE_URL}/api/theme`,
-            getConfig(),
-        );
-        if (!useQueryThemes || !useQueryThemes.data) {
-            toastProvider(
-                'error',
-                'Une erreur est survenue pendant la récupération des thèmes. Veuillez réessayer.',
-                'bottom-left',
-                'colored',
-            );
-            return undefined;
-        }
-        return useQueryThemes;
-    });
-    const { data: useQueryPublishers }: any = useQuery(
-        'get_publishers',
-        async () => {
-            const useQueryPublishers = await handleGet(
-                `${BASE_URL}/api/publisher`,
-                getConfig(),
-            );
-            if (!useQueryPublishers || !useQueryPublishers.data) {
-                toastProvider(
-                    'error',
-                    'Une erreur est survenue pendant la récupération des éditeurs. Veuillez réessayer.',
-                    'bottom-left',
-                    'colored',
-                );
-                return undefined;
-            }
-            return useQueryPublishers;
-        },
-    );
     const convertToBase64 = (file: File) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -84,10 +48,10 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
         const convertedFile = await convertToBase64(file);
         console.log('convertedFile', convertedFile);
         console.log('file', file);
-        await handlePost(`${BASE_URL}/api/image/upload`, {
-            title: file.name,
-            image: convertedFile,
-        });
+        // await handlePost(`${BASE_URL}/api/image/upload`, {
+        //     title: file.name,
+        //     image: convertedFile,
+        // });
         toastProvider(
             'success',
             "L'image a été upload avec succès.",
@@ -95,28 +59,43 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
             'light',
         );
     };
-    const onSubmit = async (values: any) => {
-        await handlePost(`${BASE_URL}/api/publication/create`, {
-            title: values.title,
-            description: values.description,
-            link: values.link,
-            thumbnail: values.thumbnail,
-            postImage: values.postImage,
-            type: values.type,
-            theme: selectThemeValue,
-            excerpt: values.excerpt,
-            publicationDate: publicationDateValue,
-            publisher: selectPublisherValue,
-            author: author?.id,
-        });
-        setRefetchTrigger(true);
-        toastProvider(
-            'success',
-            'La publication a été créée avec succès.',
-            'bottom-left',
-            'light',
-        );
-        //Checking if handleCancelation undefined or not.
+    const { mutateAsync } = useCreateMutation({
+        dataUrl: 'publication',
+        dataType: 'publication'
+    })
+
+    const onSubmit = async (values: Publication) => {
+        console.log("this is author", author)
+        const mutationPayload: MutationPayload = {
+            data: {
+                title: values.title,
+                description: values.description,
+                link: values.link,
+                thumbnail: values.thumbnail,
+                postImage: values.postImage,
+                type: values.type,
+                theme: {
+                    _id: selectThemeValue,
+                    title: '',
+                    description: '',
+                    image: '',
+                },
+                excerpt: values.excerpt,
+                publicationDate: publicationDateValue,
+                publisher: selectPublisherValue,
+                author: {
+                    _id: author?._id || '',
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    password: '',
+                    phoneNumber: '',
+                },
+            },
+            config: getConfig()
+        };
+        await mutateAsync(mutationPayload);
+        refetch;
         handleCancelation?.();
     };
     return (
@@ -246,7 +225,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                 >
                     <Select
                         placeholder="Choisir un Thème"
-                        options={useQueryThemes?.data.theme.map(
+                        options={themeQuery?.data?.data.theme.map(
                             (item: any) => ({
                                 value: item._id,
                                 label: item.title,
@@ -302,7 +281,7 @@ const CreatePublication: React.FC<RefetchTriggerProps> = ({
                 >
                     <Cascader
                         placeholder="Editeur / Service"
-                        options={useQueryPublishers?.data.publisher.map(
+                        options={publisherQuery?.data?.data.publisher.map(
                             (publisher: Publisher) => ({
                                 value: publisher._id,
                                 label: publisher.title,

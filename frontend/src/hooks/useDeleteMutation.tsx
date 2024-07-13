@@ -15,7 +15,6 @@ const useDeleteMutation = ({
         `${BASE_URL}/api/${dataUrl}/delete/${dataId}`,
         `${dataType} supprimé avec succès`,
         `Erreur lors de la suppression de/du : ${dataType}`,
-        dataType
     );
 }
 

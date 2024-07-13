@@ -1,13 +1,9 @@
 import { AxiosResponse } from "axios";
 import { Dayjs } from "dayjs";
 import { Dispatch, SetStateAction } from "react";
-import { UseMutationResult, UseQueryResult } from "react-query";
+import { QueryObserverResult, RefetchOptions, RefetchQueryFilters, UseMutationResult, UseQueryResult } from "react-query";
 /** Misc */
-export interface RefetchTriggerProps {
-    refetchTrigger: boolean;
-    setRefetchTrigger: React.Dispatch<React.SetStateAction<boolean>>;
-    handleCancelation?: (() => void | undefined) | undefined;
-}
+
 export type DataRefetchProps =
     | UseQueryResult<BooksQueryResponse, Error>
     | UseQueryResult<PublicationQueryResponse, Error>
@@ -20,7 +16,6 @@ export type MutationConfig = <TVariables extends MutationPayload>(
     url: string,
     successMessage: string,
     errorMessage: string,
-    dataType: string
 ) => UseMutationResult<TData, Error, TVariables>;
 
 export type TData = {
@@ -37,6 +32,11 @@ export interface MutateApi {(
     payload: MutationPayload
     ): Promise<AxiosResponse<TData>>;
 }
+export interface MutationProps {
+    dataUrl: string;
+    dataType: string;
+    dataId?: string;
+}
 export interface QueryApi {(
     url: string, 
     config: Record<string, unknown>
@@ -49,7 +49,7 @@ export type CapitalizeLetterTypes = string | string[];
 
 /** Author */
 export interface Author {
-    id: string;
+    _id: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -89,11 +89,6 @@ export type SignUpData = {
 }
 export type SignUpType = (userInfo: SignUpData) => Promise<void>;
 
-export interface MutationProps {
-    dataUrl: string;
-    dataType: string;
-    dataId?: string;
-}
 export interface ApiContextType {
     publicationQuery: UseQueryResult<PublicationQueryResponse, Error>,
     bookQuery: UseQueryResult<BooksQueryResponse, Error>
@@ -170,7 +165,7 @@ export interface UpdateThemeProps {
 /** Publications */
 
 export interface Publication {
-    _id: string;
+    _id?: string;
     title: string,
     description: string,
     link?: string,
@@ -184,7 +179,10 @@ export interface Publication {
     author: Author,
     position?: string
 }
-
+export interface CreatePublicationProps {
+    refetch: <TPageData>(options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined) => Promise<QueryObserverResult<PublicationQueryResponse>>;
+    handleCancelation?: (() => void | undefined) | undefined;
+}
 export interface UpdatePublicationsProps {
     record: Publication;
     editingRowId: string | null;
@@ -239,7 +237,7 @@ export interface Book {
 
 export interface UpdateBooksProps{
     record: Book;
-    refetch: Function;
+    refetch: Promise<QueryObserverResult<BooksQueryResponse, Error>>;
     bookInitialState: SetStateAction<Book>;
     isBookDateEdited: boolean;
     setIsBookDateEdited: Dispatch<SetStateAction<boolean>>
@@ -254,7 +252,12 @@ export interface UpdateBooksProps{
 
 export interface DeleteBooksProps {
     record: Book;
-    setIsDeletingBooks: Dispatch<SetStateAction<boolean>>;
+    refetch: Promise<QueryObserverResult<BooksQueryResponse, Error>>;
     editingRowId: string | null;
     setEditingRowId: Dispatch<SetStateAction<string | null>>;
+}
+
+export interface CreateBooksProps {
+    refetch: Promise<QueryObserverResult<BooksQueryResponse, Error>>;
+    handleCancelation?: (() => void | undefined) | undefined;
 }

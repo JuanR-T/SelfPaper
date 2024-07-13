@@ -17,15 +17,13 @@ import { useAuth } from '../../../context/AuthContext';
 import useCreateMutation from '../../../hooks/useCreateMutation';
 import Capitalize from '../../../lib/capitalizeLetter';
 import toastProvider from '../../../lib/toastProvider';
-import { Book, MutationPayload, Publisher, RefetchTriggerProps } from '../../../types/types';
+import { Book, CreateBooksProps, MutationPayload, Publisher } from '../../../types/types';
 
-const CreateBooks: React.FC<RefetchTriggerProps> = ({
-    setRefetchTrigger,
-    refetchTrigger,
+const CreateBooks: React.FC<CreateBooksProps> = ({
+    refetch,
     handleCancelation,
 }) => {
     const { themeQuery, publisherQuery } = useApiContext();
-    const BASE_URL = import.meta.env.VITE_BASE_URL;
     const { author, getConfig } = useAuth();
     const [selectThemeValue, setSelectThemeValue] = useState('');
     const [bookPublicationDateValue, setBookPublicationDateValue] =
@@ -62,7 +60,7 @@ const CreateBooks: React.FC<RefetchTriggerProps> = ({
             'light',
         );
     };
-    const createBookMutation = useCreateMutation({
+    const { mutateAsync } = useCreateMutation({
         dataUrl: 'books',
         dataType: 'book',
     });
@@ -88,9 +86,8 @@ const CreateBooks: React.FC<RefetchTriggerProps> = ({
         };
 
         /**Here I'm using a custom hook to trigger react-query's useMutation */
-        await createBookMutation.mutateAsync(mutationPayload);
-
-        setRefetchTrigger(true);
+        await mutateAsync(mutationPayload);
+        refetch;
         handleCancelation?.();
     };
 
