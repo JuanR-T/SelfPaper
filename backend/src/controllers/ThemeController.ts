@@ -5,7 +5,7 @@ import Theme from '../models/Theme';
 export const getThemes = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const theme = await Theme.find({});
@@ -20,7 +20,7 @@ export const getThemes = async (
 export const getThemeById = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
@@ -45,7 +45,7 @@ export const getThemeById = async (
 export const createTheme = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const newTheme = await Theme.create(req.body);
@@ -60,7 +60,7 @@ export const createTheme = async (
 export const deleteTheme = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
@@ -85,7 +85,7 @@ export const deleteTheme = async (
 export const updateTheme = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const { id } = req.params;

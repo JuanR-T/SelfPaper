@@ -20,8 +20,8 @@ export const checkPublisherService = async (req: Request): Promise<boolean> => {
 
         const requestPublishers: PublisherRequestBody =
             req.body.publisher || [];
-        console.log("requestPublishers", requestPublishers)
-        console.log("publishers", publishers)
+        console.log('requestPublishers', requestPublishers);
+        console.log('publishers', publishers);
         const hasSameService = publishers.some((publisher) => {
             return (
                 publisher._id.equals(requestPublishers._id) &&
@@ -32,7 +32,7 @@ export const checkPublisherService = async (req: Request): Promise<boolean> => {
                 )
             );
         });
-        console.log("hasSameService", hasSameService);
+        console.log('hasSameService', hasSameService);
         return hasSameService;
     } catch (error) {
         console.error(error);

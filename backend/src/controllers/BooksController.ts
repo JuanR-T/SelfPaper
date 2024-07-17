@@ -7,7 +7,7 @@ import Theme from '../models/Theme';
 export const getBooks = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const book = await Books.find({});
@@ -45,7 +45,7 @@ export const getBooks = async (
 export const createBook = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const newBook = await Books.create(req.body);
@@ -60,7 +60,7 @@ export const createBook = async (
 export const updateBook = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
@@ -81,7 +81,7 @@ export const updateBook = async (
 export const deleteBook = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const { id } = req.params;

@@ -9,6 +9,7 @@ import { themeRoutes } from './routes/ThemeRoutes';
 
 import cors from 'cors';
 import errorHandlingMiddleware from './middleware/errorHandlingMiddleware';
+import verifyTokenMiddleware from './middleware/verifyTokenMiddleware';
 const app = express();
 const PORT = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
@@ -32,12 +33,12 @@ app.use(
 );
 //TODO make a sharp package middleware to handle global image resizing.
 
-app.use('/api/publication', publicationRoutes());
-app.use('/api/publisher', publisherRoutes());
-app.use('/api/author', authorRoutes());
-app.use('/api/theme', themeRoutes());
-app.use('/api/image', imagesRoutes());
-app.use('/api/books', booksRoutes());
+app.use('/api/publication', verifyTokenMiddleware, publicationRoutes());
+app.use('/api/publisher', verifyTokenMiddleware, publisherRoutes());
+app.use('/api/author', verifyTokenMiddleware, authorRoutes());
+app.use('/api/theme', verifyTokenMiddleware, themeRoutes());
+app.use('/api/image', verifyTokenMiddleware, imagesRoutes());
+app.use('/api/books', verifyTokenMiddleware, booksRoutes());
 
 app.use(errorHandlingMiddleware);
 

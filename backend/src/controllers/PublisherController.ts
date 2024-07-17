@@ -5,7 +5,7 @@ import Publisher from '../models/Publisher';
 export const getPublisher = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const publisher = await Publisher.find({});
@@ -21,7 +21,7 @@ export const getPublisher = async (
 export const getPublisherById = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
@@ -46,7 +46,7 @@ export const getPublisherById = async (
 export const createPublisher = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const newPublisher = await Publisher.create(req.body);
@@ -62,7 +62,7 @@ export const createPublisher = async (
 export const deletePublisher = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
@@ -89,7 +89,7 @@ export const deletePublisher = async (
 export const updatePublisher = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
