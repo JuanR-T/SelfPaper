@@ -9,7 +9,7 @@ import { checkPublisherService } from '../utils/publisherHasSameService';
 export const getPublication = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     //TODO return the matching publisher services from the publication, it returns everything now
     try {
@@ -20,7 +20,9 @@ export const getPublication = async (
             publication.map(async (publication) => {
                 const author = await Author.findById(publication.author);
                 const theme = await Theme.findById(publication.theme);
-                const publisher = await Publisher.findById(publication.publisher?._id);
+                const publisher = await Publisher.findById(
+                    publication.publisher?._id,
+                );
                 if (publisher) {
                     publisher.service = publication.publisher?.service;
                 }
@@ -50,7 +52,7 @@ export const getPublication = async (
 export const getPublicationById = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
@@ -75,7 +77,7 @@ export const getPublicationById = async (
 export const createPublication = async (
     req: any,
     res: any,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const hasSameService = await checkPublisherService(req);
@@ -85,7 +87,7 @@ export const createPublication = async (
             );
         }
         const newPublication = await Publication.create(req.body);
-        console.log("newPublication", newPublication)
+        console.log('newPublication', newPublication);
         if (!newPublication)
             throw new Error('Publication could not be created. Wrong params');
 
@@ -100,7 +102,7 @@ export const createPublication = async (
 export const updatePublication = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
@@ -139,7 +141,7 @@ export const updatePublication = async (
 export const deletePublication = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const { id } = req.params;

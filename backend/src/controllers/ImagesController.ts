@@ -5,8 +5,8 @@ import Images from '../models/Images';
 export const getImages = async (
     req: Request,
     res: Response,
-    next: NextFunction
-): Promise<Response | undefined> => {
+    next: NextFunction,
+): Promise<Response | undefined> => {
     try {
         const images = await Images.find({});
         if (!images) throw new Error('Could not find any images');
@@ -19,8 +19,8 @@ export const getImages = async (
 export const getImageById = async (
     req: Request,
     res: Response,
-    next: NextFunction
-): Promise<Response | undefined> => {
+    next: NextFunction,
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id) throw new Error('Could not get image by id. Wrong id.');
@@ -48,8 +48,8 @@ const upload = multer({ storage: storage });
 export const uploadImage = async (
     req: Request,
     res: Response,
-    next: NextFunction
-): Promise<Response | undefined> => {
+    next: NextFunction,
+): Promise<Response | undefined> => {
     try {
         upload.single('image');
         const imageUrl = req?.body?.image;
@@ -73,8 +73,8 @@ export const uploadImage = async (
 export const deleteImage = async (
     req: Request,
     res: Response,
-    next: NextFunction
-): Promise<Response | undefined> => {
+    next: NextFunction,
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id) throw new Error('Could not delete image. Wrong id.');
@@ -91,8 +91,8 @@ export const deleteImage = async (
 export const updateImage = async (
     req: Request,
     res: Response,
-    next: NextFunction
-): Promise<Response | undefined> => {
+    next: NextFunction,
+): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
         if (!id) throw new Error('Could not update image. Wrong id.');

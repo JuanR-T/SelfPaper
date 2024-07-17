@@ -6,7 +6,7 @@ import Author from '../models/Author';
 export const getAuthors = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const author = await Author.find({});
@@ -21,7 +21,7 @@ export const getAuthors = async (
 export const getAuthorById = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
@@ -32,14 +32,14 @@ export const getAuthorById = async (
 
         return res.status(200).json({ data: { found: true, authorById } });
     } catch (err) {
-        next(err)
+        next(err);
     }
 };
 
 export const createAuthor = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const existingAuthor = await Author.findOne({ email: req.body.email });
@@ -74,7 +74,8 @@ export const createAuthor = async (
             .status(200)
             .json({ data: { created: true, newAuthor, token } });
     } catch (err) {
-        next(err)   }
+        next(err);
+    }
 };
 
 //TODO make a middleware to check if there's doublons
@@ -82,7 +83,7 @@ export const createAuthor = async (
 export const loginAuthor = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const { email, password } = req.body;
@@ -116,13 +117,14 @@ export const loginAuthor = async (
         );
         return res.status(200).json({ data: { authenticated: true, token } });
     } catch (err) {
-        next(err)   }
+        next(err);
+    }
 };
 
 export const deleteAuthor = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
@@ -133,13 +135,14 @@ export const deleteAuthor = async (
 
         return res.status(200).json({ data: { deleted: true, deletedAuthor } });
     } catch (err) {
-        next(err)   }
+        next(err);
+    }
 };
 
 export const updateAuthor = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
         const { id } = req.params;
@@ -151,5 +154,6 @@ export const updateAuthor = async (
 
         return res.status(200).json({ data: { updated: true, updatedAuthor } });
     } catch (err) {
-        next(err)   }
+        next(err);
+    }
 };
