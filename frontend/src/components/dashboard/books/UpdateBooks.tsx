@@ -21,13 +21,11 @@ const UpdateBooks = ({
     dayjs.extend(customParseFormat);
     dayjs.locale('fr');
 
-    const { mutateAsync } = useUpdateMutation(
-        {
-            dataUrl: 'books',
-            dataType: 'book',
-            dataId: editingRowData._id
-        }
-    );
+    const { mutateAsync } = useUpdateMutation({
+        dataUrl: 'books',
+        dataType: 'book',
+        dataId: editingRowData._id,
+    });
     const handleEditBookRow = (record: Book) => {
         setIsEditingBooks(true);
         setEditingRowData({ ...record });

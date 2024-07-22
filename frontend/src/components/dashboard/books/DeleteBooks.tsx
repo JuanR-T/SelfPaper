@@ -24,10 +24,10 @@ const DeleteBooks = ({
     const { mutateAsync } = useDeleteMutation({
         dataUrl: 'books',
         dataType: 'book',
-        dataId: record._id
-    })
+        dataId: record._id,
+    });
     const deleteBook = async (record: Book) => {
-        await mutateAsync({ data: { ...record } })
+        await mutateAsync({ data: { ...record } });
         hide();
         refetch;
     };

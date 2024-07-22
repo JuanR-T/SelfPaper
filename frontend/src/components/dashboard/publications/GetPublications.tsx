@@ -13,11 +13,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useApiContext } from '../../../context/ApiContext';
 import { useAuth } from '../../../context/AuthContext';
-import {
-    Author,
-    Publication,
-    Publisher
-} from '../../../types/types';
+import { Author, Publication, Publisher } from '../../../types/types';
 import ModalProvider from '../../utils/ModalProvider';
 import CreatePublication from './CreatePublications';
 import DeletePublications from './DeletePublications';
@@ -25,7 +21,8 @@ import UpdatePublications from './UpdatePublications';
 
 const GetPublications: React.FC = () => {
     const { getConfig, author } = useAuth();
-    const { publicationQuery, imageQuery, publisherQuery, themeQuery } = useApiContext();
+    const { publicationQuery, imageQuery, publisherQuery, themeQuery } =
+        useApiContext();
 
     const [refetchTrigger, setRefetchTrigger] = useState(false);
     const [selectThemeValue, setSelectThemeValue] = useState('');
@@ -68,8 +65,8 @@ const GetPublications: React.FC = () => {
             lastName: '',
             email: '',
             password: '',
-            phoneNumber: ''
-        }
+            phoneNumber: '',
+        },
     });
 
     const publications = publicationQuery?.data?.data?.publications;
@@ -326,9 +323,7 @@ const GetPublications: React.FC = () => {
                         ))}
                     </Select>
                 ) : (
-                    record.publisher.title +
-                    ' / ' +
-                    record.publisher.service
+                    record.publisher.title + ' / ' + record.publisher.service
                 );
             },
         },
@@ -373,14 +368,12 @@ const GetPublications: React.FC = () => {
         <div style={{ width: '100%' }}>
             <h2>Mes Publications</h2>
             <div>
-                {imageQuery?.data?.data?.images?.map(
-                    (item) => (
-                        <>
-                            <span>{item.title}</span>
-                            <img src={item.image} alt="Image" />
-                        </>
-                    ),
-                )}
+                {imageQuery?.data?.data?.images?.map((item) => (
+                    <>
+                        <span>{item.title}</span>
+                        <img src={item.image} alt="Image" />
+                    </>
+                ))}
             </div>
             <ModalProvider
                 modalContent={({ handleCancelation }) => (

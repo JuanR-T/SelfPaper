@@ -1,11 +1,6 @@
 import { createContext, PropsWithChildren, useContext } from 'react';
-import {
-    useQuery,
-    UseQueryResult
-} from 'react-query';
-import {
-    handleGet
-} from '../api/handleCall';
+import { useQuery, UseQueryResult } from 'react-query';
+import { handleGet } from '../api/handleCall';
 import toastProvider from '../lib/toastProvider';
 import {
     ApiContextType,
@@ -13,7 +8,7 @@ import {
     ImagesQueryResponse,
     PublicationQueryResponse,
     PublisherQueryResponse,
-    ThemeQueryResponse
+    ThemeQueryResponse,
 } from '../types/types';
 import { useAuth } from './AuthContext';
 
@@ -43,8 +38,9 @@ export const ApiContextProvider = ({ children }: PropsWithChildren) => {
             return response.data;
         });
 
-    const bookQuery: UseQueryResult<BooksQueryResponse, Error> =
-        useQuery('get_books', async () => {
+    const bookQuery: UseQueryResult<BooksQueryResponse, Error> = useQuery(
+        'get_books',
+        async () => {
             const response = await handleGet(
                 `${BASE_URL}/api/books`,
                 getConfig(),
@@ -59,7 +55,8 @@ export const ApiContextProvider = ({ children }: PropsWithChildren) => {
                 return undefined;
             }
             return response.data;
-        });
+        },
+    );
 
     const publisherQuery: UseQueryResult<PublisherQueryResponse, Error> =
         useQuery('get_publishers', async () => {
@@ -79,8 +76,9 @@ export const ApiContextProvider = ({ children }: PropsWithChildren) => {
             return response.data;
         });
 
-    const themeQuery: UseQueryResult<ThemeQueryResponse, Error> =
-        useQuery('get_themes', async () => {
+    const themeQuery: UseQueryResult<ThemeQueryResponse, Error> = useQuery(
+        'get_themes',
+        async () => {
             const response = await handleGet(
                 `${BASE_URL}/api/theme`,
                 getConfig(),
@@ -95,7 +93,8 @@ export const ApiContextProvider = ({ children }: PropsWithChildren) => {
                 return undefined;
             }
             return response.data;
-        });
+        },
+    );
 
     const imageQuery: UseQueryResult<ImagesQueryResponse, Error> = useQuery(
         'get_images',
@@ -124,7 +123,7 @@ export const ApiContextProvider = ({ children }: PropsWithChildren) => {
                 bookQuery,
                 publisherQuery,
                 imageQuery,
-                themeQuery
+                themeQuery,
             }}
         >
             {children}
