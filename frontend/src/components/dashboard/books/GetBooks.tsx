@@ -22,7 +22,6 @@ import DeleteBooks from './DeleteBooks';
 import UpdateBooks from './UpdateBooks';
 
 const GetBooks = () => {
-
     dayjs.extend(customParseFormat);
     dayjs.locale('fr');
     const { bookQuery, publisherQuery, imageQuery } = useApiContext();
@@ -39,10 +38,7 @@ const GetBooks = () => {
     const [isBookDateEdited, setIsBookDateEdited] = useState<boolean>(false);
 
     const booksQueryResult = bookQuery?.data?.data?.books;
-    const currentBooksDisplayed = booksQueryResult?.slice(
-        startIndex,
-        endIndex,
-    );
+    const currentBooksDisplayed = booksQueryResult?.slice(startIndex, endIndex);
     const bookInitialState = {
         _id: '',
         title: '',

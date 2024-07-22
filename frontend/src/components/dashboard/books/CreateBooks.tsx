@@ -17,7 +17,12 @@ import { useAuth } from '../../../context/AuthContext';
 import useCreateMutation from '../../../hooks/useCreateMutation';
 import Capitalize from '../../../lib/capitalizeLetter';
 import toastProvider from '../../../lib/toastProvider';
-import { Book, CreateBooksProps, MutationPayload, Publisher } from '../../../types/types';
+import {
+    Book,
+    CreateBooksProps,
+    MutationPayload,
+    Publisher,
+} from '../../../types/types';
 
 const CreateBooks: React.FC<CreateBooksProps> = ({
     refetch,
@@ -82,7 +87,7 @@ const CreateBooks: React.FC<CreateBooksProps> = ({
                     image: '',
                 },
             },
-            config: getConfig()
+            config: getConfig(),
         };
 
         /**Here I'm using a custom hook to trigger react-query's useMutation */

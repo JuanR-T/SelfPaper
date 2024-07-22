@@ -30,46 +30,42 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     });
     const loginMutation = useLoginMutation({
         dataUrl: 'author',
-        dataType: 'auteur'
-    })
+        dataType: 'auteur',
+    });
     const signUpMutation = useCreateMutation({
         dataUrl: 'author',
-        dataType: 'Utilisateur'
-    })
+        dataType: 'Utilisateur',
+    });
 
     const logIn: LogInType = async (credentials) => {
-        const { email, password } = credentials
+        const { email, password } = credentials;
         try {
-            const author = await loginMutation.mutateAsync({ data: { email, password } });
-            console.log("this is author", author);
+            const author = await loginMutation.mutateAsync({
+                data: { email, password },
+            });
+            console.log('this is author', author);
             setItem('token', author?.data?.token || '');
             getAuthorFromToken(author?.data?.token || '');
 
             navigate('/dashboard');
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     };
 
     const signUp: SignUpType = async (userInfo) => {
-        const { firstName,
-            lastName,
-            email,
-            phoneNumber,
-            password } = userInfo
+        const { firstName, lastName, email, phoneNumber, password } = userInfo;
 
         try {
-            const signUp = await signUpMutation.mutateAsync(
-                {
-                    data: {
-                        firstName,
-                        lastName,
-                        email,
-                        phoneNumber,
-                        password,
-                    }
+            const signUp = await signUpMutation.mutateAsync({
+                data: {
+                    firstName,
+                    lastName,
+                    email,
+                    phoneNumber,
+                    password,
                 },
-            )
+            });
 
             getAuthorFromToken(signUp?.data?.token || '');
             setItem('token', signUp?.data?.token || '');
@@ -110,7 +106,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
     useEffect(() => {
         const authorToken = getItem('token');
-        console.log("this executes everywhere")
+        console.log('this executes everywhere');
         if (authorToken) {
             getAuthorFromToken(authorToken);
         } else {

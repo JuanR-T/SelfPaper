@@ -17,7 +17,12 @@ import { useAuth } from '../../../context/AuthContext';
 import useCreateMutation from '../../../hooks/useCreateMutation';
 import Capitalize from '../../../lib/capitalizeLetter';
 import toastProvider from '../../../lib/toastProvider';
-import { CreatePublicationProps, MutationPayload, Publication, Publisher } from '../../../types/types';
+import {
+    CreatePublicationProps,
+    MutationPayload,
+    Publication,
+    Publisher,
+} from '../../../types/types';
 
 const CreatePublication: React.FC<CreatePublicationProps> = ({
     refetch,
@@ -61,11 +66,11 @@ const CreatePublication: React.FC<CreatePublicationProps> = ({
     };
     const { mutateAsync } = useCreateMutation({
         dataUrl: 'publication',
-        dataType: 'publication'
-    })
+        dataType: 'publication',
+    });
 
     const onSubmit = async (values: Publication) => {
-        console.log("this is author", author)
+        console.log('this is author', author);
         const mutationPayload: MutationPayload = {
             data: {
                 title: values.title,
@@ -92,7 +97,7 @@ const CreatePublication: React.FC<CreatePublicationProps> = ({
                     phoneNumber: '',
                 },
             },
-            config: getConfig()
+            config: getConfig(),
         };
         await mutateAsync(mutationPayload);
         refetch;

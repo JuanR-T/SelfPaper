@@ -13,7 +13,7 @@ const LoginForm: React.FC = () => {
     }
 
     const onFinish = async (values: any) => {
-        console.log("these are values", values);
+        console.log('these are values', values);
         if (!logIn) return null;
         logIn({ email: values.email, password: values.password });
     };
@@ -62,10 +62,7 @@ const LoginForm: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                        >
+                        <Button type="primary" htmlType="submit">
                             Connexion
                         </Button>
                     </Form.Item>
