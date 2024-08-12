@@ -99,6 +99,7 @@ const CreatePublication: React.FC<CreatePublicationProps> = ({
             },
             config: getConfig(),
         };
+        console.log("mutationPayload", mutationPayload)
         await mutateAsync(mutationPayload);
         refetch;
         handleCancelation?.();
