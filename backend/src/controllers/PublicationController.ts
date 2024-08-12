@@ -80,6 +80,7 @@ export const createPublication = async (
     next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
+        console.log("this req.body", req.body)
         const hasSameService = await checkPublisherService(req);
         if (!hasSameService) {
             throw new Error(

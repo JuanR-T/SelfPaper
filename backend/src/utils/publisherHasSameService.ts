@@ -17,7 +17,6 @@ export const checkPublisherService = async (req: Request): Promise<boolean> => {
                 'Publisher not found. Cannot create publication. Try to create a publisher first',
             );
         }
-
         const requestPublishers: PublisherRequestBody =
             req.body.publisher || [];
         console.log('requestPublishers', requestPublishers);
