@@ -2,14 +2,12 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 const verifyToken =
-    (requireAuth: boolean) =>
+    //(requireAuth: boolean) =>
     (req: Request, res: Response, next: NextFunction) => {
-        //console.log("Im inside bebe")
         const token = req.header('Authorization')?.replace('Bearer ', '');
-        //console.log("this is the token :", token)
-        if (!requireAuth) {
-            return next();
-        }
+        // if (!requireAuth) {
+        //     return next();
+        // }
 
         if (!token) {
             return res.status(401).json({ message: 'No token provided' });

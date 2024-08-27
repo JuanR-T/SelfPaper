@@ -1,20 +1,21 @@
 import express from 'express';
 import {
-    getAuthors,
-    getAuthorById,
     createAuthor,
     deleteAuthor,
-    updateAuthor,
+    getAuthorById,
+    getAuthors,
     loginAuthor,
+    updateAuthor,
 } from '../controllers/AuthorController';
+import verifyToken from '../middleware/verifyTokenMiddleware';
 
 export const authorRoutes = () => {
     const router = express.Router();
     router.get('/', getAuthors);
     router.get('/:id', getAuthorById);
-    router.post('/create', createAuthor);
-    router.delete('/delete/:id', deleteAuthor);
-    router.put('/update/:id', updateAuthor);
+    router.post('/create', verifyToken, createAuthor);
+    router.delete('/delete/:id', verifyToken, deleteAuthor);
+    router.put('/update/:id', verifyToken, updateAuthor);
     router.post('/login', loginAuthor);
 
     return router;

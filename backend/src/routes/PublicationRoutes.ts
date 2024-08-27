@@ -12,9 +12,9 @@ export const publicationRoutes = () => {
     const router = express.Router();
     router.get('/', getPublication);
     router.get('/:id', getPublicationById);
-    router.post('/create', verifyToken(true), createPublication);
-    router.put('/update/:id', verifyToken(true), updatePublication);
-    router.delete('/delete/:id', verifyToken(true), deletePublication);
+    router.post('/create', verifyToken, createPublication);
+    router.put('/update/:id', verifyToken, updatePublication);
+    router.delete('/delete/:id', verifyToken, deletePublication);
 
     return router;
 };
