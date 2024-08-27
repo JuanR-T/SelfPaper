@@ -18,13 +18,13 @@ const axiosInstance = axios.create({
 /** This interceptor will logout user and delete token if it's outdated */
 axiosInstance.interceptors.response.use(
     (response: AxiosResponse) => {
-        console.log("Am I interupting post", response);
+        console.log("im intercepted")
 
         return response;
     },
     
-    async (error: AxiosError) => {
-        console.log("401 catched")
+    (error: AxiosError) => {
+        console.log("401 catched", error.response)
         if (error.response && error.response.status === 401) {
             console.warn("Unauthorized! Token might be invalid or expired.");
             localStorage.removeItem('token');
@@ -40,7 +40,7 @@ export const handleGet: QueryApi = async (
     config
 ) => {
     try {
-        const res = await axios.get<TData>(url, config ?? defaultConfig)
+        const res = await axiosInstance.get<TData>(url, config ?? defaultConfig)
         return res;
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
@@ -57,7 +57,7 @@ export const handlePost: MutateApi = async (
     console.log("handlePostHere", {data, config})
     try {
         console.log("inside handlePOst")
-        const res = await axios.post<any>(url, data, config);
+        const res = await axiosInstance.post<any>(url, data, config);
         console.log("this is res publication", res)
         return res;
     } catch (error) {
@@ -73,7 +73,7 @@ export const handlePut: MutateApi  = async (
     {data, config,}
 ) => {
     try {
-        const res = await axios.put<TData>(url, data, config ?? defaultConfig)
+        const res = await axiosInstance.put<TData>(url, data, config ?? defaultConfig)
         return res;
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
@@ -88,7 +88,7 @@ export const handleDelete: MutateApi  = async (
     {data, config,}
 ) => {
     try {
-        const res = await axios.delete<TData>(url, config ?? defaultConfig);
+        const res = await axiosInstance.delete<TData>(url, config ?? defaultConfig);
         return res; 
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
