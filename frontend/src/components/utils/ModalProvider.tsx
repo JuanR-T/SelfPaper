@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Button, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { Button, Modal } from 'antd';
+import React, { useState } from 'react';
 interface ModalProviderProps {
     modalContent: (props: { handleCancelation: () => void }) => React.ReactNode;
     contentContext: string;
@@ -33,7 +33,7 @@ const ModalProvider: React.FC<ModalProviderProps> = ({
             </Button>
             <Modal
                 className="modal-provider"
-                visible={isModalOpen}
+                open={isModalOpen}
                 onOk={handleValidation}
                 onCancel={handleCancelation}
                 footer={[]}

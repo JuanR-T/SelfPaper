@@ -26,7 +26,6 @@ const GetBooks = () => {
     dayjs.locale('fr');
     const { bookQuery, publisherQuery, imageQuery } = useApiContext();
     const { author } = useAuth();
-
     const [currentPage, setCurrentPage] = useState<number>(1);
     const booksPerPage = 10;
     const startIndex = (currentPage - 1) * booksPerPage;
@@ -38,6 +37,7 @@ const GetBooks = () => {
     const [isBookDateEdited, setIsBookDateEdited] = useState<boolean>(false);
 
     const booksQueryResult = bookQuery?.data?.data?.books;
+    //console.log(booksQueryResult, "booksQueryResult")
     const currentBooksDisplayed = booksQueryResult?.slice(startIndex, endIndex);
     const bookInitialState = {
         _id: '',
@@ -45,7 +45,7 @@ const GetBooks = () => {
         description: '',
         link: '',
         bookPublicationDate: '',
-        bookAuthor: author?.id,
+        bookAuthor: author?._id,
         bookPublisher: {
             _id: '',
             title: '',

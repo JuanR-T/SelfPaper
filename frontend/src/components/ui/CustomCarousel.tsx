@@ -1,17 +1,16 @@
+import {
+    FileTextOutlined,
+    LeftCircleOutlined,
+    RightCircleOutlined,
+    TagOutlined,
+} from '@ant-design/icons';
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { handleGet } from '../../api/handleCall';
-import toastProvider from '../../lib/toastProvider';
-import { PublicationApiResponse } from '../../types/types';
 import { useAuth } from '../../context/AuthContext';
-import {
-    FileTextOutlined,
-    TagOutlined,
-    LeftCircleOutlined,
-    RightCircleOutlined,
-} from '@ant-design/icons';
-import { Publication } from '../../types/types';
 import Capitalize from '../../lib/capitalizeLetter';
+import toastProvider from '../../lib/toastProvider';
+import { Publication, PublicationQueryResponse } from '../../types/types';
 
 const CustomCarousel = () => {
     const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -43,12 +42,11 @@ const CustomCarousel = () => {
     );
 
     const publications =
-        (useQueryPublications?.data as PublicationApiResponse)?.publications ||
-        [];
+        (useQueryPublications?.data as unknown as PublicationQueryResponse)
+            ?.data?.publications || [];
     const currentPublicationData = publicationsCarousel?.find(
         (publication) => publication.position === 'current',
     );
-
     useEffect(() => {
         if (publications.length > 0) {
             const prevIndex =
@@ -91,12 +89,11 @@ const CustomCarousel = () => {
                                 <p>{currentPublicationData.description}</p>
                                 <div className="carousel-publication-origin">
                                     {Capitalize(
-                                        currentPublicationData.publisher[0]
-                                            .type,
+                                        currentPublicationData.publisher.type,
                                     ) + ' '}
-                                    {currentPublicationData.publisher[0].title}
+                                    {currentPublicationData.publisher.title}
                                     {' : ' +
-                                        currentPublicationData.publisher[1]
+                                        currentPublicationData.publisher
                                             .service}
                                     <span>
                                         <FileTextOutlined />{' '}
