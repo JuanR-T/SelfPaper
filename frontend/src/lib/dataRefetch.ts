@@ -6,7 +6,6 @@ const dataRefetch = (dataType: string): DataRefetchProps => {
 
     switch (dataType) {
         case 'book':
-            console.log('im in')
             return bookQuery;
         case 'publication':
             return publicationQuery;
