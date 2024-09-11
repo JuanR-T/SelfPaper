@@ -42,8 +42,8 @@ const CustomCarousel = () => {
     );
 
     const publications =
-        (useQueryPublications?.data as unknown as PublicationQueryResponse)?.data?.publications ||
-        [];
+        (useQueryPublications?.data as unknown as PublicationQueryResponse)
+            ?.data?.publications || [];
     const currentPublicationData = publicationsCarousel?.find(
         (publication) => publication.position === 'current',
     );
@@ -93,7 +93,8 @@ const CustomCarousel = () => {
                                     ) + ' '}
                                     {currentPublicationData.publisher.title}
                                     {' : ' +
-                                        currentPublicationData.publisher.service}
+                                        currentPublicationData.publisher
+                                            .service}
                                     <span>
                                         <FileTextOutlined />{' '}
                                         {' ' + currentPublicationData.type}
