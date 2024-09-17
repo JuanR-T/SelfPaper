@@ -234,7 +234,7 @@ export interface Book {
 
 export interface UpdateBooksProps{
     record: Book;
-    refetch: Promise<QueryObserverResult<BooksQueryResponse, Error>>;
+    refetch: () => Promise<QueryObserverResult<BooksQueryResponse, Error>>;
     bookInitialState: SetStateAction<Book>;
     isBookDateEdited: boolean;
     setIsBookDateEdited: Dispatch<SetStateAction<boolean>>
@@ -249,12 +249,12 @@ export interface UpdateBooksProps{
 
 export interface DeleteBooksProps {
     record: Book;
-    refetch: Promise<QueryObserverResult<BooksQueryResponse, Error>>;
+    refetch: () => Promise<QueryObserverResult<BooksQueryResponse, Error>>;
     editingRowId: string | null;
     setEditingRowId: Dispatch<SetStateAction<string | null>>;
 }
 
 export interface CreateBooksProps {
-    refetch: Promise<QueryObserverResult<BooksQueryResponse, Error>>;
+    refetch: () => Promise<QueryObserverResult<BooksQueryResponse, Error>>;
     handleCancelation?: (() => void | undefined) | undefined;
 }
