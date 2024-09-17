@@ -1,12 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { MutateApi, QueryApi, TData } from "../types/types";
 
-const defaultConfig = {
-    headers: {
-        "Content-Type": "application/json",
-    },
-};
-
 const axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
     headers: {
@@ -14,11 +8,21 @@ const axiosInstance = axios.create({
     },
 });
 
+/** This interceptor attachs token to post, put and delete methods */
+axiosInstance.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token && ['post', 'put', 'delete'].includes(config.method?.toLowerCase() || '')) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
 
 /** This interceptor will logout user and delete token if it's outdated */
 axiosInstance.interceptors.response.use(
     (response: AxiosResponse) => {
-        console.log("im intercepted")
 
         return response;
     },
@@ -28,7 +32,6 @@ axiosInstance.interceptors.response.use(
         if (error.response && error.response.status === 401) {
             console.warn("Unauthorized! Token might be invalid or expired.");
             localStorage.removeItem('token');
-            console.log("token deleted")
             window.location.href = "/login";
         }
         return Promise.reject(error);
@@ -40,7 +43,7 @@ export const handleGet: QueryApi = async (
     config
 ) => {
     try {
-        const res = await axiosInstance.get<TData>(url, config ?? defaultConfig)
+        const res = await axiosInstance.get<TData>(url, config)
         return res;
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
@@ -73,7 +76,7 @@ export const handlePut: MutateApi  = async (
     {data, config,}
 ) => {
     try {
-        const res = await axiosInstance.put<TData>(url, data, config ?? defaultConfig)
+        const res = await axiosInstance.put<TData>(url, data, config)
         return res;
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
@@ -88,7 +91,7 @@ export const handleDelete: MutateApi  = async (
     {data, config,}
 ) => {
     try {
-        const res = await axiosInstance.delete<TData>(url, config ?? defaultConfig);
+        const res = await axiosInstance.delete<TData>(url, config);
         return res; 
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
