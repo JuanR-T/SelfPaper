@@ -46,7 +46,7 @@ export interface QueryApi {(
     ): Promise<AxiosResponse<TData>>;
 }
 
-export type ApiDataResponse = Book | Publication | Publisher | Images | Theme | LogInData | SignUpData;
+export type ApiDataResponse = Book | Publication | Publisher | Images | Theme | LogInData | SignUpData | FormData;
 
 export type CapitalizeLetterTypes = string | string[];
 
@@ -166,8 +166,8 @@ export interface Publication {
     title: string,
     description: string,
     link?: string,
-    thumbnail: Buffer | string ,
-    postImage: Buffer | string ,
+    thumbnail?: string,
+    postImage?: string,
     type: string[],
     theme: Theme,
     excerpt: string,
