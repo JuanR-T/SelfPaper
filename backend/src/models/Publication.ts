@@ -4,7 +4,13 @@ const publicationSchema = new Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     link: { type: String },
-    thumbnail: { type: Buffer || String },
+    thumbnail: [
+        {
+            type: SchemaTypes.ObjectId,
+            ref: 'Images',
+            required: false,
+        },
+    ],
     postImage: [
         {
             type: SchemaTypes.ObjectId,
