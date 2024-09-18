@@ -16,7 +16,6 @@ import { useApiContext } from '../../../context/ApiContext';
 import { useAuth } from '../../../context/AuthContext';
 import useCreateMutation from '../../../hooks/useCreateMutation';
 import Capitalize from '../../../lib/capitalizeLetter';
-import toastProvider from '../../../lib/toastProvider';
 import {
     CreatePublicationProps,
     MutationPayload,
@@ -33,76 +32,80 @@ const CreatePublication: React.FC<CreatePublicationProps> = ({
     const [selectThemeValue, setSelectThemeValue] = useState('');
     const [publicationDateValue, setPublicationDateValue] = useState('');
     const [selectPublisherValue, setSelectPublisherValue] = useState<any>({});
+    const [tempImages, setTempImages] = useState<{ thumbnail?: File; postImage?: File }>({});
 
-    const convertToBase64 = (file: File) => {
+    const fileToBase64 = (file: File) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
-
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
             reader.readAsDataURL(file);
-
-            reader.onload = () => {
-                resolve(reader.result as string);
-            };
-
-            reader.onerror = (error) => {
-                reject(error);
-            };
         });
     };
-    const uploadImage = async (file: any) => {
-        const convertedFile = await convertToBase64(file);
-        console.log('convertedFile', convertedFile);
-        console.log('file', file);
-        // await handlePost(`${BASE_URL}/api/image/upload`, {
-        //     title: file.name,
-        //     image: convertedFile,
-        // });
-        toastProvider(
-            'success',
-            "L'image a été upload avec succès.",
-            'bottom-left',
-            'light',
-        );
+
+    const onFileChange = async (file: File, type: 'thumbnail' | 'postImage') => {
+        try {
+            console.log("this is b4 conversion", file)
+            setTempImages(prev => ({ ...prev, [type]: file }));
+            console.log("images", tempImages);
+            return false; // Prevent automatic upload
+        } catch (error) {
+            message.error('Failed to convert file.');
+            return false;
+        }
     };
+
     const { mutateAsync } = useCreateMutation({
         dataUrl: 'publication',
         dataType: 'publication',
     });
 
     const onSubmit = async (values: Publication) => {
-        console.log('this is author', author);
-        const mutationPayload: MutationPayload = {
-            data: {
-                title: values.title,
-                description: values.description,
-                link: values.link,
-                thumbnail: values.thumbnail,
-                postImage: values.postImage,
-                type: values.type,
-                theme: {
-                    _id: selectThemeValue,
-                    title: '',
-                    description: '',
-                    image: '',
+        console.log("these are the images : ", tempImages)
+        try {
+            const thumbnailBase64 = tempImages.thumbnail
+                ? await fileToBase64(tempImages.thumbnail)
+                : '';
+
+            const postImageBase64 = tempImages.postImage
+                ? await fileToBase64(tempImages.postImage)
+                : '';
+
+            const mutationPayload: MutationPayload = {
+                data: {
+                    title: values.title,
+                    description: values.description,
+                    link: values.link,
+                    thumbnail: thumbnailBase64 as string,
+                    postImage: postImageBase64 as string,
+                    type: values.type,
+                    theme: {
+                        _id: selectThemeValue,
+                        title: '',
+                        description: '',
+                        image: '',
+                    },
+                    excerpt: values.excerpt,
+                    publicationDate: publicationDateValue,
+                    publisher: selectPublisherValue,
+                    author: {
+                        _id: author?._id || '',
+                        firstName: '',
+                        lastName: '',
+                        email: '',
+                        password: '',
+                        phoneNumber: '',
+                    },
                 },
-                excerpt: values.excerpt,
-                publicationDate: publicationDateValue,
-                publisher: selectPublisherValue,
-                author: {
-                    _id: author?._id || '',
-                    firstName: '',
-                    lastName: '',
-                    email: '',
-                    password: '',
-                    phoneNumber: '',
-                },
-            },
-            config: getConfig(),
-        };
-        console.log('mutationPayload', mutationPayload);
-        await mutateAsync(mutationPayload);
-        refetch;
-        handleCancelation?.();
+                config: getConfig(),
+            };
+            await mutateAsync(mutationPayload);
+            refetch;
+            handleCancelation?.();
+        } catch (error) {
+            console.error('Error during file conversion or submission:', error);
+            message.error('Failed to submit the form.');
+        }
     };
     return (
         <Row className="creation-form">
@@ -152,21 +155,14 @@ const CreatePublication: React.FC<CreatePublicationProps> = ({
                     dependencies={['typeSwitch', 'selectField', 'inputField']}
                 >
                     <Upload
-                        onChange={(info) => {
-                            if (info.file.status !== 'uploading') {
-                                console.log(info.file, info.fileList);
-                            }
-                            if (info.file.status === 'done') {
-                                message.success(
-                                    `${info.file.name} file uploaded successfully`,
-                                );
-                            } else if (info.file.status === 'error') {
-                                message.error(
-                                    `${info.file.name} file upload failed.`,
-                                );
+                        beforeUpload={(file) => onFileChange(file, 'thumbnail')}
+                        onChange={({ file }) => {
+                            if (file.status === 'done') {
+                                message.success(`${file.name} file uploaded successfully.`);
+                            } else if (file.status === 'error') {
+                                message.error(`${file.name} file upload failed.`);
                             }
                         }}
-                        action="/upload/image"
                         listType="picture"
                     >
                         <Button icon={<UploadOutlined />}>Upload</Button>
@@ -184,22 +180,12 @@ const CreatePublication: React.FC<CreatePublicationProps> = ({
                     dependencies={['typeSwitch', 'selectField', 'inputField']}
                 >
                     <Upload
-                        beforeUpload={(file) => {
-                            uploadImage(file);
-                            return false;
-                        }}
-                        onChange={(info) => {
-                            if (info.file.status !== 'uploading') {
-                                console.log(info.file, info.fileList);
-                            }
-                            if (info.file.status === 'done') {
-                                message.success(
-                                    `${info.file.name} file uploaded successfully`,
-                                );
-                            } else if (info.file.status === 'error') {
-                                message.error(
-                                    `${info.file.name} file upload failed.`,
-                                );
+                        beforeUpload={(file) => onFileChange(file, 'postImage')}
+                        onChange={({ file }) => {
+                            if (file.status === 'done') {
+                                message.success(`${file.name} file uploaded successfully.`);
+                            } else if (file.status === 'error') {
+                                message.error(`${file.name} file upload failed.`);
                             }
                         }}
                         listType="picture"

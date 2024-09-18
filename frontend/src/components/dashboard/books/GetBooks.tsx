@@ -300,7 +300,7 @@ const GetBooks = () => {
                             bookInitialState={bookInitialState}
                             isBookDateEdited={isBookDateEdited}
                             setIsBookDateEdited={setIsBookDateEdited}
-                            refetch={bookQuery.refetch()}
+                            refetch={() => bookQuery.refetch()}
                             books={booksQueryResult}
                             isEditingBooks={isEditingBooks}
                             editingRowId={editingRowId}
@@ -312,7 +312,7 @@ const GetBooks = () => {
 
                         <DeleteBooks
                             record={record}
-                            refetch={bookQuery.refetch()}
+                            refetch={() => bookQuery.refetch()}
                             editingRowId={editingRowId}
                             setEditingRowId={setEditingRowId}
                         />
@@ -329,7 +329,7 @@ const GetBooks = () => {
                 modalContent={({ handleCancelation }) => (
                     <CreateBooks
                         handleCancelation={handleCancelation}
-                        refetch={bookQuery.refetch()}
+                        refetch={() => bookQuery.refetch()}
                     />
                 )}
                 contentContext="Ajouter un Livre"
