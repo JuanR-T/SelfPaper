@@ -1,9 +1,8 @@
 import { Schema, SchemaTypes, model } from 'mongoose';
 
 const imageSchema = new Schema({
-    title: { type: String, required: true },
+    type: { type: String, required: true },
     image: { type: Buffer, required: true },
-    type: {type: String, required: true},
     publications: [
         {
             type: SchemaTypes.ObjectId,

@@ -4,6 +4,7 @@ import Author from '../models/Author';
 import Publication from '../models/Publication';
 import Publisher from '../models/Publisher';
 import Theme from '../models/Theme';
+import baseToBufferImage from '../utils/baseToBufferImage';
 import { checkPublisherService } from '../utils/publisherHasSameService';
 
 export const getPublication = async (
@@ -80,21 +81,66 @@ export const createPublication = async (
     next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
-        console.log('this are images', req.body.postImage, req.body.thumbnail);
+        console.log('Received body', req.body);
+        console.log('Received files', req.files);
+
         const hasSameService = await checkPublisherService(req);
         if (!hasSameService) {
             throw new Error(
                 'Publisher service from request does not match existing publisher service',
             );
         }
-        const newPublication = await Publication.create(req.body);
-        console.log('newPublication', newPublication);
-        if (!newPublication)
-            throw new Error('Publication could not be created. Wrong params');
 
-        return res
-            .status(200)
-            .json({ data: { created: true, newPublication } });
+        // Access form fields from req.body
+
+        // Access the files from req.files
+        const thumbnail = req.files.thumbnail ? req.files.thumbnail[0] : null;
+        const postImage = req.files.postImage ? req.files.postImage[0] : null;
+        const publisher = req.body.publisher ? JSON.parse(req.body.publisher) : null;
+        console.log("publishergourou", publisher)
+        const author = req.body.author ? JSON.parse(req.body.author) : null;
+        const publicationThumbnail = thumbnail
+            ? await baseToBufferImage(thumbnail.buffer, 'thumbnail')
+            : null;
+
+        const publicationPostImage = postImage
+            ? await baseToBufferImage(postImage.buffer, 'postImage')
+            : null;
+
+        console.log("publicationThumbnail", publicationThumbnail);
+        console.log("publicationPostImage", publicationPostImage);
+
+        
+        const { title, description, link, type, theme, excerpt, publicationDate } = req.body;
+
+        const newPublication = await Publication.create({
+            title,
+            description,
+            link,
+            type,
+            theme,
+            excerpt,
+            publicationDate,
+            publisher,
+            author,
+            thumbnail: publicationThumbnail ? [publicationThumbnail._id] : [],
+            postImage: publicationPostImage ? [publicationPostImage._id] : [],
+        });
+
+        if (publicationThumbnail && newPublication) {
+            publicationThumbnail.publications.push(newPublication._id);
+            await publicationThumbnail.save();
+        }
+
+        if (publicationPostImage && newPublication) {
+            publicationPostImage.publications.push(newPublication._id);
+            await publicationPostImage.save();
+        }
+
+        console.log('newPublication', newPublication);
+        if (!newPublication) throw new Error('Publication could not be created. Wrong params');
+
+        return res.status(200).json({ data: { created: true, newPublication } });
     } catch (err) {
         next(err);
     }

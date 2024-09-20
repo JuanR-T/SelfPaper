@@ -21,7 +21,7 @@ import UpdatePublications from './UpdatePublications';
 
 const GetPublications: React.FC = () => {
     const { getConfig, author } = useAuth();
-    const { publicationQuery, imageQuery, publisherQuery, themeQuery } =
+    const { publicationQuery, imageQuery, imageByIdQuery, publisherQuery, themeQuery } =
         useApiContext();
 
     const [refetchTrigger, setRefetchTrigger] = useState(false);
@@ -68,6 +68,7 @@ const GetPublications: React.FC = () => {
             phoneNumber: '',
         },
     });
+    const [preprocessedImages, setPreprocessedImages] = useState<Record<string, string | null>>({});
 
     const publications = publicationQuery?.data?.data?.publications;
     const publicationsPerPage = 10;
@@ -76,10 +77,46 @@ const GetPublications: React.FC = () => {
     const currentPublications = publications?.slice(startIndex, endIndex);
     const publishers = publisherQuery?.data?.data?.publisher;
 
+    const preprocessImages = async (publications: Publication[]) => {
+        const imagePromises = publications.flatMap(item =>
+            Array.isArray(item.thumbnail) && item.thumbnail.length > 0
+                ? item.thumbnail.map(id => fetchAndConvertImage(id))
+                : (item.thumbnail ? [fetchAndConvertImage(item.thumbnail)] : [])
+        );
+
+        const imageResults = await Promise.all(imagePromises);
+        console.log(imageResults, "imageResults")
+        const imageMap = imageResults.reduce((acc, { id, src }) => ({ ...acc, [id]: src }), {});
+
+        setPreprocessedImages(prev => ({ ...prev, ...imageMap }));
+    };
+
+
+    const fetchAndConvertImage = async (id: string) => {
+        try {
+            const response = await imageByIdQuery(id);
+            console.log("response", response)
+            const image = response?.data?.imageById[0]?.image;
+            if (image) {
+                //console.log("image", image)
+                const imageData = new Uint8Array(image.data);
+                const base64Image = Buffer.from(imageData).toString('base64');
+                return { id, src: `data:${image.type};base64,${base64Image}` };
+            } else {
+                return { id, src: null };
+            }
+        } catch (error) {
+            console.error('Error fetching image data:', error);
+            return { id, src: null };
+        }
+    };
     useEffect(() => {
         const fetchData = async () => {
             await publicationQuery.refetch();
         };
+        if (publications) {
+            preprocessImages(publications);
+        }
         setIsDeletingPublication(false);
         fetchData();
     }, [isDeletingPublication, editingRowId, refetchTrigger]);
@@ -153,30 +190,44 @@ const GetPublications: React.FC = () => {
             dataIndex: 'thumbnail',
             responsive: ['sm'],
             render: (text: string, record: Publication) => {
-                return isEditingPublication && editingRowId === record._id ? (
-                    <Upload
-                        onChange={(info) => {
-                            if (info.file.status !== 'uploading') {
-                                console.log(info.file, info.fileList);
-                            }
-                            if (info.file.status === 'done') {
-                                message.success(
-                                    `${info.file.name} file uploaded successfully`,
-                                );
-                            } else if (info.file.status === 'error') {
-                                message.error(
-                                    `${info.file.name} file upload failed.`,
-                                );
-                            }
-                        }}
-                        action="/upload/image"
-                        listType="picture"
-                    >
-                        <Button icon={<UploadOutlined />}>Upload</Button>
-                    </Upload>
-                ) : (
-                    text
-                );
+                const thumbnailIds = Array.isArray(record.thumbnail) ? record.thumbnail : [record.thumbnail];
+                console.log("thumbnailIds", thumbnailIds)
+                if (thumbnailIds.length > 0) {
+                    const thumbnailId = thumbnailIds[0];
+                    console.log("thumbnailId", thumbnailId)
+                    console.log("preprocessedImages", preprocessedImages)
+                    const imageSrc = preprocessedImages[thumbnailId];
+                    console.log("imageSrc", imageSrc)
+                    if (imageSrc === undefined) {
+                        return <>Loading...</>; // Display loading state
+                    }
+                    if (imageSrc === null) {
+                        return <>No Thumbnail</>; // Display fallback if image is not available
+                    }
+
+                    return (
+                        <img
+                            src={imageSrc}
+                            alt="Thumbnail"
+                            style={{ width: '50px', height: '50px' }}
+                        />
+                    );
+                }
+                if (isEditingPublication && editingRowId === record._id) {
+                    return (
+                        <Upload
+                            onChange={(info) => {
+                                // Upload logic here
+                            }}
+                            action="/upload/image"
+                            listType="picture"
+                        >
+                            <Button icon={<UploadOutlined />}>Upload</Button>
+                        </Upload>
+                    );
+                }
+
+
             },
         },
         {
@@ -367,14 +418,7 @@ const GetPublications: React.FC = () => {
     return (
         <div style={{ width: '100%' }}>
             <h2>Mes Publications</h2>
-            <div>
-                {imageQuery?.data?.data?.images?.map((item) => (
-                    <>
-                        <span>{item.title}</span>
-                        <img src={item.image} alt="Image" />
-                    </>
-                ))}
-            </div>
+
             <ModalProvider
                 modalContent={({ handleCancelation }) => (
                     <CreatePublication

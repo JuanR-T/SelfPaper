@@ -92,6 +92,7 @@ export interface ApiContextType {
     publisherQuery: UseQueryResult<PublisherQueryResponse, Error>,
     themeQuery: UseQueryResult<ThemeQueryResponse, Error>,
     imageQuery: UseQueryResult<ImagesQueryResponse, Error>,
+    imageByIdQuery: (imageId: string) => UseQueryResult<ImageByIdQueryResponse, Error>,
 }
 
 export type LoginResponse = {
@@ -198,17 +199,31 @@ export interface DeletePublicationsProps {
 }
 
 /** Images */
+export interface ImagesData {
+    type: string,
+    data: number[]
+}
 export interface Images {
     _id: string;
-    title: string,
-    image: string
+    type: string,
+    image: ImagesData
+}
+export interface ImageById {
+    image: { 
+        data: any,
+        type: string
+    }
 }
 export interface ImagesQueryResponse {
-    data : 
+    data:{data : 
     {
         found: boolean;
-        images?: Images[];
-    }
+        images: Images[];
+    }}
+}
+export interface ImageByIdQueryResponse {
+    found: boolean;
+    imageById: ImageById[];
 }
 
 /** Books */

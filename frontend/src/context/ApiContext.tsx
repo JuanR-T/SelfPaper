@@ -5,6 +5,7 @@ import toastProvider from '../lib/toastProvider';
 import {
     ApiContextType,
     BooksQueryResponse,
+    ImageByIdQueryResponse,
     ImagesQueryResponse,
     PublicationQueryResponse,
     PublisherQueryResponse,
@@ -115,6 +116,25 @@ export const ApiContextProvider = ({ children }: PropsWithChildren) => {
             return response;
         },
     );
+    const imageByIdQuery = (imageId: string): UseQueryResult<ImageByIdQueryResponse, Error> => useQuery(
+        ['get_image_by_id', imageId],
+        async () => {
+            const response = await handleGet(
+                `${BASE_URL}/api/image/${imageId}`,
+                getConfig(),
+            );
+            if (!response) {
+                toastProvider(
+                    'error',
+                    'Erreur lors de la récupération de l\'image.',
+                    'bottom-left',
+                    'colored',
+                );
+                return { data: { found: false, imageById: [] } }; // Adjusted return type
+            }
+            return response.data; // Ensure response.data matches ImageByIdQueryResponse
+        },
+    );
 
     return (
         <ApiContext.Provider
@@ -123,6 +143,7 @@ export const ApiContextProvider = ({ children }: PropsWithChildren) => {
                 bookQuery,
                 publisherQuery,
                 imageQuery,
+                imageByIdQuery,
                 themeQuery,
             }}
         >

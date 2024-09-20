@@ -1,6 +1,5 @@
-// publisherUtils.ts
-
 import { Request } from 'express';
+import mongoose from 'mongoose';
 import Publisher from '../models/Publisher';
 
 interface PublisherRequestBody {
@@ -12,18 +11,29 @@ export const checkPublisherService = async (req: Request): Promise<boolean> => {
     try {
         const publishers = await Publisher.find({});
 
-        if (!publishers) {
+        if (!publishers || publishers.length === 0) {
             throw new Error(
                 'Publisher not found. Cannot create publication. Try to create a publisher first',
             );
         }
-        const requestPublishers: PublisherRequestBody =
-            req.body.publisher || [];
-        console.log('requestPublishers', requestPublishers);
-        console.log('publishers', publishers);
+
+        let requestPublishers: PublisherRequestBody;
+        if (typeof req.body.publisher === 'string') {
+            requestPublishers = JSON.parse(req.body.publisher);
+        } else {
+            requestPublishers = req.body.publisher;
+        }
+
+        if (!requestPublishers) {
+            console.error('Publisher data missing in request body');
+            return false;
+        }
+
         const hasSameService = publishers.some((publisher) => {
+            const requestPublisherId = new mongoose.Types.ObjectId(requestPublishers._id);
+
             return (
-                publisher._id.equals(requestPublishers._id) &&
+                publisher._id.equals(requestPublisherId) &&
                 publisher.services.some(
                     (service) =>
                         service.toLowerCase() ===
@@ -31,7 +41,7 @@ export const checkPublisherService = async (req: Request): Promise<boolean> => {
                 )
             );
         });
-        console.log('hasSameService', hasSameService);
+
         return hasSameService;
     } catch (error) {
         console.error(error);
