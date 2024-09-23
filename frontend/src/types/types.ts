@@ -27,15 +27,14 @@ export type TData = {
     }
 };
 export type MutationPayload = {
-    data: ApiDataResponse;
+    data?: ApiDataResponse;
     config?: Record<string, unknown>;
 };
 export interface MutateApi {(
     url: string, 
-    payload?: MutationPayload
+    payload: MutationPayload
     ): Promise<AxiosResponse<TData>>;
 }
-
 export interface MutationProps {
     dataUrl: string;
     dataType: string;

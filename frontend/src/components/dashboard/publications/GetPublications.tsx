@@ -24,7 +24,6 @@ const GetPublications: React.FC = () => {
     const { publicationQuery, imageQuery, imageByIdQuery, publisherQuery, themeQuery } =
         useApiContext();
 
-    const [refetchTrigger, setRefetchTrigger] = useState(false);
     const [selectThemeValue, setSelectThemeValue] = useState('');
     const [selectPublisherValue, setSelectPublisherValue] = useState('');
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -98,7 +97,6 @@ const GetPublications: React.FC = () => {
             console.log("response", response)
             const image = response?.data?.imageById[0]?.image;
             if (image) {
-                //console.log("image", image)
                 const imageData = new Uint8Array(image.data);
                 const base64Image = Buffer.from(imageData).toString('base64');
                 return { id, src: `data:${image.type};base64,${base64Image}` };
@@ -119,7 +117,7 @@ const GetPublications: React.FC = () => {
         }
         setIsDeletingPublication(false);
         fetchData();
-    }, [isDeletingPublication, editingRowId, refetchTrigger]);
+    }, [isDeletingPublication, editingRowId]);
 
     const columns: any = [
         {

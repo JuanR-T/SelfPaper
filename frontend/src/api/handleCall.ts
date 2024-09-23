@@ -88,7 +88,7 @@ export const handlePut: MutateApi  = async (
 
 export const handleDelete: MutateApi  = async (
     url,
-    {data, config,}
+    { config }
 ) => {
     try {
         const res = await axiosInstance.delete<TData>(url, config);
