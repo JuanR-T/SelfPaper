@@ -3,16 +3,14 @@ import {
     Button,
     DatePicker,
     Input,
-    message,
     Pagination,
     Select,
     Table,
-    Upload,
+    Upload
 } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useApiContext } from '../../../context/ApiContext';
-import { useAuth } from '../../../context/AuthContext';
 import { Author, Publication, Publisher } from '../../../types/types';
 import ModalProvider from '../../utils/ModalProvider';
 import CreatePublication from './CreatePublications';
@@ -20,7 +18,6 @@ import DeletePublications from './DeletePublications';
 import UpdatePublications from './UpdatePublications';
 
 const GetPublications: React.FC = () => {
-    const { getConfig, author } = useAuth();
     const { publicationQuery, imageQuery, imageByIdQuery, publisherQuery, themeQuery } =
         useApiContext();
 
@@ -32,41 +29,9 @@ const GetPublications: React.FC = () => {
         useState<boolean>(false);
     const [isEditingPublication, setIsEditingPublication] =
         useState<boolean>(false);
-    const [editingRowData, setEditingRowData] = useState<Publication>({
-        _id: '',
-        title: '',
-        description: '',
-        link: '',
-        thumbnail: '',
-        postImage: '',
-        type: [''],
-        theme: {
-            _id: '',
-            title: '',
-            description: '',
-            image: '',
-        },
-        excerpt: '',
-        publicationDate: '',
-        publisher: {
-            _id: '',
-            title: '',
-            description: '',
-            type: '',
-            location: '',
-            founded_at: '',
-            services: [''],
-            service: '',
-        },
-        author: {
-            _id: author?._id || '',
-            firstName: '',
-            lastName: '',
-            email: '',
-            password: '',
-            phoneNumber: '',
-        },
-    });
+    const [editingRowData, setEditingRowData] = useState<Partial<Publication>>({});
+    const [editingFormData, setEditingFormData] = useState<FormData>(new FormData());
+
     const [preprocessedImages, setPreprocessedImages] = useState<Record<string, string | null>>({});
 
     const publications = publicationQuery?.data?.data?.publications;
@@ -108,6 +73,7 @@ const GetPublications: React.FC = () => {
             return { id, src: null };
         }
     };
+
     useEffect(() => {
         const fetchData = async () => {
             await publicationQuery.refetch();
@@ -129,10 +95,8 @@ const GetPublications: React.FC = () => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Input
                         onChange={(e) => {
-                            setEditingRowData({
-                                ...editingRowData,
-                                title: e.target.value,
-                            });
+                            const updatedData = { ...editingRowData, title: e.target.value };
+                            setEditingRowData(updatedData);
                         }}
                         value={editingRowData.title}
                     ></Input>
@@ -149,10 +113,8 @@ const GetPublications: React.FC = () => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Input.TextArea
                         onChange={(e) => {
-                            setEditingRowData({
-                                ...editingRowData,
-                                description: e.target.value,
-                            });
+                            const updatedData = { ...editingRowData, description: e.target.value };
+                            setEditingRowData(updatedData);
                         }}
                         value={editingRowData.description}
                     ></Input.TextArea>
@@ -169,10 +131,8 @@ const GetPublications: React.FC = () => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Input.TextArea
                         onChange={(e) => {
-                            setEditingRowData({
-                                ...editingRowData,
-                                link: e.target.value,
-                            });
+                            const updatedData = { ...editingRowData, link: e.target.value };
+                            setEditingRowData(updatedData);
                         }}
                         value={editingRowData.link}
                     ></Input.TextArea>
@@ -189,43 +149,22 @@ const GetPublications: React.FC = () => {
             responsive: ['sm'],
             render: (text: string, record: Publication) => {
                 const thumbnailIds = Array.isArray(record.thumbnail) ? record.thumbnail : [record.thumbnail];
-                console.log("thumbnailIds", thumbnailIds)
-                if (thumbnailIds.length > 0) {
-                    const thumbnailId = thumbnailIds[0];
-                    console.log("thumbnailId", thumbnailId)
-                    console.log("preprocessedImages", preprocessedImages)
-                    const imageSrc = preprocessedImages[thumbnailId];
-                    console.log("imageSrc", imageSrc)
-                    if (imageSrc === undefined) {
-                        return <>Loading...</>; // Display loading state
-                    }
-                    if (imageSrc === null) {
-                        return <>No Thumbnail</>; // Display fallback if image is not available
-                    }
+                const imageSrc = thumbnailIds.length > 0 ? preprocessedImages[thumbnailIds[0]] : null;
 
-                    return (
-                        <img
-                            src={imageSrc}
-                            alt="Thumbnail"
-                            style={{ width: '50px', height: '50px' }}
-                        />
-                    );
-                }
-                if (isEditingPublication && editingRowId === record._id) {
-                    return (
-                        <Upload
-                            onChange={(info) => {
-                                // Upload logic here
-                            }}
-                            action="/upload/image"
-                            listType="picture"
-                        >
-                            <Button icon={<UploadOutlined />}>Upload</Button>
-                        </Upload>
-                    );
-                }
-
-
+                return isEditingPublication && editingRowId === record._id ? (
+                    <Upload
+                        beforeUpload={(file) => {
+                            const formData = new FormData();
+                            formData.append('thumbnail', file);
+                            setEditingFormData(formData);
+                            return false;
+                        }}
+                    >
+                        <Button icon={<UploadOutlined />}>Upload</Button>
+                    </Upload>
+                ) : (
+                    <img src={imageSrc || text} alt="Thumbnail" style={{ width: '50px', height: '50px' }} />
+                );
             },
         },
         {
@@ -235,29 +174,17 @@ const GetPublications: React.FC = () => {
             render: (text: string, record: Publication) => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Upload
-                        onChange={(info) => {
-                            if (info.file.status !== 'uploading') {
-                                console.log(info.file, info.fileList);
-                            }
-                            if (info.file.status === 'done') {
-                                message.success(
-                                    `${info.file.name} file uploaded successfully`,
-                                );
-                            } else if (info.file.status === 'error') {
-                                message.error(
-                                    `${info.file.name} file upload failed.`,
-                                );
-                            }
+                        beforeUpload={(file) => {
+                            const formData = editingFormData;
+                            formData.append('postImage', file);
+                            setEditingFormData(formData);
+                            return false;
                         }}
-                        action="/upload/image"
-                        //beforeUpload={beforeUpload}
-                        //fileList={fileList}
-                        listType="picture"
                     >
                         <Button icon={<UploadOutlined />}>Upload</Button>
                     </Upload>
                 ) : (
-                    text
+                    <img src={text} alt="postImage" style={{ width: '50px' }} />
                 );
             },
         },
@@ -269,10 +196,8 @@ const GetPublications: React.FC = () => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Input.TextArea
                         onChange={(e) => {
-                            setEditingRowData({
-                                ...editingRowData,
-                                type: [e.target.value],
-                            });
+                            const updatedData = { ...editingRowData, type: [e.target.value] };
+                            setEditingRowData(updatedData);
                         }}
                         value={editingRowData.type}
                     ></Input.TextArea>
@@ -312,10 +237,8 @@ const GetPublications: React.FC = () => {
                 return isEditingPublication && editingRowId === record._id ? (
                     <Input.TextArea
                         onChange={(e) => {
-                            setEditingRowData({
-                                ...editingRowData,
-                                excerpt: e.target.value,
-                            });
+                            const updatedData = { ...editingRowData, excerpt: e.target.value };
+                            setEditingRowData(updatedData);
                         }}
                         value={editingRowData.excerpt}
                     ></Input.TextArea>
@@ -329,6 +252,8 @@ const GetPublications: React.FC = () => {
             dataIndex: 'publicationDate',
             responsive: ['sm'],
             render: (text: string, record: Publication) => {
+                const isValidDate = editingRowData.publicationDate && dayjs(editingRowData.publicationDate).isValid();
+
                 return isEditingPublication && editingRowId === record._id ? (
                     <DatePicker
                         onChange={(date: Dayjs | null) => {
@@ -345,7 +270,8 @@ const GetPublications: React.FC = () => {
                                 });
                             }
                         }}
-                        value={dayjs(editingRowData.publicationDate)}
+                        // Ensure `value` is passed only if it's a valid date
+                        value={isValidDate ? dayjs(editingRowData.publicationDate) : null}
                     />
                 ) : (
                     text
@@ -372,7 +298,8 @@ const GetPublications: React.FC = () => {
                         ))}
                     </Select>
                 ) : (
-                    record.publisher.title + ' / ' + record.publisher.service
+                    text
+                    //record.publisher.title + ' / ' + record.publisher.service
                 );
             },
         },
@@ -398,6 +325,8 @@ const GetPublications: React.FC = () => {
                             isEditingPublication={isEditingPublication}
                             editingRowId={editingRowId}
                             editingRowData={editingRowData}
+                            editingFormData={editingFormData}
+                            setEditingFormData={setEditingFormData}
                             setIsEditingPublication={setIsEditingPublication}
                             setEditingRowId={setEditingRowId}
                             setEditingRowData={setEditingRowData}

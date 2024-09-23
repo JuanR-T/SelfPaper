@@ -185,10 +185,12 @@ export interface UpdatePublicationsProps {
     record: Publication;
     editingRowId: string | null;
     isEditingPublication: boolean;
-    editingRowData: Publication;
+    editingRowData: Partial<Publication>;
+    editingFormData: FormData;
+    setEditingFormData: Dispatch<SetStateAction<FormData>>;
     setIsEditingPublication: Dispatch<SetStateAction<boolean>>;
     setEditingRowId: Dispatch<SetStateAction<string | null>>;
-    setEditingRowData: Dispatch<SetStateAction<Publication>>;
+    setEditingRowData: Dispatch<SetStateAction<Partial<Publication>>>;
 }
 
 export interface DeletePublicationsProps {
