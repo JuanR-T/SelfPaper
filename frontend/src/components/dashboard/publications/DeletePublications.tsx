@@ -1,9 +1,10 @@
+import { WarningOutlined } from '@ant-design/icons';
 import { Button, Popover } from 'antd';
 import { useState } from 'react';
-import { handleDelete } from '../../../api/handleCall';
+import { useAuth } from '../../../context/AuthContext';
+import useDeleteMutation from '../../../hooks/useDeleteMutation';
 import toastProvider from '../../../lib/toastProvider';
-import { WarningOutlined } from '@ant-design/icons';
-import { DeletePublicationsProps, Publication } from '../../../types/types';
+import { DeletePublicationsProps, MutationPayload, Publication } from '../../../types/types';
 
 const DeletePublications = ({
     record,
@@ -11,11 +12,11 @@ const DeletePublications = ({
     setEditingRowId,
     editingRowId,
 }: DeletePublicationsProps) => {
-    const BASE_URL = import.meta.env.VITE_BASE_URL;
     const [open, setOpen] = useState<boolean>(false);
+    const { getConfig } = useAuth();
 
     const handlePopoverRow = (record: Publication) => {
-        setEditingRowId(record._id);
+        setEditingRowId(record._id || '');
     };
     const hide = () => {
         setEditingRowId(null);
@@ -26,35 +27,44 @@ const DeletePublications = ({
         setOpen(newOpen);
     };
 
-    const deletePublication = async (record: any) => {
-        const deletedPublication = await handleDelete(
-            `${BASE_URL}/api/publication/delete/${record._id}`,
-        );
-        if (!deletedPublication || !deletedPublication.data) {
+    const { mutateAsync } = useDeleteMutation({
+        dataUrl: 'publication',
+        dataType: 'publication',
+        dataId: record._id
+    });
+
+    const deletePublication = async () => {
+        try {
+            const mutationPayload: MutationPayload = {
+                config: {
+                    ...getConfig(),
+                },
+            };
+            await mutateAsync(mutationPayload);
+            setIsDeletingPublication(true);
+            toastProvider(
+                'success',
+                'La publication a bien été supprimée !',
+                'bottom-left',
+                'light',
+            );
+        } catch (error) {
             toastProvider(
                 'error',
                 'Une erreur est survenue pendant la suppression de la publication. Veuillez réessayer.',
                 'bottom-left',
                 'colored',
             );
-            return undefined;
         }
-        setIsDeletingPublication(true);
-        toastProvider(
-            'success',
-            'La publication a bien été supprimée !',
-            'bottom-left',
-            'light',
-        );
-        return deletedPublication;
     };
-    const deleteContent = (record: Publication) => {
+
+    const deleteContent = () => {
         return (
             <>
                 <WarningOutlined style={{ color: 'red' }} />
                 <p>Êtes vous sûre de vouloir supprimer cette publication ? </p>
                 <Button onClick={hide}>Annuler</Button>
-                <Button onClick={() => deletePublication(record)}>
+                <Button onClick={() => deletePublication()}>
                     Confirmer
                 </Button>
             </>
@@ -62,7 +72,8 @@ const DeletePublications = ({
     };
     return (
         <Popover
-            content={deleteContent(record)}
+            content={deleteContent()}
+            placement="left"
             title="Suppression de l'éditeur"
             trigger="click"
             open={editingRowId === record._id && open}

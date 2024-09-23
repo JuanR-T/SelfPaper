@@ -34,21 +34,10 @@ const CreatePublication: React.FC<CreatePublicationProps> = ({
     const [selectPublisherValue, setSelectPublisherValue] = useState<any>({});
     const [tempImages, setTempImages] = useState<{ thumbnail?: File; postImage?: File }>({});
 
-    const fileToBase64 = (file: File) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-            reader.readAsDataURL(file);
-        });
-    };
-
     const onFileChange = async (file: File, type: 'thumbnail' | 'postImage') => {
         try {
-            console.log("this is b4 conversion", file)
             setTempImages(prev => ({ ...prev, [type]: file }));
-            console.log("images", tempImages);
-            return false; // Prevent automatic upload
+            return false;
         } catch (error) {
             message.error('Failed to convert file.');
             return false;
@@ -61,43 +50,35 @@ const CreatePublication: React.FC<CreatePublicationProps> = ({
     });
 
     const onSubmit = async (values: Publication) => {
-        console.log("these are the images : ", tempImages)
+        const formData = new FormData();
         try {
-            const thumbnailBase64 = tempImages.thumbnail
-                ? await fileToBase64(tempImages.thumbnail)
-                : '';
+            formData.append('title', values.title);
+            formData.append('description', values.description);
+            formData.append('link', values.link || '');
+            formData.append('type', values.type as any);
+            formData.append('theme', selectThemeValue);
+            formData.append('excerpt', values.excerpt);
+            formData.append('publicationDate', publicationDateValue);
+            formData.append('publisher', JSON.stringify(selectPublisherValue));
+            formData.append('author', JSON.stringify({
+                _id: author?._id || '',
+            }));
 
-            const postImageBase64 = tempImages.postImage
-                ? await fileToBase64(tempImages.postImage)
-                : '';
+            if (tempImages.thumbnail) {
+                formData.append('thumbnail', tempImages.thumbnail);
+            }
+            if (tempImages.postImage) {
+                formData.append('postImage', tempImages.postImage);
+            }
 
             const mutationPayload: MutationPayload = {
-                data: {
-                    title: values.title,
-                    description: values.description,
-                    link: values.link,
-                    thumbnail: thumbnailBase64 as string,
-                    postImage: postImageBase64 as string,
-                    type: values.type,
-                    theme: {
-                        _id: selectThemeValue,
-                        title: '',
-                        description: '',
-                        image: '',
-                    },
-                    excerpt: values.excerpt,
-                    publicationDate: publicationDateValue,
-                    publisher: selectPublisherValue,
-                    author: {
-                        _id: author?._id || '',
-                        firstName: '',
-                        lastName: '',
-                        email: '',
-                        password: '',
-                        phoneNumber: '',
+                data: formData,
+                config: {
+                    ...getConfig(),
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
                     },
                 },
-                config: getConfig(),
             };
             await mutateAsync(mutationPayload);
             refetch;
