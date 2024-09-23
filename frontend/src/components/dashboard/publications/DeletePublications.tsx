@@ -1,8 +1,8 @@
+import { WarningOutlined } from '@ant-design/icons';
 import { Button, Popover } from 'antd';
 import { useState } from 'react';
 import { handleDelete } from '../../../api/handleCall';
 import toastProvider from '../../../lib/toastProvider';
-import { WarningOutlined } from '@ant-design/icons';
 import { DeletePublicationsProps, Publication } from '../../../types/types';
 
 const DeletePublications = ({
@@ -15,7 +15,7 @@ const DeletePublications = ({
     const [open, setOpen] = useState<boolean>(false);
 
     const handlePopoverRow = (record: Publication) => {
-        setEditingRowId(record._id);
+        setEditingRowId(record._id || '');
     };
     const hide = () => {
         setEditingRowId(null);

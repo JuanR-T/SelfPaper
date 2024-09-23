@@ -1,7 +1,7 @@
 import { Button } from 'antd';
 import { handlePut } from '../../../api/handleCall';
 import toastProvider from '../../../lib/toastProvider';
-import { UpdatePublicationsProps, Publication } from '../../../types/types';
+import { Publication, UpdatePublicationsProps } from '../../../types/types';
 
 const UpdatePublications = ({
     record,
@@ -17,7 +17,7 @@ const UpdatePublications = ({
     const handleEditPublicationRow = (record: Publication) => {
         setIsEditingPublication(true);
         setEditingRowData({ ...record });
-        setEditingRowId(record._id);
+        setEditingRowId(record._id || '');
     };
     const updatePublication = async () => {
         const updatedTheme = await handlePut(

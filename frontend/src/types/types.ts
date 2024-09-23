@@ -32,9 +32,10 @@ export type MutationPayload = {
 };
 export interface MutateApi {(
     url: string, 
-    payload: MutationPayload
+    payload?: MutationPayload
     ): Promise<AxiosResponse<TData>>;
 }
+
 export interface MutationProps {
     dataUrl: string;
     dataType: string;

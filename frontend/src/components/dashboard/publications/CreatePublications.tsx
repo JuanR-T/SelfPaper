@@ -34,21 +34,10 @@ const CreatePublication: React.FC<CreatePublicationProps> = ({
     const [selectPublisherValue, setSelectPublisherValue] = useState<any>({});
     const [tempImages, setTempImages] = useState<{ thumbnail?: File; postImage?: File }>({});
 
-    const fileToBase64 = (file: File) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-            reader.readAsDataURL(file);
-        });
-    };
-
     const onFileChange = async (file: File, type: 'thumbnail' | 'postImage') => {
         try {
-            console.log("this is b4 conversion", file)
             setTempImages(prev => ({ ...prev, [type]: file }));
-            console.log("images", tempImages);
-            return false; // Prevent automatic upload
+            return false;
         } catch (error) {
             message.error('Failed to convert file.');
             return false;
@@ -61,7 +50,6 @@ const CreatePublication: React.FC<CreatePublicationProps> = ({
     });
 
     const onSubmit = async (values: Publication) => {
-        console.log("these are the images : ", tempImages)
         const formData = new FormData();
         try {
             formData.append('title', values.title);
@@ -80,7 +68,7 @@ const CreatePublication: React.FC<CreatePublicationProps> = ({
                 formData.append('thumbnail', tempImages.thumbnail);
             }
             if (tempImages.postImage) {
-                formData.append('postImage', tempImages.postImage);  // 'postImage' is the field name in multer
+                formData.append('postImage', tempImages.postImage);
             }
 
             const mutationPayload: MutationPayload = {
