@@ -31,7 +31,7 @@ export const checkPublisherService = async (req: Request): Promise<boolean> => {
 
         const hasSameService = publishers.some((publisher) => {
             const requestPublisherId = new mongoose.Types.ObjectId(requestPublishers._id);
-
+            console.log("requestPublishers", requestPublishers)
             return (
                 publisher._id.equals(requestPublisherId) &&
                 publisher.services.some(

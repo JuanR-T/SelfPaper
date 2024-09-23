@@ -91,13 +91,9 @@ export const createPublication = async (
             );
         }
 
-        // Access form fields from req.body
-
-        // Access the files from req.files
         const thumbnail = req.files.thumbnail ? req.files.thumbnail[0] : null;
         const postImage = req.files.postImage ? req.files.postImage[0] : null;
         const publisher = req.body.publisher ? JSON.parse(req.body.publisher) : null;
-        console.log("publishergourou", publisher)
         const author = req.body.author ? JSON.parse(req.body.author) : null;
         const publicationThumbnail = thumbnail
             ? await baseToBufferImage(thumbnail.buffer, 'thumbnail')
@@ -137,7 +133,6 @@ export const createPublication = async (
             await publicationPostImage.save();
         }
 
-        console.log('newPublication', newPublication);
         if (!newPublication) throw new Error('Publication could not be created. Wrong params');
 
         return res.status(200).json({ data: { created: true, newPublication } });
@@ -146,40 +141,66 @@ export const createPublication = async (
     }
 };
 
+
 export const updatePublication = async (
-    req: Request,
-    res: Response,
+    req: any,
+    res: any,
     next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
-        const { id } = req.params;
-        if (!id || typeof id !== 'string')
-            throw new Error(
-                'Could not find publication id for update. Wrong id',
-            );
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            throw new Error(
-                'Invalid theme ID format. Please provide a valid ID.',
-            );
-        }
+        const { id } = req.params as { id: string };
 
+        const thumbnail = req.files.thumbnail ? req.files.thumbnail[0] : null;
+        const postImage = req.files.postImage ? req.files.postImage[0] : null;
+        const publicationThumbnail = thumbnail
+            ? await baseToBufferImage(thumbnail.buffer, 'thumbnail')
+            : null;
+
+        const publicationPostImage = postImage
+            ? await baseToBufferImage(postImage.buffer, 'postImage')
+            : null;
+        console.log("thumbnailFiles", thumbnail)
+        console.log("postImageFiles", postImage)
+        console.log("req", req.body)
+        
+        if (!id || typeof id !== 'string' || !mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error('Invalid publication ID format. Please provide a valid ID.');
+        }
+        const publisher = req.body.publisher ? JSON.parse(req.body.publisher) : null;
+        const theme = req.body.theme ? JSON.parse(req.body.theme) : null;
+        const author = req.body.author ? JSON.parse(req.body.author) : null;
+        //const publicationDate = req.body.publicationDate ? JSON.parse(req.body.publicationDate) : null;
+        console.log("publisherparsed", publisher)
+        const updateData: any = {
+            ...req.body,
+            publisher,
+            theme,
+            author,
+            //publicationDate,
+            thumbnail: publicationThumbnail ? [publicationThumbnail._id] : [],
+            postImage: publicationPostImage ? [publicationPostImage._id] : [],
+        };
+        console.log("updateData", updateData)
         const hasSameService = await checkPublisherService(req);
         if (!hasSameService) {
-            throw new Error(
-                'Publisher service from request does not match existing publisher service',
-            );
+            throw new Error('Publisher service from request does not match existing publisher service');
         }
 
-        const updatedPublication = await Publication.findByIdAndUpdate(
-            id,
-            req.body,
-        );
-        if (!updatedPublication)
+        const updatedPublication = await Publication.findByIdAndUpdate(id, updateData, { new: true });
+        if (!updatedPublication) {
             throw new Error('Could not update publication. Wrong params;');
+        }
 
-        return res
-            .status(200)
-            .json({ data: { updated: true, updatedPublication } });
+        if (publicationThumbnail && updatedPublication) {
+            publicationThumbnail.publications.push(updatedPublication._id);
+            await publicationThumbnail.save();
+        }
+
+        if (publicationPostImage && updatedPublication) {
+            publicationPostImage.publications.push(updatedPublication._id);
+            await publicationPostImage.save();
+        }
+        return res.status(200).json({ data: { updated: true, updatedPublication } });
     } catch (err) {
         next(err);
     }
