@@ -2,12 +2,13 @@ import { Schema, SchemaTypes, model } from 'mongoose';
 
 const imageSchema = new Schema({
     type: { type: String, required: true },
+    format: {type: String, required: true},
     image: { type: Buffer, required: true },
     publications: [
         {
             type: SchemaTypes.ObjectId,
             ref: 'Publication',
-            required: false,
+            required: true,
         },
     ],
 });

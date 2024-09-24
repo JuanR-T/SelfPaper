@@ -4,7 +4,9 @@ import Author from '../models/Author';
 import Publication from '../models/Publication';
 import Publisher from '../models/Publisher';
 import Theme from '../models/Theme';
+import { FileUploadData } from '../types/utils';
 import baseToBufferImage from '../utils/baseToBufferImage';
+import matchesExistingImage from '../utils/matchesExistingImage';
 import { checkPublisherService } from '../utils/publisherHasSameService';
 
 export const getPublication = async (
@@ -81,34 +83,24 @@ export const createPublication = async (
     next: NextFunction,
 ): Promise<Response | undefined> => {
     try {
-        console.log('Received body', req.body);
-        console.log('Received files', req.files);
-
         const hasSameService = await checkPublisherService(req);
         if (!hasSameService) {
             throw new Error(
                 'Publisher service from request does not match existing publisher service',
             );
         }
-
-        const thumbnail = req.files.thumbnail ? req.files.thumbnail[0] : null;
-        const postImage = req.files.postImage ? req.files.postImage[0] : null;
+        const convertedImages: FileUploadData = await baseToBufferImage(req.files);
+        if (!convertedImages) {
+            throw new Error(
+                'Could not convert thumbnail / postImage to buffer',
+            );
+        }
         const publisher = req.body.publisher ? JSON.parse(req.body.publisher) : null;
         const author = req.body.author ? JSON.parse(req.body.author) : null;
-        const publicationThumbnail = thumbnail
-            ? await baseToBufferImage(thumbnail.buffer, 'thumbnail')
-            : null;
-
-        const publicationPostImage = postImage
-            ? await baseToBufferImage(postImage.buffer, 'postImage')
-            : null;
-
-        console.log("publicationThumbnail", publicationThumbnail);
-        console.log("publicationPostImage", publicationPostImage);
-
         
         const { title, description, link, type, theme, excerpt, publicationDate } = req.body;
 
+        const existingImages = await matchesExistingImage(convertedImages);
         const newPublication = await Publication.create({
             title,
             description,
@@ -119,18 +111,15 @@ export const createPublication = async (
             publicationDate,
             publisher,
             author,
-            thumbnail: publicationThumbnail ? [publicationThumbnail._id] : [],
-            postImage: publicationPostImage ? [publicationPostImage._id] : [],
+            thumbnail: existingImages[0],
+            postImage: existingImages[1],
         });
 
-        if (publicationThumbnail && newPublication) {
-            publicationThumbnail.publications.push(newPublication._id);
-            await publicationThumbnail.save();
-        }
-
-        if (publicationPostImage && newPublication) {
-            publicationPostImage.publications.push(newPublication._id);
-            await publicationPostImage.save();
+        for (const images of existingImages) {
+            if (!images.publications.includes(newPublication._id)) {
+                images.publications.push(newPublication._id);
+                await images.save();
+            }
         }
 
         if (!newPublication) throw new Error('Publication could not be created. Wrong params');
@@ -149,57 +138,49 @@ export const updatePublication = async (
 ): Promise<Response | undefined> => {
     try {
         const { id } = req.params as { id: string };
-
-        const thumbnail = req.files.thumbnail ? req.files.thumbnail[0] : null;
-        const postImage = req.files.postImage ? req.files.postImage[0] : null;
-        const publicationThumbnail = thumbnail
-            ? await baseToBufferImage(thumbnail.buffer, 'thumbnail')
-            : null;
-
-        const publicationPostImage = postImage
-            ? await baseToBufferImage(postImage.buffer, 'postImage')
-            : null;
-        console.log("thumbnailFiles", thumbnail)
-        console.log("postImageFiles", postImage)
-        console.log("req", req.body)
         
         if (!id || typeof id !== 'string' || !mongoose.Types.ObjectId.isValid(id)) {
             throw new Error('Invalid publication ID format. Please provide a valid ID.');
         }
+
+        //TODO make parsing helper
         const publisher = req.body.publisher ? JSON.parse(req.body.publisher) : null;
         const theme = req.body.theme ? JSON.parse(req.body.theme) : null;
         const author = req.body.author ? JSON.parse(req.body.author) : null;
-        //const publicationDate = req.body.publicationDate ? JSON.parse(req.body.publicationDate) : null;
-        console.log("publisherparsed", publisher)
+        const convertedImages: FileUploadData = await baseToBufferImage(req.files);
+        if (!convertedImages) {
+            throw new Error(
+                'Could not convert thumbnail / postImage to buffer',
+            );
+        }
+        const existingImages = await matchesExistingImage(convertedImages)
+
         const updateData: any = {
             ...req.body,
             publisher,
             theme,
             author,
-            //publicationDate,
-            thumbnail: publicationThumbnail ? [publicationThumbnail._id] : [],
-            postImage: publicationPostImage ? [publicationPostImage._id] : [],
+            thumbnail: existingImages[0],
+            postImage: existingImages[1],
         };
-        console.log("updateData", updateData)
+        
         const hasSameService = await checkPublisherService(req);
         if (!hasSameService) {
             throw new Error('Publisher service from request does not match existing publisher service');
         }
 
         const updatedPublication = await Publication.findByIdAndUpdate(id, updateData, { new: true });
+
         if (!updatedPublication) {
             throw new Error('Could not update publication. Wrong params;');
         }
 
-        if (publicationThumbnail && updatedPublication) {
-            publicationThumbnail.publications.push(updatedPublication._id);
-            await publicationThumbnail.save();
+        for (const image of existingImages) {
+            image.publications = image.publications.filter(pubId => !pubId.equals(updatedPublication._id));
+            image.publications.push(updatedPublication._id);
+            await image.save();
         }
 
-        if (publicationPostImage && updatedPublication) {
-            publicationPostImage.publications.push(updatedPublication._id);
-            await publicationPostImage.save();
-        }
         return res.status(200).json({ data: { updated: true, updatedPublication } });
     } catch (err) {
         next(err);
