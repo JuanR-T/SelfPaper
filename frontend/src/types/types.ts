@@ -167,8 +167,8 @@ export interface Publication {
     title: string,
     description: string,
     link?: string,
-    thumbnail?: string,
-    postImage?: string,
+    thumbnail?: Thumbnail,
+    postImage?: PostImage,
     type: string[],
     theme: Theme,
     excerpt: string,
@@ -201,15 +201,19 @@ export interface DeletePublicationsProps {
 }
 
 /** Images */
-export interface ImagesData {
-    type: string,
-    data: number[]
-}
 export interface Images {
-    _id: string;
-    type: string,
-    image: ImagesData
+    type: string;
+    format: string;
+    image: string | BufferImage;
+    publications: Publication[];
 }
+type BufferImage = {
+    type: string;
+    data: Buffer;
+
+};
+export interface Thumbnail extends Images {}
+export interface PostImage extends Images {}
 export interface ImageById {
     image: { 
         data: any,
@@ -244,8 +248,8 @@ export interface Book {
     bookPublicationDate: string | Dayjs;
     bookAuthor: string | undefined;
     bookPublisher: Publisher;
-    bookImage: Buffer | string ;
-    thumbnail: Buffer | string ;
+    bookImage: PostImage ;
+    thumbnail: Thumbnail ;
     theme: Theme;
 }
 
