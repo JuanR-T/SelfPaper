@@ -1,4 +1,4 @@
-import { UploadOutlined } from '@ant-design/icons';
+import { FileImageOutlined, UploadOutlined } from '@ant-design/icons';
 import {
     Button,
     DatePicker,
@@ -32,55 +32,20 @@ const GetPublications: React.FC = () => {
     const [editingRowData, setEditingRowData] = useState<Partial<Publication>>({});
     const [editingFormData, setEditingFormData] = useState<FormData>(new FormData());
 
-    const [preprocessedImages, setPreprocessedImages] = useState<Record<string, string | null>>({});
 
     const publications = publicationQuery?.data?.data?.publications;
+    console.log("publications", publications);
     const publicationsPerPage = 10;
     const startIndex = (currentPage - 1) * publicationsPerPage;
     const endIndex = startIndex + publicationsPerPage;
     const currentPublications = publications?.slice(startIndex, endIndex);
     const publishers = publisherQuery?.data?.data?.publisher;
-
-    const preprocessImages = async (publications: Publication[]) => {
-        const imagePromises = publications.flatMap(item =>
-            Array.isArray(item.thumbnail) && item.thumbnail.length > 0
-                ? item.thumbnail.map(id => fetchAndConvertImage(id))
-                : (item.thumbnail ? [fetchAndConvertImage(item.thumbnail)] : [])
-        );
-
-        const imageResults = await Promise.all(imagePromises);
-        console.log(imageResults, "imageResults")
-        const imageMap = imageResults.reduce((acc, { id, src }) => ({ ...acc, [id]: src }), {});
-
-        setPreprocessedImages(prev => ({ ...prev, ...imageMap }));
-    };
-
-
-    const fetchAndConvertImage = async (id: string) => {
-        try {
-            const response = await imageByIdQuery(id);
-            console.log("response", response)
-            const image = response?.data?.imageById[0]?.image;
-            if (image) {
-                const imageData = new Uint8Array(image.data);
-                const base64Image = Buffer.from(imageData).toString('base64');
-                return { id, src: `data:${image.type};base64,${base64Image}` };
-            } else {
-                return { id, src: null };
-            }
-        } catch (error) {
-            console.error('Error fetching image data:', error);
-            return { id, src: null };
-        }
-    };
+    //const publicationImages = publicationQuery?.data?.data.publications { };
 
     useEffect(() => {
         const fetchData = async () => {
             await publicationQuery.refetch();
         };
-        if (publications) {
-            preprocessImages(publications);
-        }
         setIsDeletingPublication(false);
         fetchData();
     }, [isDeletingPublication, editingRowId]);
@@ -148,8 +113,7 @@ const GetPublications: React.FC = () => {
             dataIndex: 'thumbnail',
             responsive: ['sm'],
             render: (text: string, record: Publication) => {
-                const thumbnailIds = Array.isArray(record.thumbnail) ? record.thumbnail : [record.thumbnail];
-                const imageSrc = thumbnailIds.length > 0 ? preprocessedImages[thumbnailIds[0]] : null;
+                const imageSrc: any = record.thumbnail?.image;
 
                 return isEditingPublication && editingRowId === record._id ? (
                     <Upload
@@ -162,8 +126,13 @@ const GetPublications: React.FC = () => {
                     >
                         <Button icon={<UploadOutlined />}>Upload</Button>
                     </Upload>
-                ) : (
-                    <img src={imageSrc || text} alt="Thumbnail" style={{ width: '50px', height: '50px' }} />
+                ) : (imageSrc ?
+                    <img
+                        src={imageSrc ? `data:image/jpeg;base64,${imageSrc}` : ''}
+                        alt="Thumbnail"
+                        style={{ width: '40px', height: '40px' }}
+                    />
+                    : <FileImageOutlined style={{ fontSize: '40px' }} />
                 );
             },
         },
@@ -172,6 +141,8 @@ const GetPublications: React.FC = () => {
             dataIndex: 'postImage',
             responsive: ['sm'],
             render: (text: string, record: Publication) => {
+                const imageSrc: any = record.postImage?.image;
+
                 return isEditingPublication && editingRowId === record._id ? (
                     <Upload
                         beforeUpload={(file) => {
@@ -183,8 +154,13 @@ const GetPublications: React.FC = () => {
                     >
                         <Button icon={<UploadOutlined />}>Upload</Button>
                     </Upload>
-                ) : (
-                    <img src={text} alt="postImage" style={{ width: '50px' }} />
+                ) : (imageSrc ?
+                    <img
+                        src={imageSrc ? `data:image/jpeg;base64,${imageSrc}` : ''}
+                        alt="Thumbnail"
+                        style={{ width: '40px', height: '40px' }}
+                    />
+                    : <FileImageOutlined style={{ fontSize: '40px' }} />
                 );
             },
         },
@@ -270,7 +246,6 @@ const GetPublications: React.FC = () => {
                                 });
                             }
                         }}
-                        // Ensure `value` is passed only if it's a valid date
                         value={isValidDate ? dayjs(editingRowData.publicationDate) : null}
                     />
                 ) : (

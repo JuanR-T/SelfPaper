@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Author from '../models/Author';
+import Images from '../models/Images';
 import Publication from '../models/Publication';
 import Publisher from '../models/Publisher';
 import Theme from '../models/Theme';
@@ -29,6 +30,25 @@ export const getPublication = async (
                 if (publisher) {
                     publisher.service = publication.publisher?.service;
                 }
+                //TODO Consider doing 3rd folder for mutual types/data handling between back and front
+                const thumbnail = await Images.findById(publication.thumbnail);
+                const postImage = await Images.findById(publication.postImage);
+                const formatImageData = (file: any) => {
+                    if (file && file.image) {
+                        const { _id, type, format, image } = file;
+                        
+                        return {
+                            _id,
+                            type,
+                            format,
+                            image: `${file.image.toString('base64')}` // Convert image to Base64
+                        };
+                    }
+                    return null;
+                };
+
+                const formattedThumbnail = formatImageData(thumbnail);
+                const formattedPostImage = formatImageData(postImage);
                 //TODO make it generic for other models
                 const formattedPublicationDate = new Date(
                     publication.publicationDate,
@@ -43,6 +63,8 @@ export const getPublication = async (
                     theme,
                     publisher,
                     author,
+                    thumbnail: formattedThumbnail,
+                    postImage: formattedPostImage
                 };
             }),
         );
