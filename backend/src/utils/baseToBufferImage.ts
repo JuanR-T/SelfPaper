@@ -1,17 +1,28 @@
-import Images from "../models/Images";
+import { FileUploadData } from "../types/utils";
 
-const baseToBufferImage = async (base64Data: string, imageType: string) => {
+/** Helper function to convert file from base64 to buffer */
+const baseToBufferImage = async (files: FileUploadData) => {
     try {
-        const imageBuffer = Buffer.from(base64Data, 'base64');
-        const newImage = new Images({
-            type: imageType,
-            image: imageBuffer,
-        });
-        await newImage.save();
-        return newImage;
+        const imageFields = ['thumbnail', 'postImage'] as const;
+
+        const convertedImages: Partial<FileUploadData> = {};
+
+        await Promise.all(
+            imageFields.map((field) => {
+                const images = files[field];
+                if (!images || images.length === 0) return;
+
+                convertedImages[field] = images.map((imageFile) => ({
+                    ...imageFile,
+                    buffer: Buffer.from(imageFile.buffer.toString('base64'), 'base64'),
+                }));
+            })
+        );
+
+        return convertedImages;
     } catch (error) {
-        console.error('Error saving image:', error);
-        throw new Error('Image save failed');
+        console.error("Error converting images:", error);
+        throw new Error("Image converting failed");
     }
 };
 
