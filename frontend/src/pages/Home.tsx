@@ -1,13 +1,13 @@
-import React from 'react';
 import { Layout } from 'antd';
-import HeroSection from '../components/landing/HeroSection';
-const { Content } = Layout;
-import Header from '../components/landing/Header';
-import Footer from '../components/landing/Footer';
-import ContentContainer from '../components/landing/Content';
+import React from 'react';
 import BiographySection from '../components/landing/BiographySection';
-import PublicationsParallax from '../components/landing/PublicationsParallax';
+import BooksSection from '../components/landing/BooksSection';
+import ContentContainer from '../components/landing/Content';
+import Footer from '../components/landing/Footer';
+import Header from '../components/landing/Header';
+import HeroSection from '../components/landing/HeroSection';
 import CustomCarousel from '../components/ui/CustomCarousel';
+const { Content } = Layout;
 
 const Home: React.FC = () => {
     return (
@@ -17,7 +17,7 @@ const Home: React.FC = () => {
                 <HeroSection />
                 <CustomCarousel />
                 <BiographySection />
-                <PublicationsParallax />
+                <BooksSection />
                 <ContentContainer />
             </Content>
             <Footer />

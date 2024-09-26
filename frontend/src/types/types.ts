@@ -279,3 +279,9 @@ export interface CreateBooksProps {
     refetch: () => Promise<QueryObserverResult<BooksQueryResponse, Error>>;
     handleCancelation?: (() => void | undefined) | undefined;
 }
+
+export type AnimatedTab = {
+    title: string;
+    value: string;
+    content?: string | React.ReactNode | any;
+};

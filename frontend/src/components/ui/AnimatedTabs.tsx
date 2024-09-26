@@ -1,30 +1,25 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 import { cn } from '../../lib/cn';
+import { AnimatedTab } from '../../types/types';
 
-export type Tab = {
-    title: string;
-    value: string;
-    content?: string | React.ReactNode | any;
-};
-
-export const Tabs = ({
+export const AnimatedTabs = ({
     tabs: propTabs,
     containerClassName,
     activeTabClassName,
     tabClassName,
     contentClassName,
 }: {
-    tabs: Tab[];
+    tabs: AnimatedTab[];
     containerClassName?: string;
     activeTabClassName?: string;
     tabClassName?: string;
     contentClassName?: string;
 }) => {
-    const [active, setActive] = useState<Tab>(propTabs?.[0]);
-    const [tabs, setTabs] = useState<Tab[]>(propTabs);
+    const [active, setActive] = useState<AnimatedTab>(propTabs?.[0]);
+    const [tabs, setTabs] = useState<AnimatedTab[]>(propTabs);
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -41,9 +36,7 @@ export const Tabs = ({
     };
 
     const [hovering, setHovering] = useState(false);
-    const isContainerEmpty =
-        containerRef.current && containerRef.current.children.length === 0;
-    console.log('isContainerEmpty', isContainerEmpty);
+
     return (
         <>
             <div
@@ -95,7 +88,7 @@ export const Tabs = ({
                 active={active}
                 key={active.value}
                 hovering={hovering}
-                className={cn('mt-32', contentClassName)}
+                className={cn('mt-4', contentClassName)}
             />
         </>
     );
@@ -108,11 +101,11 @@ export const FadeInDiv = ({
 }: {
     className?: string;
     key?: string;
-    tabs: Tab[];
-    active: Tab;
+    tabs: AnimatedTab[];
+    active: AnimatedTab;
     hovering?: boolean;
 }) => {
-    const isActive = (tab: Tab) => {
+    const isActive = (tab: AnimatedTab) => {
         return tab.value === tabs[0].value;
     };
     return (
