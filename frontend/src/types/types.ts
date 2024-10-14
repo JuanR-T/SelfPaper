@@ -174,6 +174,7 @@ export interface Publication {
     excerpt: string,
     publicationDate: string,
     publisher: Publisher,
+    publisherService: string,
     author: Author,
     position?: string
 }
@@ -214,6 +215,7 @@ type BufferImage = {
 };
 export interface Thumbnail extends Images {}
 export interface PostImage extends Images {}
+export interface BookImage extends Images {}
 export interface ImageById {
     image: { 
         data: any,
@@ -248,24 +250,26 @@ export interface Book {
     bookPublicationDate: string | Dayjs;
     bookAuthor: string | undefined;
     bookPublisher: Publisher;
-    bookImage: PostImage ;
-    thumbnail: Thumbnail ;
+    bookPublisherService: string;
+    bookImage?: BookImage ;
+    thumbnail?: Thumbnail ;
     theme: Theme;
 }
 
 export interface UpdateBooksProps{
     record: Book;
     refetch: () => Promise<QueryObserverResult<BooksQueryResponse, Error>>;
-    bookInitialState: SetStateAction<Book>;
     isBookDateEdited: boolean;
     setIsBookDateEdited: Dispatch<SetStateAction<boolean>>
     books: Book[] | undefined;
     editingRowId: string | null;
     isEditingBooks: boolean;
-    editingRowData: Book;
+    editingRowData: Partial<Book>;
+    editingFormData: FormData;
+    setEditingFormData: Dispatch<SetStateAction<FormData>>;
     setIsEditingBooks: Dispatch<SetStateAction<boolean>>;
     setEditingRowId: Dispatch<SetStateAction<string | null>>;
-    setEditingRowData: Dispatch<SetStateAction<Book>>;
+    setEditingRowData: Dispatch<SetStateAction<Partial<Book>>>;
 }
 
 export interface DeleteBooksProps {

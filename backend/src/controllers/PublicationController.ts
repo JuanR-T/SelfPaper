@@ -7,6 +7,8 @@ import Publisher from '../models/Publisher';
 import Theme from '../models/Theme';
 import { FileUploadData } from '../types/utils';
 import baseToBufferImage from '../utils/baseToBufferImage';
+import formatDate from '../utils/formatDate';
+import formatImageData from '../utils/formatImageData';
 import matchesExistingImage from '../utils/matchesExistingImage';
 import { checkPublisherService } from '../utils/publisherHasSameService';
 
@@ -15,56 +17,22 @@ export const getPublication = async (
     res: Response,
     next: NextFunction,
 ): Promise<Response | undefined> => {
-    //TODO return the matching publisher services from the publication, it returns everything now
     try {
         const publication = await Publication.find({});
         if (!publication) throw new Error("Couldn't find any publications");
 
         const publications = await Promise.all(
             publication.map(async (publication) => {
-                const author = await Author.findById(publication.author);
-                const theme = await Theme.findById(publication.theme);
-                const publisher = await Publisher.findById(
-                    publication.publisher?._id,
-                );
-                if (publisher) {
-                    publisher.service = publication.publisher?.service;
-                }
                 //TODO Consider doing 3rd folder for mutual types/data handling between back and front
-                const thumbnail = await Images.findById(publication.thumbnail);
-                const postImage = await Images.findById(publication.postImage);
-                const formatImageData = (file: any) => {
-                    if (file && file.image) {
-                        const { _id, type, format, image } = file;
-                        
-                        return {
-                            _id,
-                            type,
-                            format,
-                            image: `${file.image.toString('base64')}` // Convert image to Base64
-                        };
-                    }
-                    return null;
-                };
 
-                const formattedThumbnail = formatImageData(thumbnail);
-                const formattedPostImage = formatImageData(postImage);
-                //TODO make it generic for other models
-                const formattedPublicationDate = new Date(
-                    publication.publicationDate,
-                ).toLocaleDateString('fr-FR', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric',
-                });
                 return {
                     ...publication.toObject(),
-                    publicationDate: formattedPublicationDate,
-                    theme,
-                    publisher,
-                    author,
-                    thumbnail: formattedThumbnail,
-                    postImage: formattedPostImage
+                    publicationDate: formatDate(publication.publicationDate),
+                    theme: await Theme.findById(publication.theme),
+                    publisher: await Publisher.findById(publication.publisher?._id),
+                    author: await Author.findById(publication.author),
+                    thumbnail: formatImageData(await Images.findById(publication.thumbnail)),
+                    postImage: formatImageData(await Images.findById(publication.postImage))
                 };
             }),
         );
@@ -117,8 +85,6 @@ export const createPublication = async (
                 'Could not convert thumbnail / postImage to buffer',
             );
         }
-        const publisher = req.body.publisher ? JSON.parse(req.body.publisher) : null;
-        const author = req.body.author ? JSON.parse(req.body.author) : null;
         
         const { title, description, link, type, theme, excerpt, publicationDate } = req.body;
 
@@ -131,8 +97,9 @@ export const createPublication = async (
             theme,
             excerpt,
             publicationDate,
-            publisher,
-            author,
+            publisher: JSON.parse(req.body.publisher),
+            publisherService: JSON.parse(req.body.publisher).service,
+            author: JSON.parse(req.body.author),
             thumbnail: existingImages[0],
             postImage: existingImages[1],
         });
@@ -165,10 +132,6 @@ export const updatePublication = async (
             throw new Error('Invalid publication ID format. Please provide a valid ID.');
         }
 
-        //TODO make parsing helper
-        const publisher = req.body.publisher ? JSON.parse(req.body.publisher) : null;
-        const theme = req.body.theme ? JSON.parse(req.body.theme) : null;
-        const author = req.body.author ? JSON.parse(req.body.author) : null;
         const convertedImages: FileUploadData = await baseToBufferImage(req.files);
         if (!convertedImages) {
             throw new Error(
@@ -179,9 +142,10 @@ export const updatePublication = async (
 
         const updateData: any = {
             ...req.body,
-            publisher,
-            theme,
-            author,
+            publisher: JSON.parse(req.body.publisher),
+            publisherService: JSON.parse(req.body.publisher).service,
+            theme: JSON.parse(req.body.theme),
+            author: JSON.parse(req.body.author),
             thumbnail: existingImages[0],
             postImage: existingImages[1],
         };

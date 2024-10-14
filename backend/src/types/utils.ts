@@ -10,4 +10,5 @@ export type UploadedFile = {
 export type FileUploadData = {
     thumbnail?: UploadedFile[];
     postImage?: UploadedFile[];
+    bookImage?: UploadedFile[];
 };
