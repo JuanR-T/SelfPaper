@@ -37,6 +37,7 @@ const publicationSchema = new Schema({
             type: String,
         },
     },
+    publisherService: {type: String, required: false},
     author: [
         {
             type: SchemaTypes.ObjectId,

@@ -3,7 +3,7 @@ import { FileUploadData } from "../types/utils";
 /** Helper function to convert file from base64 to buffer */
 const baseToBufferImage = async (files: FileUploadData) => {
     try {
-        const imageFields = ['thumbnail', 'postImage'] as const;
+        const imageFields = ['thumbnail', 'postImage', 'bookImage'] as const;
 
         const convertedImages: Partial<FileUploadData> = {};
 

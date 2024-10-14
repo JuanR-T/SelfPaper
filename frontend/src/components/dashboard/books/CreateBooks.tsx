@@ -16,7 +16,6 @@ import { useApiContext } from '../../../context/ApiContext';
 import { useAuth } from '../../../context/AuthContext';
 import useCreateMutation from '../../../hooks/useCreateMutation';
 import Capitalize from '../../../lib/capitalizeLetter';
-import toastProvider from '../../../lib/toastProvider';
 import {
     Book,
     CreateBooksProps,
@@ -34,66 +33,57 @@ const CreateBooks: React.FC<CreateBooksProps> = ({
     const [bookPublicationDateValue, setBookPublicationDateValue] =
         useState('');
     const [selectPublisherValue, setSelectPublisherValue] = useState<any>({});
+    const [tempImages, setTempImages] = useState<{ thumbnail?: File; bookImage?: File }>({});
 
-    const convertToBase64 = (file: File) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-
-            reader.readAsDataURL(file);
-
-            reader.onload = () => {
-                resolve(reader.result as string);
-            };
-
-            reader.onerror = (error) => {
-                reject(error);
-            };
-        });
-    };
-    const uploadImage = async (file: any) => {
-        const convertedFile: any = await convertToBase64(file);
-        console.log('convertedFile', convertedFile);
-        console.log('file', file);
-        // await handlePost(`${BASE_URL}/api/image/upload`, {
-        //     title: file.name,
-        //     image: convertedFile,
-        // });
-        toastProvider(
-            'success',
-            "L'image a été upload avec succès.",
-            'bottom-left',
-            'light',
-        );
+    const onFileChange = async (file: File, type: 'thumbnail' | 'bookImage') => {
+        try {
+            setTempImages(prev => ({ ...prev, [type]: file }));
+            return false;
+        } catch (error) {
+            message.error('Failed to convert file.');
+            return false;
+        }
     };
     const { mutateAsync } = useCreateMutation({
         dataUrl: 'books',
         dataType: 'book',
     });
     const onSubmit = async (values: Book) => {
-        const mutationPayload: MutationPayload = {
-            data: {
-                title: values.title,
-                description: values.description,
-                link: values.link,
-                bookPublicationDate: bookPublicationDateValue,
-                bookAuthor: author?._id,
-                bookPublisher: selectPublisherValue,
-                bookImage: values.bookImage,
-                thumbnail: values.thumbnail,
-                theme: {
-                    title: '',
-                    _id: selectThemeValue,
-                    description: '',
-                    image: '',
+        const formData = new FormData();
+        try {
+            formData.append('title', values.title);
+            formData.append('description', values.description);
+            formData.append('link', values.link || '');
+            formData.append('bookPublicationDate', bookPublicationDateValue);
+            formData.append('bookPublisher', JSON.stringify(selectPublisherValue));
+            formData.append('bookAuthor', JSON.stringify({
+                _id: author?._id || '',
+            }));
+            console.log("tempImages", tempImages)
+            if (tempImages.bookImage) {
+                formData.append('bookImage', tempImages.bookImage);
+            }
+            if (tempImages.thumbnail) {
+                formData.append('thumbnail', tempImages.thumbnail);
+            }
+            formData.append('theme', selectThemeValue);
+            /**Here I'm using a custom hook to trigger react-query's useMutation */
+            const mutationPayload: MutationPayload = {
+                data: formData,
+                config: {
+                    ...getConfig(),
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
                 },
-            },
-            config: getConfig(),
-        };
-
-        /**Here I'm using a custom hook to trigger react-query's useMutation */
-        await mutateAsync(mutationPayload);
-        refetch;
-        handleCancelation?.();
+            };
+            await mutateAsync(mutationPayload);
+            refetch;
+            handleCancelation?.();
+        } catch (error) {
+            console.error('Error during file conversion or submission:', error);
+            message.error('Failed to submit the form.');
+        }
     };
 
     return (
@@ -199,22 +189,12 @@ const CreateBooks: React.FC<CreateBooksProps> = ({
                     dependencies={['typeSwitch', 'selectField', 'inputField']}
                 >
                     <Upload
-                        beforeUpload={(file) => {
-                            uploadImage(file);
-                            return false;
-                        }}
-                        onChange={(info) => {
-                            if (info.file.status !== 'uploading') {
-                                console.log(info.file, info.fileList);
-                            }
-                            if (info.file.status === 'done') {
-                                message.success(
-                                    `${info.file.name} file uploaded successfully`,
-                                );
-                            } else if (info.file.status === 'error') {
-                                message.error(
-                                    `${info.file.name} file upload failed.`,
-                                );
+                        beforeUpload={(file) => onFileChange(file, 'bookImage')}
+                        onChange={({ file }) => {
+                            if (file.status === 'done') {
+                                message.success(`${file.name} file uploaded successfully.`);
+                            } else if (file.status === 'error') {
+                                message.error(`${file.name} file upload failed.`);
                             }
                         }}
                         listType="picture"
@@ -234,21 +214,14 @@ const CreateBooks: React.FC<CreateBooksProps> = ({
                     dependencies={['typeSwitch', 'selectField', 'inputField']}
                 >
                     <Upload
-                        onChange={(info) => {
-                            if (info.file.status !== 'uploading') {
-                                console.log(info.file, info.fileList);
-                            }
-                            if (info.file.status === 'done') {
-                                message.success(
-                                    `${info.file.name} file uploaded successfully`,
-                                );
-                            } else if (info.file.status === 'error') {
-                                message.error(
-                                    `${info.file.name} file upload failed.`,
-                                );
+                        beforeUpload={(file) => onFileChange(file, 'thumbnail')}
+                        onChange={({ file }) => {
+                            if (file.status === 'done') {
+                                message.success(`${file.name} file uploaded successfully.`);
+                            } else if (file.status === 'error') {
+                                message.error(`${file.name} file upload failed.`);
                             }
                         }}
-                        action="/upload/image"
                         listType="picture"
                     >
                         <Button icon={<UploadOutlined />}>Upload</Button>

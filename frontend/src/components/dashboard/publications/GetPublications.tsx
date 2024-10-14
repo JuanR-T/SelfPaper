@@ -40,7 +40,6 @@ const GetPublications: React.FC = () => {
     const endIndex = startIndex + publicationsPerPage;
     const currentPublications = publications?.slice(startIndex, endIndex);
     const publishers = publisherQuery?.data?.data?.publisher;
-    //const publicationImages = publicationQuery?.data?.data.publications { };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -273,8 +272,7 @@ const GetPublications: React.FC = () => {
                         ))}
                     </Select>
                 ) : (
-                    text
-                    //record.publisher.title + ' / ' + record.publisher.service
+                    record.publisherService ? record.publisher.title + ": " + record.publisherService : record.publisher.title
                 );
             },
         },

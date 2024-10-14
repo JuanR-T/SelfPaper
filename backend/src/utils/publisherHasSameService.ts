@@ -18,20 +18,17 @@ export const checkPublisherService = async (req: Request): Promise<boolean> => {
         }
 
         let requestPublishers: PublisherRequestBody;
-        if (typeof req.body.publisher === 'string') {
-            requestPublishers = JSON.parse(req.body.publisher);
+        if (typeof req.body.publisher === 'string' || typeof req.body.bookPublisher === 'string') {
+            requestPublishers = JSON.parse(req.body.publisher || req.body.bookPublisher);
         } else {
-            requestPublishers = req.body.publisher;
+            requestPublishers = req.body.publisher || req.body.bookPublisher;
         }
-
         if (!requestPublishers) {
             console.error('Publisher data missing in request body');
             return false;
         }
-
         const hasSameService = publishers.some((publisher) => {
             const requestPublisherId = new mongoose.Types.ObjectId(requestPublishers._id);
-            console.log("requestPublishers", requestPublishers)
             return (
                 publisher._id.equals(requestPublisherId) &&
                 publisher.services.some(

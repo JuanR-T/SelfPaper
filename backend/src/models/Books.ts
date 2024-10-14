@@ -19,6 +19,7 @@ const booksSchema = new Schema({
             required: true,
         },
     },
+    bookPublisherService: {type: String, required: false},
     bookImage: [
         {
             type: SchemaTypes.ObjectId,
@@ -26,7 +27,13 @@ const booksSchema = new Schema({
             required: false,
         },
     ],
-    thumbnail: { type: Buffer || String },
+    thumbnail: [
+        {
+            type: SchemaTypes.ObjectId,
+            ref: 'Images',
+            required: false,
+        },
+    ],
     theme: [
         {
             type: SchemaTypes.ObjectId,

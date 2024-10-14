@@ -1,0 +1,22 @@
+.books-section-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    padding: 50px;
+
+    @media (min-width: $lg) {
+        .biography-box {
+            flex-direction: row;
+        }
+    }
+
+    @media (max-width: $lg) {
+        padding: 30px;
+        
+    }
+    @media (max-width: 420px) {
+        height: 55vh;
+    }
+}

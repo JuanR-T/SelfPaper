@@ -62,7 +62,6 @@ const UpdatePublications = ({
                 'colored',
             );
         }
-
     };
 
     return isEditingPublication && editingRowId ? (

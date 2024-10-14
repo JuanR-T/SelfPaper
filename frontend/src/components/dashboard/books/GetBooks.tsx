@@ -1,4 +1,4 @@
-import { UploadOutlined } from '@ant-design/icons';
+import { FileImageOutlined, UploadOutlined } from '@ant-design/icons';
 import {
     Button,
     DatePicker,
@@ -6,16 +6,15 @@ import {
     Pagination,
     Select,
     Table,
-    Upload,
-    message,
+    Upload
 } from 'antd';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/fr';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useEffect, useState } from 'react';
 import { useApiContext } from '../../../context/ApiContext';
 import { useAuth } from '../../../context/AuthContext';
-import { Author, Book } from '../../../types/types';
+import { Author, Book, Publisher } from '../../../types/types';
 import ModalProvider from '../../utils/ModalProvider';
 import CreateBooks from './CreateBooks';
 import DeleteBooks from './DeleteBooks';
@@ -35,45 +34,13 @@ const GetBooks = () => {
     const [editingRowId, setEditingRowId] = useState<string | null>(null);
     const [isEditingBooks, setIsEditingBooks] = useState<boolean>(false);
     const [isBookDateEdited, setIsBookDateEdited] = useState<boolean>(false);
+    const [editingFormData, setEditingFormData] = useState<FormData>(new FormData());
 
     const booksQueryResult = bookQuery?.data?.data?.books;
-    //console.log(booksQueryResult, "booksQueryResult")
     const currentBooksDisplayed = booksQueryResult?.slice(startIndex, endIndex);
-    const bookInitialState = {
-        _id: '',
-        title: '',
-        description: '',
-        link: '',
-        bookPublicationDate: '',
-        bookAuthor: author?._id,
-        bookPublisher: {
-            _id: '',
-            title: '',
-            description: '',
-            type: '',
-            location: '',
-            founded_at: '',
-            services: [''],
-            service: '',
-        },
-        bookImage: '',
-        thumbnail: '',
-        theme: {
-            _id: '',
-            title: '',
-            description: '',
-            image: '',
-        },
-    };
-    const [editingRowData, setEditingRowData] =
-        useState<Book>(bookInitialState);
-    const editingBookPublicationDate = (date: any | null) => {
-        setIsBookDateEdited(true);
-        setEditingRowData({
-            ...editingRowData,
-            bookPublicationDate: dayjs(date, 'DD MMMM YYYY'),
-        });
-    };
+    const publishers = publisherQuery?.data?.data?.publisher;
+
+    const [editingRowData, setEditingRowData] = useState<Partial<Book>>({})
 
     useEffect(() => {
         bookQuery.refetch();
@@ -148,21 +115,27 @@ const GetBooks = () => {
             dataIndex: 'bookPublicationDate',
             responsive: ['sm'],
             render: (text: string, record: Book) => {
-                const formattedBookPublicationDate = dayjs(
-                    record?.bookPublicationDate,
-                    'DD MMMM YYYY',
-                );
+                const isValidDate = editingRowData.bookPublicationDate && dayjs(editingRowData.bookPublicationDate).isValid();
                 return isEditingBooks && editingRowId === record._id ? (
                     <DatePicker
-                        onChange={editingBookPublicationDate}
-                        value={
-                            isBookDateEdited
-                                ? dayjs(editingRowData.bookPublicationDate)
-                                : formattedBookPublicationDate
-                        }
+                        onChange={(date: Dayjs | null) => {
+                            if (date) {
+                                const dayjsDate = dayjs(date);
+                                setEditingRowData({
+                                    ...editingRowData,
+                                    bookPublicationDate: dayjsDate.toISOString(),
+                                });
+                            } else {
+                                setEditingRowData({
+                                    ...editingRowData,
+                                    bookPublicationDate: '',
+                                });
+                            }
+                        }}
+                        value={isValidDate ? dayjs(editingRowData.bookPublicationDate) : null}
                     />
                 ) : (
-                    record.bookPublicationDate
+                    text
                 );
             },
         },
@@ -182,24 +155,23 @@ const GetBooks = () => {
             dataIndex: 'bookPublisher',
             responsive: ['sm'],
             render: (text: string, record: Book) => {
+                console.log("recordit", record)
                 return isEditingBooks && editingRowId === record._id ? (
                     <Select
                         placeholder="Choisir un éditeur"
                         onSelect={(value) => setSelectPublisherValue(value)}
                     >
-                        {publisherQuery?.data?.data?.publisher?.map(
-                            (publisher: any) => (
-                                <Select.Option
-                                    key={publisher._id}
-                                    value={publisher._id}
-                                >
-                                    {publisher.title}
-                                </Select.Option>
-                            ),
-                        )}
+                        {publishers?.map((publisher: Publisher) => (
+                            <Select.Option
+                                key={publisher._id}
+                                value={publisher._id}
+                            >
+                                {publisher.title}
+                            </Select.Option>
+                        ))}
                     </Select>
                 ) : (
-                    record.bookPublisher.title
+                    record.bookPublisherService ? record.bookPublisher.title + ": " + record.bookPublisherService : record.bookPublisher.title
                 );
             },
         },
@@ -208,31 +180,26 @@ const GetBooks = () => {
             dataIndex: 'postImage',
             responsive: ['sm'],
             render: (text: string, record: Book) => {
+                const imageSrc: any = record.bookImage?.image;
+
                 return isEditingBooks && editingRowId === record._id ? (
                     <Upload
-                        onChange={(info) => {
-                            if (info.file.status !== 'uploading') {
-                                console.log(info.file, info.fileList);
-                            }
-                            if (info.file.status === 'done') {
-                                message.success(
-                                    `${info.file.name} file uploaded successfully`,
-                                );
-                            } else if (info.file.status === 'error') {
-                                message.error(
-                                    `${info.file.name} file upload failed.`,
-                                );
-                            }
+                        beforeUpload={(file) => {
+                            const formData = editingFormData;
+                            formData.append('postImage', file);
+                            setEditingFormData(formData);
+                            return false;
                         }}
-                        action="/upload/image"
-                        //beforeUpload={beforeUpload}
-                        //fileList={fileList}
-                        listType="picture"
                     >
                         <Button icon={<UploadOutlined />}>Upload</Button>
                     </Upload>
-                ) : (
-                    text
+                ) : (imageSrc ?
+                    <img
+                        src={imageSrc ? `data:image/jpeg;base64,${imageSrc}` : ''}
+                        alt="Thumbnail"
+                        style={{ width: '40px', height: '40px' }}
+                    />
+                    : <FileImageOutlined style={{ fontSize: '40px' }} />
                 );
             },
         },
@@ -241,29 +208,25 @@ const GetBooks = () => {
             dataIndex: 'thumbnail',
             responsive: ['sm'],
             render: (text: string, record: Book) => {
+                const imageSrc: any = record.thumbnail?.image;
                 return isEditingBooks && editingRowId === record._id ? (
                     <Upload
-                        onChange={(info) => {
-                            if (info.file.status !== 'uploading') {
-                                console.log(info.file, info.fileList);
-                            }
-                            if (info.file.status === 'done') {
-                                message.success(
-                                    `${info.file.name} file uploaded successfully`,
-                                );
-                            } else if (info.file.status === 'error') {
-                                message.error(
-                                    `${info.file.name} file upload failed.`,
-                                );
-                            }
+                        beforeUpload={(file) => {
+                            const formData = editingFormData;
+                            formData.append('thumbnail', file);
+                            setEditingFormData(formData);
+                            return false;
                         }}
-                        action="/upload/image"
-                        listType="picture"
                     >
                         <Button icon={<UploadOutlined />}>Upload</Button>
                     </Upload>
-                ) : (
-                    text
+                ) : (imageSrc ?
+                    <img
+                        src={imageSrc ? `data:image/jpeg;base64,${imageSrc}` : ''}
+                        alt="Thumbnail"
+                        style={{ width: '40px', height: '40px' }}
+                    />
+                    : <FileImageOutlined style={{ fontSize: '40px' }} />
                 );
             },
         },
@@ -297,7 +260,6 @@ const GetBooks = () => {
                     <>
                         <UpdateBooks
                             record={record}
-                            bookInitialState={bookInitialState}
                             isBookDateEdited={isBookDateEdited}
                             setIsBookDateEdited={setIsBookDateEdited}
                             refetch={() => bookQuery.refetch()}
@@ -305,6 +267,8 @@ const GetBooks = () => {
                             isEditingBooks={isEditingBooks}
                             editingRowId={editingRowId}
                             editingRowData={editingRowData}
+                            editingFormData={editingFormData}
+                            setEditingFormData={setEditingFormData}
                             setIsEditingBooks={setIsEditingBooks}
                             setEditingRowId={setEditingRowId}
                             setEditingRowData={setEditingRowData}
