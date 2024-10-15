@@ -67,6 +67,7 @@ const CreateBooks: React.FC<CreateBooksProps> = ({
                 formData.append('thumbnail', tempImages.thumbnail);
             }
             formData.append('theme', selectThemeValue);
+
             /**Here I'm using a custom hook to trigger react-query's useMutation */
             const mutationPayload: MutationPayload = {
                 data: formData,
@@ -78,7 +79,7 @@ const CreateBooks: React.FC<CreateBooksProps> = ({
                 },
             };
             await mutateAsync(mutationPayload);
-            refetch;
+            refetch();
             handleCancelation?.();
         } catch (error) {
             console.error('Error during file conversion or submission:', error);

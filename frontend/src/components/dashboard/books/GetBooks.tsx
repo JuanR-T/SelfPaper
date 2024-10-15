@@ -13,7 +13,6 @@ import 'dayjs/locale/fr';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useEffect, useState } from 'react';
 import { useApiContext } from '../../../context/ApiContext';
-import { useAuth } from '../../../context/AuthContext';
 import { Author, Book, Publisher } from '../../../types/types';
 import ModalProvider from '../../utils/ModalProvider';
 import CreateBooks from './CreateBooks';
@@ -23,8 +22,7 @@ import UpdateBooks from './UpdateBooks';
 const GetBooks = () => {
     dayjs.extend(customParseFormat);
     dayjs.locale('fr');
-    const { bookQuery, publisherQuery, imageQuery } = useApiContext();
-    const { author } = useAuth();
+    const { bookQuery, publisherQuery } = useApiContext();
     const [currentPage, setCurrentPage] = useState<number>(1);
     const booksPerPage = 10;
     const startIndex = (currentPage - 1) * booksPerPage;

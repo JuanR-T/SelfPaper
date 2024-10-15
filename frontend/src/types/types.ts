@@ -287,5 +287,5 @@ export interface CreateBooksProps {
 export type AnimatedTab = {
     title: string;
     value: string;
-    content?: string | React.ReactNode | any;
+    content?: string | React.ReactNode | Dayjs | any;
 };
